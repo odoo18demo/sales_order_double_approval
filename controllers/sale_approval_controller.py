@@ -9,7 +9,7 @@ class SaleApprovalController(http.Controller):
         auth='public',
         methods=['GET'],
         csrf=False
-    )  # ← removed website=True
+    )
     def sale_approval(self, order_id, token, action, **kw):
         order = request.env['sale.order'].sudo().search([
             ('id', '=', order_id),
@@ -18,21 +18,73 @@ class SaleApprovalController(http.Controller):
 
         if not order:
             return request.make_response(
-                "<h2>⚠️ Invalid or expired approval link.</h2>",
+                "<html><body style='font-family:Arial;text-align:center;margin-top:80px'>"
+                "<h2>⚠️ Invalid or expired approval link.</h2>"
+                "</body></html>",
                 headers=[('Content-Type', 'text/html')]
             )
 
         if action == 'approve':
             order.sudo().button_approve()
-            msg = "<h2 style='color:green'>✅ Sale Order <b>%s</b> approved successfully!</h2>" % order.name
+            # ✅ Post to chatter
+            order.sudo().message_post(
+                body="✅ <b>Approved</b> via email link.",
+                message_type='comment',
+                subtype_xmlid='mail.mt_note',
+            )
+            msg = "✅ Approved"
+            color = "#28a745"
+            detail = "Sale Order <b>%s</b> has been approved successfully." % order.name
+
         elif action == 'reject':
             order.sudo().action_cancel()
-            msg = "<h2 style='color:red'>❌ Sale Order <b>%s</b> rejected successfully!</h2>" % order.name
+            # ❌ Post to chatter
+            order.sudo().message_post(
+                body="❌ <b>Rejected</b> via email link.",
+                message_type='comment',
+                subtype_xmlid='mail.mt_note',
+            )
+            msg = "❌ Rejected"
+            color = "#dc3545"
+            detail = "Sale Order <b>%s</b> has been rejected." % order.name
+
         else:
-            msg = "<h2>Invalid action.</h2>"
+            msg = "Invalid action"
+            color = "#666"
+            detail = "Unknown action requested."
+
+        # Auto-close tab after 5 seconds
+        html = """
+        <html>
+        <head>
+            <title>%s</title>
+            <style>
+                body { font-family: Arial, sans-serif; text-align: center; margin-top: 80px; }
+                .badge { display: inline-block; padding: 12px 30px; border-radius: 8px;
+                         background: %s; color: white; font-size: 22px; font-weight: bold; }
+                .counter { font-size: 14px; color: #888; margin-top: 20px; }
+            </style>
+        </head>
+        <body>
+            <div class="badge">%s</div>
+            <p style="font-size:16px; margin-top:20px;">%s</p>
+            <p class="counter">This window will close in <b id="sec">5</b> seconds...</p>
+            <script>
+                var s = 5;
+                var t = setInterval(function() {
+                    s--;
+                    document.getElementById('sec').innerText = s;
+                    if (s <= 0) {
+                        clearInterval(t);
+                        window.close();
+                    }
+                }, 1000);
+            </script>
+        </body>
+        </html>
+        """ % (msg, color, msg, detail)
 
         return request.make_response(
-            "<html><body style='font-family:Arial;text-align:center;margin-top:80px'>%s"
-            "<p>You can close this window.</p></body></html>" % msg,
+            html,
             headers=[('Content-Type', 'text/html')]
         )
