@@ -1,26 +1,5 @@
-# -*- coding: utf-8 -*-
-###############################################################################
-#
-#    Cybrosys Technologies Pvt. Ltd.
-#
-#    Copyright (C) 2025-TODAY Cybrosys Technologies(<https://www.cybrosys.com>)
-#    Author: Aysha Shalin (odoo@cybrosys.com)
-#
-#    You can modify it under the terms of the GNU AFFERO
-#    GENERAL PUBLIC LICENSE (AGPL v3), Version 3.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU AFFERO GENERAL PUBLIC LICENSE (AGPL v3) for more details.
-#
-#    You should have received a copy of the GNU AFFERO GENERAL PUBLIC LICENSE
-#    (AGPL v3) along with this program.
-#    If not, see <http://www.gnu.org/licenses/>.
-#
-###############################################################################
 from odoo import fields, models
-
+import uuid
 
 class SaleOrder(models.Model):
     """ Inheriting sale.order to add new state """
@@ -29,6 +8,7 @@ class SaleOrder(models.Model):
     state = fields.Selection(selection_add=
                              [('to_approve', 'To Approve'),
                               ('sent',)], ondelete={'to_approve': 'cascade'})
+    approval_token = fields.Char(string="Approval Token", readonly=True)
 
     def button_approve(self):
         """ Method to approve the sale order and change its state to 'sale' """
@@ -61,11 +41,26 @@ class SaleOrder(models.Model):
         """ Override to add double validation logic based on company settings.
         Confirms the sale order if conditions are met, otherwise sets state to
         'to_approve'. """
-        if self._needs_approval():
-            self.write({'state': 'to_approve'})
-            return True
+        for order in self:
+            if order._needs_approval():
+                # Generate token
+                order.approval_token = str(uuid.uuid4())
+                order.state = 'to_approve'
+                order._send_approval_email()
+            else:
+                super(SaleOrder, order).action_confirm()
+        return True
 
-        return super(SaleOrder, self).action_confirm()
+    def _send_approval_email(self):
+        """ Send email to all sales managers """
+        template = self.env.ref('sales_order_double_approval.sale_order_approval_email_template')
+        managers = self.env['res.users'].search([('groups_id', 'in', self.env.ref('sales_team.group_sale_manager').id)])
+        template.sudo().send_mail(self.id, force_send=True,
+                                  email_values={'email_to': ','.join([m.email for m in managers if m.email])})
+
+    def get_approval_url(self, action):
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        return f"{base_url}/sale_approval/{self.id}/{self.approval_token}/{action}"
 
     def action_cancel(self):
         """ Method to cancel the sale order and change state into 'cancel' """
