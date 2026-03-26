@@ -3,21 +3,28 @@
     <record id="sale_order_approval_email_template" model="mail.template">
         <field name="name">Sale Order Approval Email</field>
         <field name="model_id" ref="sale.model_sale_order"/>
-        <field name="email_from">${(object.company_id.email or 'noreply@example.com')|safe}</field>
-        <field name="subject">Sale Order ${object.name} Requires Approval</field>
-        <field name="body_html">
-            <![CDATA[
-            <p>Dear Manager,</p>
-            <p>Sale Order <b>${object.name}</b> requires your approval.</p>
-            <p>Amount: ${object.amount_total}</p>
-            <p>
-                <a href="${object.get_approval_url('approve')}" style="padding:8px 12px; background-color:#4CAF50; color:white; text-decoration:none; border-radius:4px;">Approve</a>
-                &nbsp;
-                <a href="${object.get_approval_url('reject')}" style="padding:8px 12px; background-color:#f44336; color:white; text-decoration:none; border-radius:4px;">Reject</a>
-            </p>
-            <p>Thank you!</p>
-            ]]>
-        </field>
+        <field name="email_from">{{ object.company_id.email or user.email }}</field>
+        <field name="subject">Sale Order {{ object.name }} Requires Approval</field>
+        <field name="body_html"><![CDATA[
+<p>Dear Manager,</p>
+<p>Sale Order <b>{{ object.name }}</b> requires your approval.</p>
+<p>Customer: {{ object.partner_id.name }}</p>
+<p>Amount: {{ object.currency_id.symbol }} {{ '%.2f' % object.amount_total }}</p>
+<p>
+    <a href="{{ object.get_approval_url('approve') }}"
+       style="padding:8px 16px; background-color:#4CAF50; color:white;
+              text-decoration:none; border-radius:4px; font-weight:bold;">
+       ✅ Approve
+    </a>
+    &nbsp;&nbsp;
+    <a href="{{ object.get_approval_url('reject') }}"
+       style="padding:8px 16px; background-color:#f44336; color:white;
+              text-decoration:none; border-radius:4px; font-weight:bold;">
+       ❌ Reject
+    </a>
+</p>
+<p>Thank you!</p>
+        ]]></field>
         <field name="auto_delete" eval="False"/>
     </record>
 </odoo>
