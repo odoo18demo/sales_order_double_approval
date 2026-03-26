@@ -5,25 +5,32 @@
         <field name="model_id" ref="sale.model_sale_order"/>
         <field name="email_from">{{ object.company_id.email or user.email }}</field>
         <field name="subject">Sale Order {{ object.name }} Requires Approval</field>
-        <field name="body_html"><![CDATA[
-<p>Dear Manager,</p>
+        <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px; font-family: Arial, sans-serif; font-size: 13px;">
+    <p>Dear Manager,</p>
 
-<p>Sale Order <b>{{ object.name }}</b> requires your approval.</p>
-<p>Customer: {{ object.partner_id.name }}</p>
-<p>Amount: {{ object.currency_id.symbol }} {{ '%0.2f' % object.amount_total }}</p>
+    <p>Sale Order <strong t-out="object.name">S00010</strong> requires your approval.</p>
 
-<p>
-  Please take action by clicking one of the links below:
-</p>
+    <p>Customer: <strong t-out="object.partner_id.name">Customer Name</strong></p>
 
-<p>
-  ✅ <a href="{{ object.get_approval_url('approve') }}"><b>Approve</b></a>
-  &nbsp;&nbsp;&nbsp;
-  ❌ <a href="{{ object.get_approval_url('reject') }}"><b>Reject</b></a>
-</p>
+    <p>Amount:
+        <strong>
+            <t t-out="object.currency_id.symbol">$</t>
+            <t t-out="'%.2f' % object.amount_total">0.00</t>
+        </strong>
+    </p>
 
-<p>Thank you!</p>
-        ]]></field>
+    <p>Please take action:</p>
+
+    <p>
+        ✅ <a t-attf-href="{{ object.get_approval_url('approve') }}"><strong>Approve</strong></a>
+        &nbsp;&nbsp;&nbsp;
+        ❌ <a t-attf-href="{{ object.get_approval_url('reject') }}"><strong>Reject</strong></a>
+    </p>
+
+    <p>Thank you!</p>
+</div>
+        </field>
         <field name="auto_delete" eval="False"/>
     </record>
 </odoo>
