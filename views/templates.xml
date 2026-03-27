@@ -36,7 +36,7 @@
                         font-size: 14px;
                         color: #ffffff;
                     }
-                    .mo-card-header.confirmed { background: #017e84; }
+                    .mo-card-header.confirmed { background: #042c53; }
                     .mo-card-header.progress  { background: #f0ad4e; color: #212529; }
                     .mo-card-header.to_close  { background: #28a745; }
                     .mo-card-body {
@@ -83,7 +83,7 @@
                         font-size: 11px;
                         font-weight: 600;
                     }
-                    .status-pill.confirmed { background: #e0f5f5; color: #017e84; }
+                    .status-pill.confirmed { background: #e0f5f5; color: #042c53; }
                     .status-pill.progress  { background: #fff3cd; color: #856404; }
                     .status-pill.to_close  { background: #d4edda; color: #155724; }
                     .empty-state {
@@ -173,6 +173,229 @@
                         if (el) el.innerText = sec;
                         if (sec &lt;= 0) window.location.reload();
                     }, 1000);
+                </script>
+
+            </body>
+        </html>
+    </template>
+    <template id="maintenance_request_template" name="Maintenance Request Form">
+        <html>
+            <head>
+                <meta charset="UTF-8"/>
+                <title>Maintenance Request</title>
+                <link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css"/>
+                <style>
+                    body {
+                        background: #f8f9fa;
+                        font-family: Arial, sans-serif;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        min-height: 100vh;
+                        margin: 0;
+                        padding: 24px;
+                    }
+                    .form-card {
+                        background: #ffffff;
+                        border-radius: 10px;
+                        border: 1px solid #dee2e6;
+                        padding: 32px;
+                        width: 100%;
+                        max-width: 520px;
+                    }
+                    .form-title {
+                        font-size: 20px;
+                        font-weight: 700;
+                        color: #042c53;
+                        margin-bottom: 6px;
+                    }
+                    .form-subtitle {
+                        font-size: 13px;
+                        color: #6c757d;
+                        margin-bottom: 24px;
+                    }
+                    .form-label {
+                        font-size: 13px;
+                        font-weight: 600;
+                        color: #495057;
+                        margin-bottom: 4px;
+                    }
+                    .form-control, .form-select {
+                        font-size: 14px;
+                        border: 1px solid #ced4da;
+                        border-radius: 6px;
+                        padding: 8px 12px;
+                        width: 100%;
+                        margin-bottom: 16px;
+                        outline: none;
+                        box-sizing: border-box;
+                    }
+                    .form-control:focus, .form-select:focus {
+                        border-color: #042c53;
+                        box-shadow: 0 0 0 2px rgba(1,126,132,0.15);
+                    }
+                    textarea.form-control { resize: vertical; min-height: 90px; }
+                    .btn-submit {
+                        background: #042c53;
+                        color: #ffffff;
+                        border: none;
+                        border-radius: 6px;
+                        padding: 10px 28px;
+                        font-size: 15px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        width: 100%;
+                    }
+                    .btn-submit:hover { background: #015f63; }
+                    .alert-success {
+                        background: #d4edda;
+                        color: #155724;
+                        border: 1px solid #c3e6cb;
+                        border-radius: 6px;
+                        padding: 12px 16px;
+                        margin-bottom: 20px;
+                        font-size: 14px;
+                    }
+                    .alert-error {
+                        background: #f8d7da;
+                        color: #721c24;
+                        border: 1px solid #f5c6cb;
+                        border-radius: 6px;
+                        padding: 12px 16px;
+                        margin-bottom: 20px;
+                        font-size: 14px;
+                    }
+                    .priority-group {
+                        display: flex;
+                        gap: 8px;
+                        margin-bottom: 16px;
+                    }
+                    .priority-btn {
+                        flex: 1;
+                        padding: 7px;
+                        border: 1px solid #ced4da;
+                        border-radius: 6px;
+                        background: #fff;
+                        font-size: 13px;
+                        cursor: pointer;
+                        text-align: center;
+                    }
+                    .priority-btn:hover { border-color: #042c53; color: #042c53; }
+                    input[type=radio]:checked + .priority-btn {
+                        background: #042c53;
+                        color: white;
+                        border-color: #042c53;
+                    }
+                    .new-request-btn {
+                        background: none;
+                        border: 1px solid #042c53;
+                        color: #042c53;
+                        border-radius: 6px;
+                        padding: 8px 20px;
+                        font-size: 14px;
+                        cursor: pointer;
+                        width: 100%;
+                        margin-top: 8px;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="form-card">
+
+                    <div class="form-title">&#128295; Maintenance Request</div>
+                    <div class="form-subtitle">Report an issue or schedule a maintenance task.</div>
+
+                    <!-- Success Message -->
+                    <t t-if="success">
+                        <div class="alert-success">
+                            &#10003; Your maintenance request has been submitted successfully!
+                        </div>
+                        <a href="/maintenance-request">
+                            <button class="new-request-btn">Submit Another Request</button>
+                        </a>
+                    </t>
+
+                    <!-- Error Message -->
+                    <t t-if="error">
+                        <div class="alert-error">
+                            &#9888; <t t-out="error"/>
+                        </div>
+                    </t>
+
+                    <!-- Form -->
+                    <t t-if="not success">
+                        <form action="/maintenance-request/submit" method="POST">
+
+                            <div class="form-label">Request Name *</div>
+                            <input type="text" name="name" class="form-control"
+                                   placeholder="e.g. Machine not starting"
+                                   t-att-value="values.get('name', '') if values else ''"/>
+
+                            <div class="form-label">Equipment</div>
+                            <select name="equipment_id" class="form-select">
+                                <option value="">— Select Equipment (optional) —</option>
+                                <t t-foreach="equipments" t-as="eq">
+                                    <option t-att-value="eq.id"
+                                            t-out="eq.name"/>
+                                </t>
+                            </select>
+
+                            <div class="form-label">Maintenance Type</div>
+                            <select name="maintenance_type" class="form-select">
+                                <option value="corrective">Corrective (Fix a problem)</option>
+                                <option value="preventive">Preventive (Scheduled check)</option>
+                            </select>
+
+                            <div class="form-label">Priority</div>
+                            <div class="priority-group">
+                                <label style="flex:1; display:block; text-align:center;">
+                                    <input type="radio" name="priority" value="0"
+                                           style="display:none;" checked="1"/>
+                                    <div class="priority-btn">Normal</div>
+                                </label>
+                                <label style="flex:1; display:block; text-align:center;">
+                                    <input type="radio" name="priority" value="1"
+                                           style="display:none;"/>
+                                    <div class="priority-btn">Urgent</div>
+                                </label>
+                                <label style="flex:1; display:block; text-align:center;">
+                                    <input type="radio" name="priority" value="2"
+                                           style="display:none;"/>
+                                    <div class="priority-btn">Very Urgent</div>
+                                </label>
+                                <label style="flex:1; display:block; text-align:center;">
+                                    <input type="radio" name="priority" value="3"
+                                           style="display:none;"/>
+                                    <div class="priority-btn">Critical</div>
+                                </label>
+                            </div>
+
+                            <div class="form-label">Description</div>
+                            <textarea name="description" class="form-control"
+                                      placeholder="Describe the issue in detail..."><t t-out="values.get('description', '') if values else ''"/></textarea>
+
+                            <button type="submit" class="btn-submit">Submit Request</button>
+
+                        </form>
+                    </t>
+
+                </div>
+
+                <script>
+                    // Priority button highlight on click
+                    document.querySelectorAll('input[name="priority"]').forEach(function(radio) {
+                        radio.addEventListener('change', function() {
+                            document.querySelectorAll('.priority-btn').forEach(function(btn) {
+                                btn.style.background = '';
+                                btn.style.color = '';
+                                btn.style.borderColor = '';
+                            });
+                            var btn = this.nextElementSibling;
+                            btn.style.background = '#042c53';
+                            btn.style.color = 'white';
+                            btn.style.borderColor = '#042c53';
+                        });
+                    });
                 </script>
 
             </body>
