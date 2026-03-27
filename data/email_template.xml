@@ -23,9 +23,9 @@
     <p>Please take action:</p>
 
     <p>
-        ✅ <a t-attf-href="{{ object.get_approval_url('approve') }}"><strong>Approve</strong></a>
+        <a t-attf-href="{{ object.get_approval_url('approve') }}"><strong>Approve</strong></a>
         &#160;&#160;&#160;
-        ❌ <a t-attf-href="{{ object.get_approval_url('reject') }}"><strong>Reject</strong></a>
+        <a t-attf-href="{{ object.get_approval_url('reject') }}"><strong>Reject</strong></a>
     </p>
 
     <p>Thank you!</p>

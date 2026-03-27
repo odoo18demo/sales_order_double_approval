@@ -12,12 +12,13 @@
     'company': 'Cybrosys Techno Solutions',
     'maintainer': 'Cybrosys Techno Solutions',
     'website': 'https://www.cybrosys.com/',
-    'depends': ['base', 'sale_management'],
+    'depends': ['base', 'sale_management','mrp'],
     'data': [
         'data/email_template.xml',
         'views/res_company_views.xml',
         'views/res_config_settings_views.xml',
-        'views/sale_order_views.xml'
+        'views/sale_order_views.xml',
+        'views/templates.xml'
     ],
     'images': [
         'static/description/banner.jpg',

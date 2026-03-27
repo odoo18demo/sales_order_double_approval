@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="mrp_screen_template" name="MRP Manufacturing Screen">
+        <html>
+            <head>
+                <meta charset="UTF-8"/>
+                <meta http-equiv="refresh" content="30"/>
+                <title>Manufacturing Orders</title>
+                <link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css"/>
+                <style>
+                    body {
+                        background: #f8f9fa;
+                        padding: 24px;
+                        font-family: 'Roboto', Arial, sans-serif;
+                    }
+                    .refresh-bar {
+                        text-align: right;
+                        font-size: 12px;
+                        color: #6c757d;
+                        margin-bottom: 16px;
+                    }
+                    .mo-grid {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                        gap: 16px;
+                    }
+                    .mo-card {
+                        background: #ffffff;
+                        border-radius: 8px;
+                        border: 1px solid #dee2e6;
+                        overflow: hidden;
+                    }
+                    .mo-card-header {
+                        padding: 12px 16px;
+                        font-weight: 600;
+                        font-size: 14px;
+                        color: #ffffff;
+                    }
+                    .mo-card-header.confirmed { background: #017e84; }
+                    .mo-card-header.progress  { background: #f0ad4e; color: #212529; }
+                    .mo-card-header.to_close  { background: #28a745; }
+                    .mo-card-body {
+                        padding: 14px 16px;
+                    }
+                    .mo-product {
+                        font-size: 15px;
+                        font-weight: 600;
+                        color: #212529;
+                        margin-bottom: 8px;
+                    }
+                    .mo-meta {
+                        font-size: 13px;
+                        color: #6c757d;
+                        margin-bottom: 4px;
+                    }
+                    .mo-meta span {
+                        color: #212529;
+                        font-weight: 500;
+                    }
+                    .mo-divider {
+                        border: none;
+                        border-top: 1px solid #dee2e6;
+                        margin: 10px 0;
+                    }
+                    .mo-components-title {
+                        font-size: 12px;
+                        font-weight: 600;
+                        color: #6c757d;
+                        text-transform: uppercase;
+                        letter-spacing: 0.5px;
+                        margin-bottom: 6px;
+                    }
+                    .mo-component-item {
+                        font-size: 13px;
+                        color: #495057;
+                        padding: 2px 0;
+                        border-bottom: 1px solid #f1f3f5;
+                    }
+                    .status-pill {
+                        display: inline-block;
+                        padding: 2px 10px;
+                        border-radius: 12px;
+                        font-size: 11px;
+                        font-weight: 600;
+                    }
+                    .status-pill.confirmed { background: #e0f5f5; color: #017e84; }
+                    .status-pill.progress  { background: #fff3cd; color: #856404; }
+                    .status-pill.to_close  { background: #d4edda; color: #155724; }
+                    .empty-state {
+                        text-align: center;
+                        padding: 60px 20px;
+                        color: #6c757d;
+                        font-size: 15px;
+                    }
+                    .counter {
+                        font-size: 12px;
+                        color: #adb5bd;
+                    }
+                </style>
+            </head>
+            <body>
+
+                <div class="refresh-bar">
+                    Auto-refresh in <b id="countdown">30</b>s
+                </div>
+
+                <div class="mo-grid">
+
+                    <t t-foreach="productions" t-as="mo">
+
+                        <div class="mo-card">
+
+                            <div t-attf-class="mo-card-header {{ mo.state }}">
+                                <t t-out="mo.name"/>
+                                — <t t-out="mo.product_id.name"/>
+                            </div>
+
+                            <div class="mo-card-body">
+
+                                <div class="mo-meta">
+                                    Qty:
+                                    <span>
+                                        <t t-out="mo.product_qty"/>
+                                        <t t-out="mo.product_uom_id.name"/>
+                                    </span>
+                                </div>
+
+                                <div class="mo-meta">
+                                    Scheduled:
+                                    <span t-out="mo.date_start or '—'"/>
+                                </div>
+
+                                <div class="mo-meta">
+                                    Status:
+                                    <span t-attf-class="status-pill {{ mo.state }}">
+                                        <t t-if="mo.state == 'confirmed'">Confirmed</t>
+                                        <t t-if="mo.state == 'progress'">In Progress</t>
+                                        <t t-if="mo.state == 'to_close'">To Close</t>
+                                    </span>
+                                </div>
+
+                                <t t-if="mo.move_raw_ids">
+                                    <hr class="mo-divider"/>
+                                    <div class="mo-components-title">Components</div>
+                                    <t t-foreach="mo.move_raw_ids" t-as="line">
+                                        <div class="mo-component-item">
+                                            <t t-out="line.product_id.name"/>
+                                            —
+                                            <t t-out="line.product_uom_qty"/>
+                                            <t t-out="line.product_uom.name"/>
+                                        </div>
+                                    </t>
+                                </t>
+
+                            </div>
+                        </div>
+
+                    </t>
+
+                    <t t-if="not productions">
+                        <div class="empty-state">
+                            No active manufacturing orders found.
+                        </div>
+                    </t>
+
+                </div>
+
+                <script>
+                    var sec = 10;
+                    setInterval(function() {
+                        sec--;
+                        var el = document.getElementById('countdown');
+                        if (el) el.innerText = sec;
+                        if (sec &lt;= 0) window.location.reload();
+                    }, 1000);
+                </script>
+
+            </body>
+        </html>
+    </template>
+</odoo>
