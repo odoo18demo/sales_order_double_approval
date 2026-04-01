@@ -531,13 +531,13 @@
                             <!-- Base64 hidden inputs will be injected here by JS -->
                             <div id="hiddenInputs"></div>
 
-<!--                            <div class="photo-upload-area" id="dropZone">-->
-<!--                                <div class="upload-icon">&#128444;</div>-->
-<!--                                <div class="upload-text">-->
-<!--                                    <strong>Drag and drop</strong> photos here<br/>-->
-<!--                                    or use the buttons above-->
-<!--                                </div>-->
-<!--                            </div>-->
+                            <div class="photo-upload-area" id="dropZone">
+                                <div class="upload-icon">&#128444;</div>
+                                <div class="upload-text">
+                                    <strong>Drag and drop</strong> photos here<br/>
+                                    or use the buttons above
+                                </div>
+                            </div>
 
                             <div class="photo-count" id="photoCount" style="display:none;">
                                 <span id="countText">0</span> photo(s) selected
