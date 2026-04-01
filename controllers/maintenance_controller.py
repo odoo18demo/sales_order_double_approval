@@ -1,3 +1,4 @@
+import base64
 from odoo import http
 from odoo.http import request
 
@@ -6,13 +7,18 @@ class MaintenanceRequestController(http.Controller):
 
     @http.route('/maintenance-request', type='http', auth='public', csrf=False)
     def maintenance_form(self, **kwargs):
-        # Get all equipment for dropdown
         equipments = request.env['maintenance.equipment'].sudo().search(
             [], order='name asc'
         )
         return request.render(
             'sales_order_double_approval.maintenance_request_template',
-            {'equipments': equipments, 'success': False, 'error': None}
+            {
+                'equipments': equipments,
+                'success': False,
+                'error': None,
+                'values': {},
+                'photo_count': 0,
+            }
         )
 
     @http.route('/maintenance-request/submit', type='http', auth='public',
@@ -36,6 +42,7 @@ class MaintenanceRequestController(http.Controller):
                         'success': False,
                         'error': 'Request name is required.',
                         'values': kwargs,
+                        'photo_count': 0,
                     }
                 )
 
@@ -48,11 +55,43 @@ class MaintenanceRequestController(http.Controller):
             if equipment_id:
                 vals['equipment_id'] = int(equipment_id)
 
-            request.env['maintenance.request'].sudo().create(vals)
+            # Create the maintenance request
+            maintenance_request = request.env['maintenance.request'].sudo().create(vals)
+
+            # ✅ Handle base64 photos sent as hidden inputs
+            photo_count = 0
+            index = 0
+            while True:
+                b64_data = kwargs.get('photo_data_%d' % index)
+                filename = kwargs.get('photo_name_%d' % index, 'photo_%d.jpg' % index)
+                if not b64_data:
+                    break
+                try:
+                    # Strip the data URL prefix: data:image/jpeg;base64,XXXX
+                    if ',' in b64_data:
+                        b64_data = b64_data.split(',')[1]
+                    request.env['ir.attachment'].sudo().create({
+                        'name': filename,
+                        'type': 'binary',
+                        'datas': b64_data,
+                        'res_model': 'maintenance.request',
+                        'res_id': maintenance_request.id,
+                        'mimetype': 'image/jpeg',
+                    })
+                    photo_count += 1
+                except Exception:
+                    pass
+                index += 1
 
             return request.render(
                 'sales_order_double_approval.maintenance_request_template',
-                {'equipments': equipments, 'success': True, 'error': None}
+                {
+                    'equipments': equipments,
+                    'success': True,
+                    'error': None,
+                    'values': {},
+                    'photo_count': photo_count,
+                }
             )
 
         except Exception as e:
@@ -61,7 +100,8 @@ class MaintenanceRequestController(http.Controller):
                 {
                     'equipments': equipments,
                     'success': False,
-                    'error': 'Something went wrong. Please try again.',
+                    'error': 'Something went wrong: %s' % str(e),
                     'values': kwargs,
+                    'photo_count': 0,
                 }
             )

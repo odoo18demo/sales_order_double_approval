@@ -182,222 +182,541 @@
         <html>
             <head>
                 <meta charset="UTF-8"/>
-                <title>Maintenance Request</title>
-                <link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css"/>
-                <style>
-                    body {
-                        background: #f8f9fa;
-                        font-family: Arial, sans-serif;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        min-height: 100vh;
-                        margin: 0;
-                        padding: 24px;
-                    }
-                    .form-card {
-                        background: #ffffff;
-                        border-radius: 10px;
-                        border: 1px solid #dee2e6;
-                        padding: 32px;
-                        width: 100%;
-                        max-width: 520px;
-                    }
-                    .form-title {
-                        font-size: 20px;
-                        font-weight: 700;
-                        color: #042c53;
-                        margin-bottom: 6px;
-                    }
-                    .form-subtitle {
-                        font-size: 13px;
-                        color: #6c757d;
-                        margin-bottom: 24px;
-                    }
-                    .form-label {
-                        font-size: 13px;
-                        font-weight: 600;
-                        color: #495057;
-                        margin-bottom: 4px;
-                    }
-                    .form-control, .form-select {
-                        font-size: 14px;
-                        border: 1px solid #ced4da;
-                        border-radius: 6px;
-                        padding: 8px 12px;
-                        width: 100%;
-                        margin-bottom: 16px;
-                        outline: none;
-                        box-sizing: border-box;
-                    }
-                    .form-control:focus, .form-select:focus {
-                        border-color: #042c53;
-                        box-shadow: 0 0 0 2px rgba(1,126,132,0.15);
-                    }
-                    textarea.form-control { resize: vertical; min-height: 90px; }
-                    .btn-submit {
-                        background: #042c53;
-                        color: #ffffff;
-                        border: none;
-                        border-radius: 6px;
-                        padding: 10px 28px;
-                        font-size: 15px;
-                        font-weight: 600;
-                        cursor: pointer;
-                        width: 100%;
-                    }
-                    .btn-submit:hover { background: #015f63; }
-                    .alert-success {
-                        background: #d4edda;
-                        color: #155724;
-                        border: 1px solid #c3e6cb;
-                        border-radius: 6px;
-                        padding: 12px 16px;
-                        margin-bottom: 20px;
-                        font-size: 14px;
-                    }
-                    .alert-error {
-                        background: #f8d7da;
-                        color: #721c24;
-                        border: 1px solid #f5c6cb;
-                        border-radius: 6px;
-                        padding: 12px 16px;
-                        margin-bottom: 20px;
-                        font-size: 14px;
-                    }
-                    .priority-group {
-                        display: flex;
-                        gap: 8px;
-                        margin-bottom: 16px;
-                    }
-                    .priority-btn {
-                        flex: 1;
-                        padding: 7px;
-                        border: 1px solid #ced4da;
-                        border-radius: 6px;
-                        background: #fff;
-                        font-size: 13px;
-                        cursor: pointer;
-                        text-align: center;
-                    }
-                    .priority-btn:hover { border-color: #042c53; color: #042c53; }
-                    input[type=radio]:checked + .priority-btn {
-                        background: #042c53;
-                        color: white;
-                        border-color: #042c53;
-                    }
-                    .new-request-btn {
-                        background: none;
-                        border: 1px solid #042c53;
-                        color: #042c53;
-                        border-radius: 6px;
-                        padding: 8px 20px;
-                        font-size: 14px;
-                        cursor: pointer;
-                        width: 100%;
-                        margin-top: 8px;
-                    }
-                </style>
+                    <title>Maintenance Request</title>
+                    <link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css"/>
+                    <style>
+                body {
+                    background: #f8f9fa;
+                    font-family: Arial, sans-serif;
+                    display: flex;
+                    align-items: flex-start;
+                    justify-content: center;
+                    min-height: 100vh;
+                    margin: 0;
+                    padding: 32px 16px;
+                }
+                .form-card {
+                    background: #ffffff;
+                    border-radius: 10px;
+                    border: 1px solid #dee2e6;
+                    padding: 32px;
+                    width: 100%;
+                    max-width: 560px;
+                }
+                .form-title {
+                    font-size: 20px;
+                    font-weight: 700;
+                    color: #042c53;
+                    margin-bottom: 4px;
+                }
+                .form-subtitle {
+                    font-size: 13px;
+                    color: #6c757d;
+                    margin-bottom: 24px;
+                }
+                .form-label {
+                    font-size: 13px;
+                    font-weight: 600;
+                    color: #495057;
+                    margin-bottom: 4px;
+                    display: block;
+                }
+                .form-control, .form-select {
+                    font-size: 14px;
+                    border: 1px solid #ced4da;
+                    border-radius: 6px;
+                    padding: 8px 12px;
+                    width: 100%;
+                    margin-bottom: 16px;
+                    outline: none;
+                    box-sizing: border-box;
+                }
+                .form-control:focus, .form-select:focus {
+                    border-color: #042c53;
+                    box-shadow: 0 0 0 2px rgba(4,44,83,0.15);
+                }
+                textarea.form-control {
+                    resize: vertical;
+                    min-height: 90px;
+                }
+                .btn-submit {
+                    background: #042c53;
+                    color: #ffffff;
+                    border: none;
+                    border-radius: 6px;
+                    padding: 10px 28px;
+                    font-size: 15px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    width: 100%;
+                }
+                .btn-submit:hover { background: #063a6e; }
+                .btn-submit:disabled { background: #aaa; cursor: not-allowed; }
+                .alert-success {
+                    background: #d4edda;
+                    color: #155724;
+                    border: 1px solid #c3e6cb;
+                    border-radius: 6px;
+                    padding: 12px 16px;
+                    margin-bottom: 20px;
+                    font-size: 14px;
+                }
+                .alert-error {
+                    background: #f8d7da;
+                    color: #721c24;
+                    border: 1px solid #f5c6cb;
+                    border-radius: 6px;
+                    padding: 12px 16px;
+                    margin-bottom: 20px;
+                    font-size: 14px;
+                }
+                .priority-group {
+                    display: flex;
+                    gap: 8px;
+                    margin-bottom: 16px;
+                }
+                .priority-label {
+                    flex: 1;
+                    display: block;
+                    text-align: center;
+                }
+                .priority-btn {
+                    width: 100%;
+                    padding: 7px 4px;
+                    border: 1px solid #ced4da;
+                    border-radius: 6px;
+                    background: #fff;
+                    font-size: 12px;
+                    cursor: pointer;
+                    transition: all 0.15s;
+                }
+                .priority-btn:hover { border-color: #042c53; color: #042c53; }
+                .priority-btn.active {
+                    background: #042c53;
+                    color: white;
+                    border-color: #042c53;
+                }
+                .photo-upload-area {
+                    border: 2px dashed #ced4da;
+                    border-radius: 8px;
+                    padding: 20px;
+                    text-align: center;
+                    cursor: pointer;
+                    margin-bottom: 12px;
+                    background: #fafafa;
+                    transition: border-color 0.2s;
+                }
+                .photo-upload-area:hover { border-color: #042c53; }
+                .photo-upload-area.dragover {
+                    border-color: #042c53;
+                    background: #e8eef5;
+                }
+                .upload-icon { font-size: 32px; margin-bottom: 8px; }
+                .upload-text { font-size: 13px; color: #6c757d; }
+                .upload-text strong { color: #042c53; }
+                .photo-actions {
+                    display: flex;
+                    gap: 8px;
+                    margin-bottom: 16px;
+                }
+                .btn-photo {
+                    flex: 1;
+                    padding: 8px;
+                    border: 1px solid #042c53;
+                    border-radius: 6px;
+                    background: #fff;
+                    color: #042c53;
+                    font-size: 13px;
+                    font-weight: 600;
+                    cursor: pointer;
+                }
+                .btn-photo:hover { background: #e8eef5; }
+                .photo-preview-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+                    gap: 8px;
+                    margin-bottom: 16px;
+                }
+                .photo-preview-item {
+                    position: relative;
+                    border-radius: 6px;
+                    overflow: hidden;
+                    border: 1px solid #dee2e6;
+                    aspect-ratio: 1;
+                }
+                .photo-preview-item img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    display: block;
+                }
+                .photo-remove {
+                    position: absolute;
+                    top: 3px;
+                    right: 3px;
+                    background: rgba(0,0,0,0.6);
+                    color: white;
+                    border: none;
+                    border-radius: 50%;
+                    width: 20px;
+                    height: 20px;
+                    font-size: 12px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+                .photo-count {
+                    font-size: 12px;
+                    color: #6c757d;
+                    margin-bottom: 16px;
+                }
+                .new-request-btn {
+                    background: none;
+                    border: 1px solid #042c53;
+                    color: #042c53;
+                    border-radius: 6px;
+                    padding: 8px 20px;
+                    font-size: 14px;
+                    cursor: pointer;
+                    width: 100%;
+                    margin-top: 8px;
+                }
+                .camera-modal {
+                    display: none;
+                    position: fixed;
+                    top: 0; left: 0;
+                    width: 100%; height: 100%;
+                    background: rgba(0,0,0,0.85);
+                    z-index: 9999;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                }
+                .camera-modal.open { display: flex; }
+                #camera-video {
+                    width: 100%;
+                    max-width: 420px;
+                    border-radius: 8px;
+                    background: #000;
+                }
+                .camera-controls {
+                    display: flex;
+                    gap: 12px;
+                    margin-top: 16px;
+                }
+                .btn-capture {
+                    background: #042c53;
+                    color: white;
+                    border: none;
+                    border-radius: 50%;
+                    width: 60px;
+                    height: 60px;
+                    font-size: 24px;
+                    cursor: pointer;
+                }
+                .btn-close-camera {
+                    background: #dc3545;
+                    color: white;
+                    border: none;
+                    border-radius: 50%;
+                    width: 44px;
+                    height: 44px;
+                    font-size: 18px;
+                    cursor: pointer;
+                }
+            </style>
             </head>
             <body>
+                <div class="camera-modal" id="cameraModal">
+                    <video id="camera-video" autoplay="1" playsinline="1"></video>
+                    <canvas id="camera-canvas" style="display:none;"></canvas>
+                    <div class="camera-controls">
+                        <button class="btn-close-camera" id="closeCamera">&#10005;</button>
+                        <button class="btn-capture" id="captureBtn">&#128247;</button>
+                    </div>
+                    <p style="color:#aaa; font-size:12px; margin-top:10px;">
+                        Tap &#128247; to capture — you can take multiple photos
+                    </p>
+                </div>
+
                 <div class="form-card">
 
                     <div class="form-title">&#128295; Maintenance Request</div>
-                    <div class="form-subtitle">Report an issue or schedule a maintenance task.</div>
+                    <div class="form-subtitle">
+                        Report an issue or schedule a maintenance task.
+                    </div>
 
-                    <!-- Success Message -->
                     <t t-if="success">
                         <div class="alert-success">
-                            &#10003; Your maintenance request has been submitted successfully!
+                            &#10003; Maintenance request submitted successfully!
+                            <t t-if="photo_count and photo_count > 0">
+                                <br/><b><t t-out="photo_count"/></b> photo(s) attached.
+                            </t>
+                            <t t-if="not photo_count or photo_count == 0">
+                                <br/>No photos were attached.
+                            </t>
                         </div>
                         <a href="/maintenance-request">
                             <button class="new-request-btn">Submit Another Request</button>
                         </a>
                     </t>
 
-                    <!-- Error Message -->
                     <t t-if="error">
-                        <div class="alert-error">
-                            &#9888; <t t-out="error"/>
-                        </div>
+                        <div class="alert-error">&#9888; <t t-out="error"/></div>
                     </t>
 
-                    <!-- Form -->
                     <t t-if="not success">
-                        <form action="/maintenance-request/submit" method="POST">
+                        <form id="maintenanceForm"
+                              action="/maintenance-request/submit"
+                              method="POST"
+                              enctype="multipart/form-data">
 
-                            <div class="form-label">Request Name *</div>
+                            <label class="form-label">Request Name *</label>
                             <input type="text" name="name" class="form-control"
                                    placeholder="e.g. Machine not starting"
                                    t-att-value="values.get('name', '') if values else ''"/>
 
-                            <div class="form-label">Equipment</div>
+                            <label class="form-label">Equipment</label>
                             <select name="equipment_id" class="form-select">
                                 <option value="">— Select Equipment (optional) —</option>
                                 <t t-foreach="equipments" t-as="eq">
-                                    <option t-att-value="eq.id"
-                                            t-out="eq.name"/>
+                                    <option t-att-value="eq.id" t-out="eq.name"/>
                                 </t>
                             </select>
 
-                            <div class="form-label">Maintenance Type</div>
+                            <label class="form-label">Maintenance Type</label>
                             <select name="maintenance_type" class="form-select">
                                 <option value="corrective">Corrective (Fix a problem)</option>
                                 <option value="preventive">Preventive (Scheduled check)</option>
                             </select>
 
-                            <div class="form-label">Priority</div>
+                            <label class="form-label">Priority</label>
                             <div class="priority-group">
-                                <label style="flex:1; display:block; text-align:center;">
-                                    <input type="radio" name="priority" value="0"
-                                           style="display:none;" checked="1"/>
-                                    <div class="priority-btn">Normal</div>
+                                <label class="priority-label">
+                                    <button type="button" class="priority-btn active" data-value="0">Normal</button>
                                 </label>
-                                <label style="flex:1; display:block; text-align:center;">
-                                    <input type="radio" name="priority" value="1"
-                                           style="display:none;"/>
-                                    <div class="priority-btn">Urgent</div>
+                                <label class="priority-label">
+                                    <button type="button" class="priority-btn" data-value="1">Urgent</button>
                                 </label>
-                                <label style="flex:1; display:block; text-align:center;">
-                                    <input type="radio" name="priority" value="2"
-                                           style="display:none;"/>
-                                    <div class="priority-btn">Very Urgent</div>
+                                <label class="priority-label">
+                                    <button type="button" class="priority-btn" data-value="2">Very Urgent</button>
                                 </label>
-                                <label style="flex:1; display:block; text-align:center;">
-                                    <input type="radio" name="priority" value="3"
-                                           style="display:none;"/>
-                                    <div class="priority-btn">Critical</div>
+                                <label class="priority-label">
+                                    <button type="button" class="priority-btn" data-value="3">Critical</button>
                                 </label>
                             </div>
+                            <input type="hidden" name="priority" id="priorityInput" value="0"/>
 
-                            <div class="form-label">Description</div>
+                            <label class="form-label">Description</label>
                             <textarea name="description" class="form-control"
                                       placeholder="Describe the issue in detail..."><t t-out="values.get('description', '') if values else ''"/></textarea>
 
-                            <button type="submit" class="btn-submit">Submit Request</button>
+                            <!-- Photo Upload Section -->
+                            <label class="form-label">Machine Photos</label>
+                            <div class="photo-actions">
+                                <button type="button" class="btn-photo" id="openCamera">
+                                    &#128247; Take Photo
+                                </button>
+                                <button type="button" class="btn-photo"
+                                        onclick="document.getElementById('fileInput').click()">
+                                    &#128193; Choose Files
+                                </button>
+                            </div>
+
+                            <!-- Regular file input — still useful for direct pick -->
+                            <input type="file" id="fileInput" accept="image/*"
+                                   multiple="1" style="display:none;"/>
+
+                            <!-- Base64 hidden inputs will be injected here by JS -->
+                            <div id="hiddenInputs"></div>
+
+<!--                            <div class="photo-upload-area" id="dropZone">-->
+<!--                                <div class="upload-icon">&#128444;</div>-->
+<!--                                <div class="upload-text">-->
+<!--                                    <strong>Drag and drop</strong> photos here<br/>-->
+<!--                                    or use the buttons above-->
+<!--                                </div>-->
+<!--                            </div>-->
+
+                            <div class="photo-count" id="photoCount" style="display:none;">
+                                <span id="countText">0</span> photo(s) selected
+                            </div>
+                            <div class="photo-preview-grid" id="previewGrid"></div>
+
+                            <button type="submit" class="btn-submit" id="submitBtn">
+                                Submit Request
+                            </button>
 
                         </form>
                     </t>
-
                 </div>
-
                 <script>
-                    // Priority button highlight on click
-                    document.querySelectorAll('input[name="priority"]').forEach(function(radio) {
-                        radio.addEventListener('change', function() {
-                            document.querySelectorAll('.priority-btn').forEach(function(btn) {
-                                btn.style.background = '';
-                                btn.style.color = '';
-                                btn.style.borderColor = '';
+                //<![CDATA[
+                (function() {
+                    var allFiles = [];
+                    var cameraStream = null;
+
+                    // Priority buttons
+                    document.querySelectorAll('.priority-btn').forEach(function(btn) {
+                        btn.addEventListener('click', function() {
+                            document.querySelectorAll('.priority-btn').forEach(function(b) {
+                                b.classList.remove('active');
                             });
-                            var btn = this.nextElementSibling;
-                            btn.style.background = '#042c53';
-                            btn.style.color = 'white';
-                            btn.style.borderColor = '#042c53';
+                            btn.classList.add('active');
+                            document.getElementById('priorityInput').value = btn.dataset.value;
                         });
                     });
-                </script>
 
+                    // File input
+                    document.getElementById('fileInput').addEventListener('change', function() {
+                        addFiles(Array.from(this.files));
+                        this.value = '';
+                    });
+
+                    // Drag and drop
+                    var dropZone = document.getElementById('dropZone');
+                    dropZone.addEventListener('dragover', function(e) {
+                        e.preventDefault();
+                        dropZone.classList.add('dragover');
+                    });
+                    dropZone.addEventListener('dragleave', function() {
+                        dropZone.classList.remove('dragover');
+                    });
+                    dropZone.addEventListener('drop', function(e) {
+                        e.preventDefault();
+                        dropZone.classList.remove('dragover');
+                        var files = Array.from(e.dataTransfer.files).filter(function(f) {
+                            return f.type.startsWith('image/');
+                        });
+                        addFiles(files);
+                    });
+                    dropZone.addEventListener('click', function() {
+                        document.getElementById('fileInput').click();
+                    });
+
+                    // Camera open
+                    document.getElementById('openCamera').addEventListener('click', function() {
+                        var modal = document.getElementById('cameraModal');
+                        modal.classList.add('open');
+                        navigator.mediaDevices.getUserMedia({
+                            video: { facingMode: 'environment' }
+                        }).then(function(stream) {
+                            cameraStream = stream;
+                            document.getElementById('camera-video').srcObject = stream;
+                        }).catch(function() {
+                            alert('Camera not accessible. Please use Choose Files instead.');
+                            modal.classList.remove('open');
+                        });
+                    });
+
+                    // Camera close
+                    document.getElementById('closeCamera').addEventListener('click', function() {
+                        stopCamera();
+                    });
+
+                    // Capture photo from camera
+                    document.getElementById('captureBtn').addEventListener('click', function() {
+                        var video = document.getElementById('camera-video');
+                        var canvas = document.getElementById('camera-canvas');
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+                        canvas.getContext('2d').drawImage(video, 0, 0);
+                        canvas.toBlob(function(blob) {
+                            var file = new File([blob], 'camera_' + Date.now() + '.jpg', {
+                                type: 'image/jpeg'
+                            });
+                            addFiles([file]);
+                        }, 'image/jpeg', 0.85);
+                    });
+
+                    function stopCamera() {
+                        if (cameraStream) {
+                            cameraStream.getTracks().forEach(function(t) { t.stop(); });
+                            cameraStream = null;
+                        }
+                        document.getElementById('cameraModal').classList.remove('open');
+                    }
+
+                    // Add files — convert each to base64 and add hidden input
+                    function addFiles(newFiles) {
+                        newFiles.forEach(function(file) {
+                            var index = allFiles.length;
+                            allFiles.push(file);
+                            convertToBase64(file, index);
+                            addPreview(file, index);
+                        });
+                        updateCount();
+                    }
+
+                    // ✅ KEY FIX: Convert file to base64 and inject as hidden input
+                    function convertToBase64(file, index) {
+                        var reader = new FileReader();
+                        reader.onload = function(e) {
+                            var container = document.getElementById('hiddenInputs');
+
+                            // data input
+                            var dataInput = document.createElement('input');
+                            dataInput.type = 'hidden';
+                            dataInput.name = 'photo_data_' + index;
+                            dataInput.id = 'photo_data_' + index;
+                            dataInput.value = e.target.result;
+                            container.appendChild(dataInput);
+
+                            // name input
+                            var nameInput = document.createElement('input');
+                            nameInput.type = 'hidden';
+                            nameInput.name = 'photo_name_' + index;
+                            nameInput.value = file.name || ('photo_' + index + '.jpg');
+                            container.appendChild(nameInput);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+
+                    function addPreview(file, index) {
+                        var reader = new FileReader();
+                        reader.onload = function(e) {
+                            var grid = document.getElementById('previewGrid');
+                            var item = document.createElement('div');
+                            item.className = 'photo-preview-item';
+                            item.id = 'preview_' + index;
+                            item.innerHTML =
+                                '<img src="' + e.target.result + '" alt="photo"/>' +
+                                '<button type="button" class="photo-remove" ' +
+                                'onclick="removePhoto(' + index + ')">&#10005;</button>';
+                            grid.appendChild(item);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+
+                    window.removePhoto = function(index) {
+                        allFiles[index] = null;
+
+                        // Remove preview
+                        var preview = document.getElementById('preview_' + index);
+                        if (preview) preview.remove();
+
+                        // Remove hidden inputs
+                        var dataInput = document.getElementById('photo_data_' + index);
+                        if (dataInput) dataInput.remove();
+
+                        updateCount();
+                    };
+
+                    function updateCount() {
+                        var active = allFiles.filter(function(f) { return f !== null; });
+                        var countEl = document.getElementById('photoCount');
+                        if (active.length > 0) {
+                            countEl.style.display = 'block';
+                            document.getElementById('countText').innerText = active.length;
+                        } else {
+                            countEl.style.display = 'none';
+                        }
+                    }
+
+                })();
+                //]]>
+                </script>
             </body>
         </html>
     </template>
