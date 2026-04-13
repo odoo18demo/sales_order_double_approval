@@ -1,6 +1,7 @@
-from odoo import fields, models
-import uuid
+# Add this at the top of your models.py
 import base64
+import uuid  # already there
+from odoo import fields, models
 
 class SaleOrder(models.Model):
     """ Inheriting sale.order to add new state """
@@ -53,30 +54,32 @@ class SaleOrder(models.Model):
         return True
 
     def _send_approval_email(self):
-        """ Send email to all sales managers """
+        """ Send email to all sales managers with Sale Order PDF attachment """
         template = self.env.ref('sales_order_double_approval.sale_order_approval_email_template')
-        managers = self.env['res.users'].search([('groups_id', 'in', self.env.ref('sales_team.group_sale_manager').id)])
+        managers = self.env['res.users'].search([
+            ('groups_id', 'in', self.env.ref('sales_team.group_sale_manager').id)
+        ])
 
-        # Safe report fetch
-        report = self.env['ir.actions.report']._get_report_from_name('sale.report_saleorder')
-        pdf_content, _ = report._render_qweb_pdf(self.id)
+        # ✅ Fix: Use self.ids (list) instead of self.id (integer)
+        pdf_content, _ = self.env['ir.actions.report']._render_qweb_pdf(
+            'sale.report_saleorder', self.ids
+        )
 
         attachment = self.env['ir.attachment'].create({
             'name': f'Sale Order {self.name}.pdf',
             'type': 'binary',
-            'datas': base64.b64encode(pdf_content),
+            'datas': base64.b64encode(pdf_content).decode('utf-8'),  # ✅ Add .decode()
             'res_model': 'sale.order',
             'res_id': self.id,
             'mimetype': 'application/pdf',
         })
 
-        # Send email with attachment
         template.sudo().send_mail(
             self.id,
             force_send=True,
             email_values={
                 'email_to': ','.join([m.email for m in managers if m.email]),
-                'attachment_ids': [(6, 0, [attachment.id])]
+                'attachment_ids': [(6, 0, [attachment.id])],
             }
         )
 
