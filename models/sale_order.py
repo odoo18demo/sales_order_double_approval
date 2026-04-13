@@ -1,5 +1,6 @@
 from odoo import fields, models
 import uuid
+import base64
 
 class SaleOrder(models.Model):
     """ Inheriting sale.order to add new state """
@@ -55,8 +56,30 @@ class SaleOrder(models.Model):
         """ Send email to all sales managers """
         template = self.env.ref('sales_order_double_approval.sale_order_approval_email_template')
         managers = self.env['res.users'].search([('groups_id', 'in', self.env.ref('sales_team.group_sale_manager').id)])
-        template.sudo().send_mail(self.id, force_send=True,
-                                  email_values={'email_to': ','.join([m.email for m in managers if m.email])})
+
+        # Generate PDF
+        report = self.env.ref('sale.action_report_saleorder')
+        pdf_content, _ = report._render_qweb_pdf(self.id)
+
+        # Create attachment
+        attachment = self.env['ir.attachment'].create({
+            'name': f'Sale Order {self.name}.pdf',
+            'type': 'binary',
+            'datas': base64.b64encode(pdf_content),
+            'res_model': 'sale.order',
+            'res_id': self.id,
+            'mimetype': 'application/pdf',
+        })
+
+        # Send email with attachment
+        template.sudo().send_mail(
+            self.id,
+            force_send=True,
+            email_values={
+                'email_to': ','.join([m.email for m in managers if m.email]),
+                'attachment_ids': [(6, 0, [attachment.id])]
+            }
+        )
 
     def get_approval_url(self, action):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
