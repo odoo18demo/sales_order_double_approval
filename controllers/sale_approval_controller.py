@@ -26,7 +26,6 @@ class SaleApprovalController(http.Controller):
 
         if action == 'approve':
             order.sudo().button_approve()
-            # ✅ Post to chatter
             order.sudo().message_post(
                 body="✅ <b>Approved</b> via email link.",
                 message_type='comment',
@@ -38,7 +37,6 @@ class SaleApprovalController(http.Controller):
 
         elif action == 'reject':
             order.sudo().action_cancel()
-            # ❌ Post to chatter
             order.sudo().message_post(
                 body="❌ <b>Rejected</b> via email link.",
                 message_type='comment',
@@ -53,7 +51,7 @@ class SaleApprovalController(http.Controller):
             color = "#666"
             detail = "Unknown action requested."
 
-        # Auto-close tab after 5 seconds
+        # ✅ ONLY THIS html VARIABLE CHANGED
         html = """
         <html>
         <head>
@@ -68,14 +66,15 @@ class SaleApprovalController(http.Controller):
         <body>
             <div class="badge">%s</div>
             <p style="font-size:16px; margin-top:20px;">%s</p>
-            <p class="counter">This window will close in <b id="sec">5</b> seconds...</p>
+            <p class="counter">This tab will close in <b id="sec">3</b> seconds...</p>
             <script>
-                var s = 5;
+                var s = 3;
                 var t = setInterval(function() {
                     s--;
                     document.getElementById('sec').innerText = s;
                     if (s <= 0) {
                         clearInterval(t);
+                        window.open('', '_self', '');
                         window.close();
                     }
                 }, 1000);

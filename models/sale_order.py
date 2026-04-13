@@ -105,7 +105,7 @@ class SaleOrder(models.Model):
 
         # ✅ Post a clean chatter message WITHOUT approve/reject links
         self.message_post(
-            body=f'⏳ Sale Order <b>{self.name}</b> is pending approval. '
+            body=f'⏳ Sale Order {self.name} is pending approval. '
                  f'Approval email has been sent to Sales Managers.',
             message_type='notification',
             subtype_xmlid='mail.mt_note',
