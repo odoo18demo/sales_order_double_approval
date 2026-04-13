@@ -54,33 +54,61 @@ class SaleOrder(models.Model):
         return True
 
     def _send_approval_email(self):
-        """ Send email to all sales managers with Sale Order PDF attachment """
-        template = self.env.ref('sales_order_double_approval.sale_order_approval_email_template')
+        """Send approval email directly to managers without logging links in chatter"""
         managers = self.env['res.users'].search([
             ('groups_id', 'in', self.env.ref('sales_team.group_sale_manager').id)
         ])
 
-        # ✅ Fix: Use self.ids (list) instead of self.id (integer)
-        pdf_content, _ = self.env['ir.actions.report']._render_qweb_pdf(
+        approve_url = self.get_approval_url('approve')
+        reject_url = self.get_approval_url('reject')
+
+        # Generate PDF attachment
+        pdf_content, _ = self.sudo().env['ir.actions.report']._render_qweb_pdf(
             'sale.report_saleorder', self.ids
         )
-
-        attachment = self.env['ir.attachment'].create({
+        attachment = self.env['ir.attachment'].sudo().create({
             'name': f'Sale Order {self.name}.pdf',
             'type': 'binary',
-            'datas': base64.b64encode(pdf_content).decode('utf-8'),  # ✅ Add .decode()
+            'datas': base64.b64encode(pdf_content).decode('utf-8'),
             'res_model': 'sale.order',
             'res_id': self.id,
             'mimetype': 'application/pdf',
         })
 
-        template.sudo().send_mail(
-            self.id,
-            force_send=True,
-            email_values={
-                'email_to': ','.join([m.email for m in managers if m.email]),
-                'attachment_ids': [(6, 0, [attachment.id])],
-            }
+        body_html = f"""
+        <div style="font-family:Arial; font-size:13px;">
+            <p>Dear Manager,</p>
+            <p>Sale Order <strong>{self.name}</strong> requires your approval.</p>
+            <p>Customer: <strong>{self.partner_id.name}</strong></p>
+            <p>Amount: <strong>{self.currency_id.symbol}{self.amount_total:.2f}</strong></p>
+            <p>Please take action:</p>
+            <p>
+                ✅ <a href="{approve_url}"><strong>Approve</strong></a>
+                &nbsp;&nbsp;&nbsp;
+                ❌ <a href="{reject_url}"><strong>Reject</strong></a>
+            </p>
+            <p>Thank you!</p>
+        </div>
+        """
+
+        # ✅ Create mail.mail directly — NOT linked to res_id
+        # So it will NEVER appear in chatter
+        mail = self.env['mail.mail'].sudo().create({
+            'subject': f'Sale Order {self.name} Requires Approval',
+            'email_from': self.company_id.email or self.env.user.email,
+            'email_to': ','.join([m.email for m in managers if m.email]),
+            'body_html': body_html,
+            'attachment_ids': [(6, 0, [attachment.id])],
+            # ✅ No res_id / model = not linked to record = not shown in chatter
+        })
+        mail.sudo().send()
+
+        # ✅ Post a clean chatter message WITHOUT approve/reject links
+        self.message_post(
+            body=f'⏳ Sale Order <b>{self.name}</b> is pending approval. '
+                 f'Approval email has been sent to Sales Managers.',
+            message_type='notification',
+            subtype_xmlid='mail.mt_note',
         )
 
     def get_approval_url(self, action):
