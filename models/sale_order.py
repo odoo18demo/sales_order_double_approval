@@ -57,11 +57,10 @@ class SaleOrder(models.Model):
         template = self.env.ref('sales_order_double_approval.sale_order_approval_email_template')
         managers = self.env['res.users'].search([('groups_id', 'in', self.env.ref('sales_team.group_sale_manager').id)])
 
-        # Generate PDF
-        report = self.env.ref('sale.action_report_saleorder')
+        # Safe report fetch
+        report = self.env['ir.actions.report']._get_report_from_name('sale.report_saleorder')
         pdf_content, _ = report._render_qweb_pdf(self.id)
 
-        # Create attachment
         attachment = self.env['ir.attachment'].create({
             'name': f'Sale Order {self.name}.pdf',
             'type': 'binary',
