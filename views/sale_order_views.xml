@@ -12,14 +12,11 @@
             <xpath expr="//button[@name='action_quotation_send']" position="after">
                 <button name="button_approve" string="Approve"
                         class="oe_highlight" type="object"
-                        invisible="state not in ['to_approve']"
-                        groups="sales_team.group_sale_manager"/>
+                        invisible="state != 'to_approve' or team_id.user_id != uid"/>
                 <button name="action_cancel" string="Cancel"
                         class="oe_highlight" type="object"
-                        invisible="state not in ['to_approve']"
-                        groups="sales_team.group_sale_manager"/>
+                        invisible="state != 'to_approve' or team_id.user_id != uid"/>
             </xpath>
-
             <xpath expr="//field[@name='source_id']" position="after">
                 <field name="approval_token" readonly="1"
                        invisible="state != 'to_approve'"/>

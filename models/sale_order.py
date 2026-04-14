@@ -34,7 +34,7 @@ class SaleOrder(models.Model):
         if self.amount_total <= min_amount:
             return False
 
-        if self.env.user.has_group('sales_team.group_sale_manager'):
+        if self.env.user == self.team_id.user_id:
             return False
 
         return True
@@ -55,9 +55,12 @@ class SaleOrder(models.Model):
 
     def _send_approval_email(self):
         """Send approval email directly to managers without logging links in chatter"""
-        managers = self.env['res.users'].search([
-            ('groups_id', 'in', self.env.ref('sales_team.group_sale_manager').id)
-        ])
+        leader = self.team_id.user_id
+
+        if not leader or not leader.email:
+            return
+
+        email_to = leader.email
 
         approve_url = self.get_approval_url('approve')
         reject_url = self.get_approval_url('reject')
@@ -77,7 +80,7 @@ class SaleOrder(models.Model):
 
         body_html = f"""
         <div style="font-family:Arial; font-size:13px;">
-            <p>Dear Manager,</p>
+            <p>Dear ${self.team_id.user_id.name},</p>
             <p>Sale Order <strong>{self.name}</strong> requires your approval.</p>
             <p>Customer: <strong>{self.partner_id.name}</strong></p>
             <p>Amount: <strong>{self.currency_id.symbol}{self.amount_total:.2f}</strong></p>
@@ -96,7 +99,7 @@ class SaleOrder(models.Model):
         mail = self.env['mail.mail'].sudo().create({
             'subject': f'Sale Order {self.name} Requires Approval',
             'email_from': self.company_id.email or self.env.user.email,
-            'email_to': ','.join([m.email for m in managers if m.email]),
+            'email_to': email_to,
             'body_html': body_html,
             'attachment_ids': [(6, 0, [attachment.id])],
             # ✅ No res_id / model = not linked to record = not shown in chatter
