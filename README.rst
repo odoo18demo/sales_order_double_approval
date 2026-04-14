@@ -12,7 +12,7 @@ Configuration
 
 Company
 -------
-* `Cybrosys Techno Solutions <https://cybrosys.com/>`__
+* `skysecretary <https://skysecretary.com/>`__
 
 License
 -------
@@ -21,16 +21,13 @@ Affero General Public License, v3.0 (AGPL v3)
 
 Credits
 -------
-* Developers : (V15) Mufeeda P P,
-               (V16) Ajith V,
-               (V17) Ajith V,
-               (V18) Aysha Shalin
-  Contact: odoo@cybrosys.com
+* Developers :(V18) Adil
+  Contact: info@skysecretary.com
 
 Contacts
 --------
-* Mail Contact : odoo@cybrosys.com
-* Website : https://cybrosys.com
+* Mail Contact : info@skysecretary.com
+* Website : https://skysecretary.com
 
 Bug Tracker
 -----------
@@ -39,11 +36,11 @@ Bugs are tracked on GitHub Issues. In case of trouble, please check there if you
 Maintainer
 ==========
 .. image:: https://cybrosys.com/images/logo.png
-   :target: https://cybrosys.com
+   :target: https://skysecretary.com
 
-This module is maintained by Cybrosys Technologies.
+This module is maintained by skysecretary.
 
-For support and more information, please visit `Our Website <https://cybrosys.com/>`__
+For support and more information, please visit `Our Website <https://skysecretary.com/>`__
 
 Further information
 ===================

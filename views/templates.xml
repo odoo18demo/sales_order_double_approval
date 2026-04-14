@@ -4,7 +4,6 @@
         <html>
             <head>
                 <meta charset="UTF-8"/>
-                <meta http-equiv="refresh" content="30"/>
                 <title>Manufacturing Orders</title>
                 <link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css"/>
                 <style>
@@ -19,9 +18,15 @@
                         color: #6c757d;
                         margin-bottom: 16px;
                     }
+                    .page-title {
+                        font-size: 20px;
+                        font-weight: 700;
+                        color: #042c53;
+                        margin-bottom: 20px;
+                    }
                     .mo-grid {
                         display: grid;
-                        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
                         gap: 16px;
                     }
                     .mo-card {
@@ -29,150 +34,289 @@
                         border-radius: 8px;
                         border: 1px solid #dee2e6;
                         overflow: hidden;
+                        cursor: pointer;
+                        transition: box-shadow 0.2s;
+                    }
+                    .mo-card:hover {
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+                        border-color: #042c53;
                     }
                     .mo-card-header {
                         padding: 12px 16px;
                         font-weight: 600;
                         font-size: 14px;
                         color: #ffffff;
+                        background: #042c53;
                     }
-                    .mo-card-header.confirmed { background: #042c53; }
-                    .mo-card-header.progress  { background: #f0ad4e; color: #212529; }
-                    .mo-card-header.to_close  { background: #28a745; }
-                    .mo-card-body {
-                        padding: 14px 16px;
+                    .mo-card-body { padding: 14px 16px; }
+                    .mo-qty {
+                        font-size: 28px;
+                        font-weight: 700;
+                        color: #042c53;
                     }
-                    .mo-product {
-                        font-size: 15px;
-                        font-weight: 600;
-                        color: #212529;
-                        margin-bottom: 8px;
-                    }
-                    .mo-meta {
-                        font-size: 13px;
+                    .mo-qty-label {
+                        font-size: 12px;
                         color: #6c757d;
-                        margin-bottom: 4px;
+                        margin-top: 2px;
                     }
-                    .mo-meta span {
-                        color: #212529;
+                    .mo-order-count {
+                        margin-top: 10px;
+                        font-size: 12px;
+                        color: #6c757d;
+                        border-top: 1px solid #f1f3f5;
+                        padding-top: 8px;
+                    }
+                    .click-hint {
+                        font-size: 11px;
+                        color: #042c53;
+                        margin-top: 6px;
                         font-weight: 500;
                     }
-                    .mo-divider {
-                        border: none;
-                        border-top: 1px solid #dee2e6;
-                        margin: 10px 0;
-                    }
-                    .mo-components-title {
-                        font-size: 12px;
-                        font-weight: 600;
-                        color: #6c757d;
-                        text-transform: uppercase;
-                        letter-spacing: 0.5px;
-                        margin-bottom: 6px;
-                    }
-                    .mo-component-item {
-                        font-size: 13px;
-                        color: #495057;
-                        padding: 2px 0;
-                        border-bottom: 1px solid #f1f3f5;
-                    }
-                    .status-pill {
-                        display: inline-block;
-                        padding: 2px 10px;
-                        border-radius: 12px;
-                        font-size: 11px;
-                        font-weight: 600;
-                    }
-                    .status-pill.confirmed { background: #e0f5f5; color: #042c53; }
-                    .status-pill.progress  { background: #fff3cd; color: #856404; }
-                    .status-pill.to_close  { background: #d4edda; color: #155724; }
                     .empty-state {
                         text-align: center;
                         padding: 60px 20px;
                         color: #6c757d;
                         font-size: 15px;
                     }
-                    .counter {
-                        font-size: 12px;
-                        color: #adb5bd;
+                    .modal-overlay {
+                        display: none;
+                        position: fixed;
+                        top: 0; left: 0;
+                        width: 100%; height: 100%;
+                        background: rgba(0,0,0,0.5);
+                        z-index: 9999;
+                        align-items: center;
+                        justify-content: center;
                     }
+                    .modal-overlay.open { display: flex; }
+                    .modal-box {
+                        background: #fff;
+                        border-radius: 10px;
+                        width: 90%;
+                        max-width: 650px;
+                        max-height: 80vh;
+                        overflow-y: auto;
+                        box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+                    }
+                    .modal-header {
+                        background: #042c53;
+                        color: white;
+                        padding: 16px 20px;
+                        border-radius: 10px 10px 0 0;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        position: sticky;
+                        top: 0;
+                    }
+                    .modal-header h3 { margin: 0; font-size: 16px; font-weight: 600; }
+                    .modal-close {
+                        background: none;
+                        border: none;
+                        color: white;
+                        font-size: 20px;
+                        cursor: pointer;
+                        line-height: 1;
+                    }
+                    .modal-body { padding: 20px; }
+                    .modal-total {
+                        background: #f0f4f8;
+                        border-radius: 6px;
+                        padding: 12px 16px;
+                        margin-bottom: 16px;
+                        font-size: 14px;
+                        color: #042c53;
+                        font-weight: 600;
+                    }
+                    .customer-table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        font-size: 13px;
+                    }
+                    .customer-table th {
+                        background: #f8f9fa;
+                        padding: 8px 12px;
+                        text-align: left;
+                        font-weight: 600;
+                        color: #495057;
+                        border-bottom: 2px solid #dee2e6;
+                    }
+                    .customer-table td {
+                        padding: 8px 12px;
+                        border-bottom: 1px solid #f1f3f5;
+                        color: #212529;
+                    }
+                    .customer-table tr:hover td { background: #f8f9fa; }
+                    .state-badge {
+                        display: inline-block;
+                        padding: 2px 8px;
+                        border-radius: 10px;
+                        font-size: 11px;
+                        font-weight: 600;
+                    }
+                    .state-confirmed { background: #e0eaf5; color: #042c53; }
+                    .state-progress  { background: #fff3cd; color: #856404; }
+                    .state-to_close  { background: #d4edda; color: #155724; }
                 </style>
             </head>
             <body>
 
-                <div class="refresh-bar">
-                    Auto-refresh in <b id="countdown">30</b>s
+                <!-- Detail Modal -->
+                <div class="modal-overlay" id="detailModal">
+                    <div class="modal-box">
+                        <div class="modal-header">
+                            <h3 id="modalTitle">Product Details</h3>
+                            <button class="modal-close" id="closeModal">&#10005;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="modal-total" id="modalTotal"></div>
+                            <table class="customer-table">
+                                <thead>
+                                    <tr>
+                                        <th>Order</th>
+                                        <th>Origin (SO)</th>
+                                        <th>Customer</th>
+                                        <th>Qty</th>
+    <!--                                    <th>Status</th>-->
+                                        <th>Scheduled</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="modalTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="mo-grid">
+                <!-- Per-product hidden inputs — most reliable data passing method -->
+                <t t-foreach="products" t-as="prod">
+                    <input type="hidden"
+                           t-attf-id="pname_{{ prod_index }}"
+                           t-att-value="prod['product_name']"/>
+                    <input type="hidden"
+                           t-attf-id="pqty_{{ prod_index }}"
+                           t-att-value="prod['total_qty']"/>
+                    <input type="hidden"
+                           t-attf-id="puom_{{ prod_index }}"
+                           t-att-value="prod['uom']"/>
+                    <input type="hidden"
+                           t-attf-id="porders_{{ prod_index }}"
+                           t-att-value="prod['orders_json']"/>
+                </t>
 
-                    <t t-foreach="productions" t-as="mo">
+                <div class="refresh-bar">
+                    Auto-refresh in <b id="countdown">20</b>s
+                </div>
 
-                        <div class="mo-card">
+                <div class="page-title">&#127981; Manufacturing Overview</div>
 
-                            <div t-attf-class="mo-card-header {{ mo.state }}">
-                                <t t-out="mo.name"/>
-                                — <t t-out="mo.product_id.name"/>
+                <div class="mo-grid" id="moGrid">
+                    <t t-foreach="products" t-as="prod">
+                        <div class="mo-card" t-attf-data-index="{{ prod_index }}">
+                            <div class="mo-card-header">
+                                <t t-out="prod['product_name']"/>
                             </div>
-
                             <div class="mo-card-body">
-
-                                <div class="mo-meta">
-                                    Qty:
-                                    <span>
-                                        <t t-out="mo.product_qty"/>
-                                        <t t-out="mo.product_uom_id.name"/>
+                                <div class="mo-qty">
+                                    <t t-out="prod['total_qty']"/>
+                                    <span style="font-size:14px; font-weight:400; color:#6c757d;">
+                                        <t t-out="prod['uom']"/>
                                     </span>
                                 </div>
-
-                                <div class="mo-meta">
-                                    Scheduled:
-                                    <span t-out="mo.date_start or '—'"/>
+                                <div class="mo-qty-label">Total Quantity</div>
+                                <div class="mo-order-count">
+                                    <t t-out="len(prod['orders'])"/> order(s) active
                                 </div>
-
-                                <div class="mo-meta">
-                                    Status:
-                                    <span t-attf-class="status-pill {{ mo.state }}">
-                                        <t t-if="mo.state == 'confirmed'">Confirmed</t>
-                                        <t t-if="mo.state == 'progress'">In Progress</t>
-                                        <t t-if="mo.state == 'to_close'">To Close</t>
-                                    </span>
-                                </div>
-
-                                <t t-if="mo.move_raw_ids">
-                                    <hr class="mo-divider"/>
-                                    <div class="mo-components-title">Components</div>
-                                    <t t-foreach="mo.move_raw_ids" t-as="line">
-                                        <div class="mo-component-item">
-                                            <t t-out="line.product_id.name"/>
-                                            —
-                                            <t t-out="line.product_uom_qty"/>
-                                            <t t-out="line.product_uom.name"/>
-                                        </div>
-                                    </t>
-                                </t>
-
+                                <div class="click-hint">&#128065; Click to view customers</div>
                             </div>
                         </div>
-
                     </t>
 
-                    <t t-if="not productions">
+                    <t t-if="not products">
                         <div class="empty-state">
                             No active manufacturing orders found.
                         </div>
                     </t>
-
                 </div>
 
                 <script>
-                    var sec = 10;
-                    setInterval(function() {
-                        sec--;
-                        var el = document.getElementById('countdown');
-                        if (el) el.innerText = sec;
-                        if (sec &lt;= 0) window.location.reload();
-                    }, 1000);
+                //<![CDATA[
+                // Build productsData from individual hidden inputs
+                var productsData = [];
+                var i = 0;
+                while (document.getElementById('pname_' + i)) {
+                    var ordersRaw = document.getElementById('porders_' + i).value;
+                    var orders = [];
+                    try { orders = JSON.parse(ordersRaw); } catch(e) { orders = []; }
+                    productsData.push({
+                        product_name: document.getElementById('pname_' + i).value,
+                        total_qty: document.getElementById('pqty_' + i).value,
+                        uom: document.getElementById('puom_' + i).value,
+                        orders: orders
+                    });
+                    i++;
+                }
+
+                // Click handler using event delegation
+                document.getElementById('moGrid').addEventListener('click', function(e) {
+                    var card = e.target.closest('.mo-card');
+                    if (!card) return;
+                    var index = parseInt(card.getAttribute('data-index'), 10);
+                    showDetail(index);
+                });
+
+                function showDetail(index) {
+                    var prod = productsData[index];
+                    if (!prod) return;
+
+                    document.getElementById('modalTitle').innerText = prod.product_name;
+                    document.getElementById('modalTotal').innerHTML =
+                        'Total: <b>' + prod.total_qty + ' ' + prod.uom +
+                        '</b> across ' + prod.orders.length + ' order(s)';
+
+                    var tbody = document.getElementById('modalTableBody');
+                    tbody.innerHTML = '';
+     if (prod.orders.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#6c757d;">No orders found</td></tr>';
+                    } else {
+                        prod.orders.forEach(function(order) {
+                            var stateClass = 'state-' + order.state;
+                            var stateLabel =
+                                order.state === 'confirmed' ? 'Confirmed' :
+                                order.state === 'progress'  ? 'In Progress' :
+                                order.state === 'to_close'  ? 'To Close' : order.state;
+                            tbody.innerHTML +=
+                                '<tr>' +
+                                '<td><b>' + order.mo_name + '</b></td>' +
+                                '<td>' + order.origin + '</td>' +
+                                '<td>' + order.customer + '</td>' +
+                                '<td>' + order.qty + ' ' + prod.uom + '</td>' +
+                                '<td>' + order.date + '</td>' +
+                                '</tr>';
+                        });
+                    }
+
+                    document.getElementById('detailModal').classList.add('open');
+
+                }
+
+                document.getElementById('closeModal').addEventListener('click', function() {
+                    document.getElementById('detailModal').classList.remove('open');
+                });
+
+                document.getElementById('detailModal').addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.classList.remove('open');
+                    }
+                });
+
+                var sec = 20;
+                setInterval(function() {
+                    sec--;
+                    var el = document.getElementById('countdown');
+                    if (el) el.innerText = sec;
+                    if (sec <= 0) window.location.reload();
+                }, 1000);
+                //]]>
                 </script>
 
             </body>

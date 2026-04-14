@@ -27,7 +27,7 @@ class SaleApprovalController(http.Controller):
         if action == 'approve':
             order.sudo().button_approve()
             order.sudo().message_post(
-                body="✅ <b>Approved</b> via email link.",
+                body="✅ Approved via email link.",
                 message_type='comment',
                 subtype_xmlid='mail.mt_note',
             )
@@ -38,7 +38,7 @@ class SaleApprovalController(http.Controller):
         elif action == 'reject':
             order.sudo().action_cancel()
             order.sudo().message_post(
-                body="❌ <b>Rejected</b> via email link.",
+                body="❌ Rejected via email link.",
                 message_type='comment',
                 subtype_xmlid='mail.mt_note',
             )
