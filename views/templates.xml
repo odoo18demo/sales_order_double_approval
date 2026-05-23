@@ -173,12 +173,12 @@
                             <table class="customer-table">
                                 <thead>
                                     <tr>
-                                        <th>Order</th>
+<!--                                        <th>Order</th>-->
                                         <th>Origin (SO)</th>
                                         <th>Customer</th>
                                         <th>Qty</th>
     <!--                                    <th>Status</th>-->
-                                        <th>Scheduled</th>
+                                        <th>Order Date</th>
                                     </tr>
                                 </thead>
                                 <tbody id="modalTableBody"></tbody>
@@ -286,7 +286,6 @@
                                 order.state === 'to_close'  ? 'To Close' : order.state;
                             tbody.innerHTML +=
                                 '<tr>' +
-                                '<td><b>' + order.mo_name + '</b></td>' +
                                 '<td>' + order.origin + '</td>' +
                                 '<td>' + order.customer + '</td>' +
                                 '<td>' + order.qty + ' ' + prod.uom + '</td>' +
