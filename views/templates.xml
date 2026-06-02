@@ -191,6 +191,7 @@
                                         <th>Salesperson</th>
                                         <th>Item</th>
                                         <th>Qty</th>
+                                        <th>Color</th>
                                         <th>Delivery Date</th>
                                         <th>Notes</th>
                                     </tr>
@@ -356,6 +357,7 @@
                                     '<td>' + order.salesperson + '</td>' +
                                     '<td>' + order.item_name + '</td>' +
                                     '<td>' + order.qty + ' ' + prod.uom +'</td>' +
+                                    '<td>' + (order.color || '') + '</td>' +
                                     '<td>' + order.delivery_date + '</td>' +
                                     '<td>' +
                                     (
