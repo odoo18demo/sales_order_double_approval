@@ -12,7 +12,7 @@ class MrpScreen(http.Controller):
     def mrp_screen(self, **kwargs):
 
         all_productions = request.env['mrp.production'].search([
-            ('state', 'in', ['confirmed', 'progress', 'to_close'])
+            ('state', 'in', ['draft', 'confirmed', 'progress', 'to_close'])
         ], order='date_start asc')
         productions = request.env['mrp.production']
         product_map = {}
