@@ -98,7 +98,7 @@ class SaleOrder(models.Model):
         # So it will NEVER appear in chatter
         mail = self.env['mail.mail'].sudo().create({
             'subject': f'Sale Order {self.name} Requires Approval',
-            'email_from': self.company_id.email or self.env.user.email,
+            'email_from': self.user_id.email or self.company_id.email,
             'email_to': email_to,
             'body_html': body_html,
             'attachment_ids': [(6, 0, [attachment.id])],
