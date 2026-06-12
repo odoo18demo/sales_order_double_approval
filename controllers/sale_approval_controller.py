@@ -22,52 +22,52 @@ class SaleApprovalController(http.Controller):
         if not order:
             return request.make_response(
                 "<html><body style='font-family:Arial;text-align:center;margin-top:80px'>"
-                "<h2>Invalid or expired verification URL link.</h2>"
+                "<h2>Invalid or expired approval link.</h2>"
                 "</body></html>",
                 headers=[('Content-Type', 'text/html')]
             )
 
         if action in ('approve', 'reject'):
             detail = order.sudo()._process_approval(action, approval_step)
-            msg = "Action Processed Successfully" if action == 'approve' else "Revision Required Applied"
+            msg = "Approved" if action == 'approve' else "Revision Required"
             color = "#28a745" if action == 'approve' else "#dc3545"
         else:
-            msg = "Action Error"
+            msg = "Invalid action"
             color = "#666"
-            detail = "An unidentifiable processing step was encountered."
+            detail = "Unknown action requested."
 
-        html = f"""
+        html = """
         <html>
         <head>
-            <title>{msg}</title>
+            <title>%s</title>
             <style>
-                body {{ font-family: Arial, sans-serif; text-align: center; margin-top: 80px; background-color: #f8f9fa; }}
-                .container {{ display: inline-block; padding: 30px; background: #fff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }}
-                .badge {{ display: inline-block; padding: 12px 30px; border-radius: 8px;
-                         background: {color}; color: white; font-size: 22px; font-weight: bold; }}
-                .details {{ font-size: 16px; margin-top: 20px; color: #333; }}
-                .counter {{ font-size: 14px; color: #888; margin-top: 20px; }}
+                body { font-family: Arial, sans-serif; text-align: center; margin-top: 80px; }
+                .badge { display: inline-block; padding: 12px 30px; border-radius: 8px;
+                         background: %s; color: white; font-size: 22px; font-weight: bold; }
+                .counter { font-size: 14px; color: #888; margin-top: 20px; }
             </style>
         </head>
         <body>
-            <div class="container">
-                <div class="badge">{msg}</div>
-                <p class="details">{detail}</p>
-                <p class="counter">This window session will conclude in <b id="sec">4</b> seconds...</p>
-            </div>
+            <div class="badge">%s</div>
+            <p style="font-size:16px; margin-top:20px;">%s</p>
+            <p class="counter">This tab will close in <b id="sec">3</b> seconds...</p>
             <script>
-                var s = 4;
-                var t = setInterval(function() {{
+                var s = 3;
+                var t = setInterval(function() {
                     s--;
                     document.getElementById('sec').innerText = s;
-                    if (s <= 0) {{
+                    if (s <= 0) {
                         clearInterval(t);
                         window.open('', '_self', '');
                         window.close();
-                    }}
-                }}, 1000);
+                    }
+                }, 1000);
             </script>
         </body>
         </html>
-        """
-        return request.make_response(html, headers=[('Content-Type', 'text/html')])
+        """ % (msg, color, msg, detail)
+
+        return request.make_response(
+            html,
+            headers=[('Content-Type', 'text/html')]
+        )
