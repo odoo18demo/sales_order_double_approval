@@ -4,13 +4,16 @@ from odoo.http import request
 class SaleApprovalController(http.Controller):
 
     @http.route(
-        '/sale_approval/<int:order_id>/<string:token>/<string:action>',
+        [
+            '/sale_approval/<int:order_id>/<string:token>/<string:action>',
+            '/sale_approval/<int:order_id>/<string:token>/<string:approval_step>/<string:action>',
+        ],
         type='http',
         auth='public',
         methods=['GET'],
         csrf=False
     )
-    def sale_approval(self, order_id, token, action, **kw):
+    def sale_approval(self, order_id, token, action, approval_step='revisor', **kw):
         order = request.env['sale.order'].sudo().search([
             ('id', '=', order_id),
             ('approval_token', '=', token),
@@ -19,39 +22,20 @@ class SaleApprovalController(http.Controller):
         if not order:
             return request.make_response(
                 "<html><body style='font-family:Arial;text-align:center;margin-top:80px'>"
-                "<h2>⚠️ Invalid or expired approval link.</h2>"
+                "<h2>Invalid or expired approval link.</h2>"
                 "</body></html>",
                 headers=[('Content-Type', 'text/html')]
             )
 
-        if action == 'approve':
-            order.sudo().button_approve()
-            order.sudo().message_post(
-                body="✅ Approved via email link.",
-                message_type='comment',
-                subtype_xmlid='mail.mt_note',
-            )
-            msg = "✅ Approved"
-            color = "#28a745"
-            detail = "Sale Order <b>%s</b> has been approved successfully." % order.name
-
-        elif action == 'reject':
-            order.sudo().action_cancel()
-            order.sudo().message_post(
-                body="❌ Rejected via email link.",
-                message_type='comment',
-                subtype_xmlid='mail.mt_note',
-            )
-            msg = "❌ Rejected"
-            color = "#dc3545"
-            detail = "Sale Order <b>%s</b> has been rejected." % order.name
-
+        if action in ('approve', 'reject'):
+            detail = order.sudo()._process_approval(action, approval_step)
+            msg = "Approved" if action == 'approve' else "Revision Required"
+            color = "#28a745" if action == 'approve' else "#dc3545"
         else:
             msg = "Invalid action"
             color = "#666"
             detail = "Unknown action requested."
 
-        # ✅ ONLY THIS html VARIABLE CHANGED
         html = """
         <html>
         <head>

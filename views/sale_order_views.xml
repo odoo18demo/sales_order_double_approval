@@ -9,6 +9,16 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
+            <xpath expr="(//button[@name='action_confirm'])[1]" position="before">
+                <button name="action_confirm" string="Submit for Approval"
+                        class="oe_highlight" type="object"
+                        invisible="not requires_approval or state not in ['draft', 'sent']"/>
+            </xpath>
+
+            <xpath expr="//button[@name='action_confirm']" position="attributes">
+                <attribute name="invisible">requires_approval or state not in ['draft', 'sent']</attribute>
+            </xpath>
+
             <xpath expr="//button[@name='action_quotation_send']" position="after">
                 <button name="button_approve" string="Approve"
                         class="oe_highlight" type="object"
@@ -21,6 +31,9 @@
             </xpath>
 
             <xpath expr="//field[@name='source_id']" position="after">
+                <field name="requires_approval" invisible="1"/>
+                <field name="approval_stage" readonly="1"
+                       invisible="state != 'to_approve'"/>
                 <field name="approval_token" readonly="1"
                        invisible="state != 'to_approve'"/>
             </xpath>

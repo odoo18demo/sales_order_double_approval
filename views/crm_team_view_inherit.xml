@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="team_crm_view_inherit" model="ir.ui.view">
+        <field name="name">crm.team.inherit</field>
+        <field name="model">crm.team</field>
+        <field name="inherit_id" ref="sales_team.crm_team_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Rename Team Leader to Revisor -->
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="domain">[('id', 'in', member_ids)]</attribute>
+                <attribute name="string">Revisor</attribute>
+            </xpath>
+            <!-- Add Manager field -->
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="sales_manager_ids" invisible="1"/>
+                <field name="second_approval_id"
+                       domain="[('id', 'in', sales_manager_ids)]"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="team_crm_list_view_inherit" model="ir.ui.view">
+        <field name="name">crm.team.list.inherit</field>
+        <field name="model">crm.team</field>
+        <field name="inherit_id" ref="sales_team.crm_team_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="sales_manager_ids" column_invisible="1"/>
+                <field name="second_approval_id" domain="[('id', 'in', sales_manager_ids)]"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
