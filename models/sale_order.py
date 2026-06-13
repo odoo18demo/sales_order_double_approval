@@ -111,7 +111,7 @@ class SaleOrder(models.Model):
             <p style="margin-top: 20px;">
                 <a href="{approve_url}" style="background-color: #28a745; color: white; padding: 8px 16px; text-decoration: none; border-radius: 4px; font-weight: bold;">Approve</a>
                 &nbsp;&nbsp;
-                <a href="{reject_url}" style="background-color: #dc3545; color: white; padding: 8px 16px; text-decoration: none; border-radius: 4px; font-weight: bold;">Reject / Revision</a>
+                <a href="{reject_url}" style="background-color: #dc3545; color: white; padding: 8px 16px; text-decoration: none; border-radius: 4px; font-weight: bold;">Reject</a>
             </p>
         </div>
         """
@@ -173,10 +173,8 @@ class SaleOrder(models.Model):
         self.write({'approval_stage': 'pending_manager'})
         self.message_post(
             body=_(
-                'Quotation approved by Revisor %s. '
-                'Waiting for Manager approval.'
+                'Quotation approved by Revisor: %s'
             ) % revisor.name,
-            message_type='comment',
             subtype_xmlid='mail.mt_note',
         )
 
@@ -217,11 +215,10 @@ class SaleOrder(models.Model):
 
         # Post onto chatter so it displays visually for the sales agent
         self.message_post(
-            bbody=_(
-                    'Manager %s approved this quotation.'
-                    '<br/>Quotation is now ready to be sent to the customer.') % manager.name,
+            body=_(
+                'Quotation approved by Manager: %s'
+            ) % manager.name,
             attachment_ids=[final_attachment.id],
-            message_type='comment',
             subtype_xmlid='mail.mt_note',
         )
 
