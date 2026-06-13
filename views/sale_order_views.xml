@@ -12,14 +12,15 @@
 
             <header position="inside">
                 <button name="action_submit_for_approval"
-                        string="Submit for Verification"
+                        string="Submit for Approval"
                         type="object"
                         class="btn-primary"
                         invisible="state != 'draft_approval'"/>
 
-                <button name="action_submit_for_approval" string="Approve"
-                        class="btn-primary" type="object"
-                        context="{'approval_action': 'approve'}"
+                <button name="button_approve"
+                        string="Approve"
+                        type="object"
+                        class="btn-primary"
                         invisible="state != 'to_approve'"/>
 
                 <button name="action_cancel" string="Reject / Revision"

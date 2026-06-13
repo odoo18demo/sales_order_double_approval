@@ -9,7 +9,7 @@ class SaleOrder(models.Model):
     # Odoo 18 requires explicit positioning for injected selection states
     state = fields.Selection(
         selection_add=[
-            ('draft_approval', 'Approval Draft'),
+            ('draft_approval', 'Draft'),
             ('to_approve', 'Pending Approval'),
             ('draft',),
         ],
@@ -171,12 +171,24 @@ class SaleOrder(models.Model):
 
         revisor, manager = self._approval_users()
         self.write({'approval_stage': 'pending_manager'})
+        self.message_post(
+            body=_(
+                'Quotation approved by Revisor %s. '
+                'Waiting for Manager approval.'
+            ) % revisor.name,
+            message_type='comment',
+            subtype_xmlid='mail.mt_note',
+        )
 
         if self.user_id:
             self._send_notification_email(
                 self.user_id,
-                _('Sale Order %s Confirmed by Revisor') % self.name,
-                _('<p>Sale Order <strong>%s</strong> has been confirmed by the Revisor.</p>') % self.name
+                _('Quotation Approved By Revisor'),
+                _(
+                    '<p>Quotation Number: <strong>%s</strong></p>'
+                    '<p>The Revisor has approved this quotation.</p>'
+                    '<p>Waiting for Manager approval.</p>'
+                ) % self.name
             )
 
         # Generate a clean, updated attachment reflecting changes (if any) made by Revisor
@@ -205,14 +217,21 @@ class SaleOrder(models.Model):
 
         # Post onto chatter so it displays visually for the sales agent
         self.message_post(
-            body=_('Manager approval achieved. The finalized Sale Order document has been compiled and logged.'),
+            bbody=_(
+                    'Manager %s approved this quotation.'
+                    '<br/>Quotation is now ready to be sent to the customer.') % manager.name,
             attachment_ids=[final_attachment.id],
             message_type='comment',
             subtype_xmlid='mail.mt_note',
         )
 
         success_msg = _(
-            '<p>Sale Order <strong>%s</strong> was fully approved by the manager and is ready for customer dispatch.</p>') % self.name
+            '<p>Quotation Number: <strong>%s</strong></p>'
+            '<p>Customer: <strong>%s</strong></p>'
+            '<p>Total Amount: <strong>%s %.2f</strong></p>'
+            '<p>The quotation has been approved by the Manager.</p>'
+            '<p>You may now send it to the customer.</p>'
+        ) % (self.name,self.partner_id.name,self.currency_id.symbol,self.amount_total,)
 
         if self.user_id:
             self._send_notification_email(self.user_id, _('Sale Order %s Approved') % self.name, success_msg,
@@ -226,3 +245,18 @@ class SaleOrder(models.Model):
     def get_approval_url(self, action, approval_step='revisor'):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         return f"{base_url}/sale_approval/{self.id}/{self.approval_token}/{approval_step}/{action}"
+
+    def button_approve(self):
+        for order in self:
+            revisor, manager = order._approval_users()
+
+            approval_step = (
+                'manager'
+                if order.approval_stage == 'pending_manager'
+                else 'revisor'
+            )
+
+            order._process_approval(
+                'approve',
+                approval_step
+            )
