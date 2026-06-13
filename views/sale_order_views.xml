@@ -26,13 +26,6 @@
                         class="btn-secondary" type="object"
                         invisible="state != 'to_approve'"/>
             </header>
-
-            <xpath expr="(//button[@name='action_confirm'])[1]" position="attributes">
-                <attribute name="invisible">state in ['draft_approval', 'to_approve']</attribute>
-            </xpath>
-            <xpath expr="(//button[@name='action_confirm'])[2]" position="attributes">
-                <attribute name="invisible">state in ['draft_approval', 'to_approve']</attribute>
-            </xpath>
             <xpath expr="//button[@name='action_quotation_send']" position="attributes">
                 <attribute name="invisible">state in ['draft_approval', 'to_approve']</attribute>
             </xpath>

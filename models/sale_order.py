@@ -7,10 +7,18 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     # Odoo 18 requires explicit positioning for injected selection states
-    state = fields.Selection(selection_add=[
-        ('draft_approval', 'Approval Draft'),
-        ('to_approve', 'Pending Approval'),
-    ], ondelete={'draft_approval': 'cascade', 'to_approve': 'cascade'})
+    state = fields.Selection(
+        selection_add=[
+            ('draft_approval', 'Approval Draft'),
+            ('to_approve', 'Pending Approval'),
+            ('draft',),
+        ],
+        default='draft_approval',
+        ondelete={
+            'draft_approval': 'cascade',
+            'to_approve': 'cascade',
+        }
+    )
 
     # Set default stage to our custom pre-quotation state
     approval_token = fields.Char(string="Approval Token", readonly=True, copy=False)
@@ -22,13 +30,11 @@ class SaleOrder(models.Model):
         ('rejected', 'Rejected'),
     ], string='Approval Stage', default='draft', readonly=True, copy=False)
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            # Enforce that new records start before Odoo's default 'draft'
-            if 'state' not in vals:
-                vals['state'] = 'draft_approval'
-        return super(SaleOrder, self).create(vals_list)
+    # @api.model_create_multi
+    # def create(self, vals_list):
+    #     for vals in vals_list:
+    #         vals.setdefault('state', 'draft_approval')
+    #     return super().create(vals_list)
 
     def _approval_users(self):
         self.ensure_one()
