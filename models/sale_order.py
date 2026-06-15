@@ -6,6 +6,7 @@ from odoo import _, fields, models, api
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
+    display_note = fields.Text(string='Note')
     # Odoo 18 requires explicit positioning for injected selection states
     state = fields.Selection(
         selection_add=[

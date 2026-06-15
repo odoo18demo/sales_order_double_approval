@@ -88,7 +88,7 @@ class MrpScreen(http.Controller):
                 'item_name': mo.product_id.name or '—',
                 'color': mo.product_id.product_tmpl_id.prod_color or '',
                 'delivery_date': delivery_date,
-                'note': html2plaintext(sale_order.note) if sale_order.note else '',
+                'note': html2plaintext(sale_order.display_note) if sale_order.display_note else '',
                 'qty': mo.product_qty,
                 'state': mo.state,
                 'date': (

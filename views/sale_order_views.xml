@@ -35,7 +35,14 @@
                 <field name="approval_stage" readonly="1" invisible="state not in ['draft_approval', 'to_approve']"/>
                 <field name="approval_token" readonly="1" groups="base.group_no_one" invisible="state not in ['draft_approval', 'to_approve']"/>
             </xpath>
-
+            <!-- display note -->
+            <xpath expr="//page[@name='other_information']" position="after">
+                <page name="display_note_page" string="Note">
+                    <group>
+                        <field name="display_note" placeholder="Enter note here..."/>
+                    </group>
+                </page>
+            </xpath>
         </field>
     </record>
 </odoo>

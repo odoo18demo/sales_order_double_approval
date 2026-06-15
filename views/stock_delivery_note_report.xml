@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<template id="delivery_note_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <div class="page">
+                    <div style="text-align:center;margin-bottom:20px;">
+                        <h2>Delivery Note</h2>
+                    </div>
+                    <table style="width:100%; margin-bottom:20px; border-collapse:separate; border-spacing:0 8px;">
+
+                        <tr>
+                            <td style="width:20%;"><b>SN:</b></td>
+                            <td style="width:30%;"><span t-field="o.name"/></td>
+
+                            <td style="width:20%;"><b>Date:</b></td>
+                            <td style="width:30%;"><span t-field="o.scheduled_date"/></td>
+                        </tr>
+
+                        <tr>
+                            <td><b>City Code:</b></td>
+                            <td><span t-field="o.city_code"/></td>
+
+                            <td><b>Salesman:</b></td>
+                            <td><span t-field="o.sale_id.user_id"/></td>
+                        </tr>
+
+                        <tr>
+                            <td><b>Customer:</b></td>
+                            <td><span t-field="o.partner_id"/></td>
+
+                            <td><b>Customer Phone:</b></td>
+                            <td><span t-field="o.customer_phone"/></td>
+                        </tr>
+
+                        <tr>
+                            <td><b>Address:</b></td>
+                            <td><span t-esc="o.partner_id.contact_address"/></td>
+
+                            <td><b>Leave Time:</b></td>
+                            <td>
+                                <span t-field="o.leave_time"
+                                      t-options='{"widget": "float_time"}'/>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td><b>Sales Order:</b></td>
+                            <td><span t-esc="o.origin"/></td>
+
+                            <td><b>Truck Plate No:</b></td>
+                            <td><span t-field="o.truck_plate_no"/></td>
+                        </tr>
+
+                        <tr>
+                            <td><b>Driver Mobile:</b></td>
+                            <td><span t-field="o.driver_mobile"/></td>
+
+                            <td></td>
+                            <td></td>
+                        </tr>
+
+                    </table>
+                    <table style="width:100%;border-collapse:collapse;margin-top:20px;">
+                        <thead>
+                            <tr>
+                                <th style="border:1px solid #000;padding:6px;">#</th>
+                                <th style="border:1px solid #000;padding:6px;">Item Code</th>
+                                <th style="border:1px solid #000;padding:6px;">Description</th>
+                                <th style="border:1px solid #000;padding:6px;">Qty</th>
+                                <th style="border:1px solid #000;padding:6px;">Unit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="o.move_ids_without_package" t-as="line">
+                                <td style="border:1px solid #000;padding:6px;">
+                                    <span t-esc="line_index + 1"/>
+                                </td>
+                                <td style="border:1px solid #000;padding:6px;">
+                                    <span t-field="line.product_id.default_code"/>
+                                </td>
+                                <td style="border:1px solid #000;padding:6px;">
+                                    <span t-field="line.product_id"/>
+                                </td>
+                                <td style="border:1px solid #000;padding:6px;text-align:right;">
+                                    <span t-field="line.quantity"/>
+                                </td>
+                                <td style="border:1px solid #000;padding:6px;">
+                                    <span t-field="line.product_uom"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style="margin-top:25px;">
+                        <strong>Notes:</strong>
+                        <hr/>
+                        <span t-field="o.note"/>
+                    </div>
+                    <table style="width:100%;margin-top:50px;text-align:center;">
+                        <tr>
+                            <td style="width:33%;">
+                                <strong>Warehouse Manager</strong>
+                                <br/><br/><br/><br/>
+                                __________________
+                            </td>
+                            <td style="width:33%;">
+                                <strong>Driver Signature</strong>
+                                <br/><br/><br/><br/>
+                                __________________
+                            </td>
+                            <td style="width:33%;">
+                                <strong>Customer Signature</strong>
+                                <br/><br/><br/><br/>
+                                __________________
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>
