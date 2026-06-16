@@ -9,13 +9,6 @@
             <field name="state" position="attributes">
                 <attribute name="statusbar_visible">draft_approval,to_approve,draft,sent,sale</attribute>
             </field>
-            <xpath expr="//header" position="inside">
-                <button name="%(sale.action_report_saleorder)d"
-                        string="Print Quotation"
-                        type="action"
-                        class="btn-secondary"
-                        invisible="state in ['draft_approval', 'to_approve']"/>
-            </xpath>
             <header position="inside">
                 <button name="action_submit_for_approval"
                         string="Submit for Approval"
