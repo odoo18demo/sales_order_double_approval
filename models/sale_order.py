@@ -149,17 +149,17 @@ class SaleOrder(models.Model):
 
         if action == 'reject':
             self.write({
-                'state': 'draft_approval',
+                'state': 'cancel', # <--- Changed this to standard Odoo cancel state
                 'approval_stage': 'rejected',
                 'approval_token': False,
             })
             if self.user_id:
                 self._send_notification_email(
                     self.user_id,
-                    _('Revision Required for Sale Order %s') % self.name,
-                    _('<p>Sale Order <strong>%s</strong> was rejected and reverted back to Draft Approval.</p>') % self.name
+                    _('Sale Order %s Rejected and Cancelled') % self.name,
+                    _('<p>Sale Order <strong>%s</strong> was rejected by the approver and has been cancelled.</p>') % self.name
                 )
-            return _('Sale Order %s has been pushed back for corrections.') % self.name
+            return _('Sale Order %s has been permanently cancelled.') % self.name
 
         if approval_step == 'manager':
             return self._approve_by_manager()
