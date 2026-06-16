@@ -117,11 +117,36 @@ class SaleOrder(models.Model):
             </p>
         </div>
         """
+
+        # Get the main system admin's email as the fallback
+        admin_email = self.env.ref('base.user_admin').email
+
         mail_values = {
             'subject': subject,
-            'email_from': self.user_id.email or self.company_id.email,
+            # Tries Salesperson -> Then Admin -> Then Company as a final safety net
+            'email_from': self.user_id.email or admin_email or self.company_id.email,
             'email_to': user.email,
             'body_html': body_html,
+        }
+        if attachment:
+            mail_values['attachment_ids'] = [(6, 0, [attachment.id])]
+
+        self.env['mail.mail'].sudo().create(mail_values).send()
+
+    def _send_notification_email(self, user, subject, body, attachment=None):
+        self.ensure_one()
+        if not user or not user.email:
+            return
+
+        # Get the main system admin's email as the fallback
+        admin_email = self.env.ref('base.user_admin').email
+
+        mail_values = {
+            'subject': subject,
+            # Tries Salesperson -> Then Admin -> Then Company as a final safety net
+            'email_from': self.user_id.email or admin_email or self.company_id.email,
+            'email_to': user.email,
+            'body_html': '<div style="font-family:Arial, sans-serif; font-size:13px;">%s</div>' % body,
         }
         if attachment:
             mail_values['attachment_ids'] = [(6, 0, [attachment.id])]
