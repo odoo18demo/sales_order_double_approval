@@ -22,7 +22,7 @@
                         class="btn-primary"
                         invisible="state != 'to_approve'"/>
 
-                <button name="action_cancel" string="Reject / Revision"
+                <button name="action_cancel" string="Cancel"
                         class="btn-secondary" type="object"
                         invisible="state != 'to_approve'"/>
             </header>

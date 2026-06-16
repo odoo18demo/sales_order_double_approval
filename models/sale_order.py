@@ -279,3 +279,16 @@ class SaleOrder(models.Model):
 
         # If it's a real Salesperson clicking confirm, let Odoo do its normal job
         return super(SaleOrder, self)._validate_order()
+
+    def action_draft(self):
+        # Run standard Odoo 'Set to Quotation' logic first
+        res = super(SaleOrder, self).action_draft()
+
+        # Force the state back to your custom starting line
+        for order in self:
+            order.write({
+                'state': 'draft_approval',
+                'approval_stage': 'draft',
+                'approval_token': False,
+            })
+        return res
