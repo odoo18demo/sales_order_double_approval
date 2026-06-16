@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="fleet_driver_list_view" model="ir.ui.view">
+        <field name="name">fleet.driver.list.view</field>
+        <field name="model">fleet.driver</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="phone"/>
+            </list>
+        </field>
+    </record>
+    <record id="fleet_driver_form_view" model="ir.ui.view">
+        <field name="name">fleet.driver.form.view</field>
+        <field name="model">fleet.driver</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="phone"/>
+                        </group>
+                        <group>
+                            <field name="license_no"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_fleet_driver" model="ir.actions.act_window">
+        <field name="name">Drivers</field>
+        <field name="res_model">fleet.driver</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <menuitem id="menu_fleet_driver"
+          name="Drivers"
+          parent="stock.menu_warehouse_config"
+          action="action_fleet_driver"/>
+</odoo>

@@ -14,8 +14,10 @@
     'website': 'https://www.cybrosys.com/',
     'depends': ['sales_team','base', 'sale_management','mrp','stock',],
     'data': [
+        'security/ir.model.access.csv',
         'data/email_template.xml',
         'report/delivery_note_report.xml',
+        'views/fleet_driver_view.xml',
         'views/res_company_views.xml',
         'views/res_config_settings_views.xml',
         'views/crm_team_view_inherit.xml',
