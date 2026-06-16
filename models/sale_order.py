@@ -53,8 +53,12 @@ class SaleOrder(models.Model):
 
     def _create_sale_order_pdf_attachment(self, link_to_order=False):
         self.ensure_one()
+
+        # Match Odoo's native naming exactly to prevent the "Send by Email" duplicate
+        file_name = _('Quotation - %s.pdf') % self.name
+
         values = {
-            'name': _('Sale Order %s.pdf') % self.name,
+            'name': file_name,
             'type': 'binary',
             'datas': self._render_sale_order_pdf(),
             'mimetype': 'application/pdf',
@@ -230,21 +234,31 @@ class SaleOrder(models.Model):
         self.ensure_one()
         revisor, manager = self._approval_users()
 
-        # Link to the order here explicitly so Odoo registers it under this record's attachment pool
-        final_attachment = self._create_sale_order_pdf_attachment(link_to_order=True)
+        # 1. CLEANUP OLD PDFS FIRST
+        old_attachments = self.env['ir.attachment'].sudo().search([
+            ('res_model', '=', 'sale.order'),
+            ('res_id', '=', self.id),
+            ('mimetype', '=', 'application/pdf'),
+            ('name', 'ilike', self.name)
+        ])
+        if old_attachments:
+            old_attachments.unlink()
 
-        # Shift to Native Odoo 'draft' state (Quotation stage)
+        # 2. STATE CHANGE MUST HAPPEN BEFORE PDF GENERATION
+        # This allows the PDF engine to "see" that the order is approved
         self.write({
             'state': 'draft',
             'approval_stage': 'approved',
             'approval_token': False,
         })
 
-        # Post onto chatter so it displays visually for the sales agent
+        # 3. GENERATE THE FINAL PDF
+        # Now that the state is 'approved', the PDF will include the signatures!
+        final_attachment = self._create_sale_order_pdf_attachment(link_to_order=True)
+
+        # 4. Post onto chatter
         self.message_post(
-            body=_(
-                'Quotation approved by Manager: %s'
-            ) % manager.name,
+            body=_('Quotation approved by Manager: %s') % manager.name,
             attachment_ids=[final_attachment.id],
             subtype_xmlid='mail.mt_note',
         )
@@ -255,14 +269,13 @@ class SaleOrder(models.Model):
             '<p>Total Amount: <strong>%s %.2f</strong></p>'
             '<p>The quotation has been approved by the Manager.</p>'
             '<p>You may now send it to the customer.</p>'
-        ) % (self.name,self.partner_id.name,self.currency_id.symbol,self.amount_total,)
+        ) % (self.name, self.partner_id.name, self.currency_id.symbol, self.amount_total,)
 
+        # 5. Send Emails back to the salesperson with the newly signed PDF
         if self.user_id:
-            self._send_notification_email(self.user_id, _('Sale Order %s Approved') % self.name, success_msg,
-                                          final_attachment)
+            self._send_notification_email(self.user_id, _('Sale Order %s Approved') % self.name, success_msg, final_attachment)
         if revisor and revisor != self.user_id:
-            self._send_notification_email(revisor, _('Sale Order %s Approved') % self.name, success_msg,
-                                          final_attachment)
+            self._send_notification_email(revisor, _('Sale Order %s Approved') % self.name, success_msg, final_attachment)
 
         return _('Sale Order %s successfully shifted to Odoo standard Quotation pipeline.') % self.name
 
