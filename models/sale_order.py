@@ -1,6 +1,7 @@
 import base64
 import uuid
 from odoo import _, fields, models, api
+from odoo.http import request
 
 
 class SaleOrder(models.Model):
@@ -258,3 +259,23 @@ class SaleOrder(models.Model):
                 'approve',
                 approval_step
             )
+
+    def _validate_order(self):
+        """
+        Odoo calls this method from the Portal when a customer signs.
+        We want to intercept it and block the confirmation ONLY if the
+        person signing is the external customer on the portal.
+        """
+
+        # Check if this is happening during a web request
+        if request and request.session:
+
+            # If the user is Public (not logged in as an internal Odoo user)
+            # Or if they are purely a Portal User
+            if request.env.user._is_public() or request.env.user.share:
+                # STOP! Do not run the core Odoo validation.
+                # Just return False to keep it as a Quotation Sent.
+                return False
+
+        # If it's a real Salesperson clicking confirm, let Odoo do its normal job
+        return super(SaleOrder, self)._validate_order()
