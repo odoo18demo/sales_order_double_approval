@@ -330,3 +330,13 @@ class SaleOrder(models.Model):
                 'approval_token': False,
             })
         return res
+
+    is_revisor = fields.Boolean(compute="_compute_approvers")
+    is_manager = fields.Boolean(compute="_compute_approvers")
+
+    @api.depends('team_id', 'team_id.user_id', 'team_id.second_approval_id')
+    def _compute_approvers(self):
+        for rec in self:
+            user = self.env.user
+            rec.is_revisor = (rec.team_id.user_id == user)
+            rec.is_manager = (rec.team_id.second_approval_id == user)
