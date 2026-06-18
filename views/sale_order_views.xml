@@ -21,11 +21,11 @@
                         type="object"
                         class="btn-primary"
                         invisible="state != 'to_approve' or not (is_revisor or is_manager)"/>
-
-                <button name="action_cancel" string="Cancel"
-                        class="btn-secondary" type="object"
-                        invisible="state != 'to_approve'"/>
             </header>
+            <xpath expr="//button[@name='action_cancel']" position="attributes">
+                <attribute name="invisible">state != 'draft_approval'</attribute>
+                <attribute name="confirm">Are you sure you want to cancel this quotation?</attribute>
+            </xpath>
             <xpath expr="//button[@name='action_quotation_send']" position="attributes">
                 <attribute name="invisible">state in ['draft_approval', 'to_approve']</attribute>
             </xpath>

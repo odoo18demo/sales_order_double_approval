@@ -340,3 +340,13 @@ class SaleOrder(models.Model):
             user = self.env.user
             rec.is_revisor = (rec.team_id.user_id == user)
             rec.is_manager = (rec.team_id.second_approval_id == user)
+
+    def action_cancel(self):
+        for order in self:
+            if order.state == 'draft_approval':
+                order.write({
+                    'state': 'cancel',
+                    'approval_stage': 'rejected',
+                    'approval_token': False,
+                })
+        return True
