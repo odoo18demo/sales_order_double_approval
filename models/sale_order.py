@@ -2,6 +2,7 @@ import base64
 import uuid
 from odoo import _, fields, models, api
 from odoo.http import request
+from odoo import http
 
 
 class SaleOrder(models.Model):
@@ -31,12 +32,6 @@ class SaleOrder(models.Model):
         ('approved', 'Approved'),
         ('rejected', 'Rejected'),
     ], string='Approval Stage', default='draft', readonly=True, copy=False)
-
-    # @api.model_create_multi
-    # def create(self, vals_list):
-    #     for vals in vals_list:
-    #         vals.setdefault('state', 'draft_approval')
-    #     return super().create(vals_list)
 
     def _approval_users(self):
         self.ensure_one()
@@ -124,10 +119,7 @@ class SaleOrder(models.Model):
 
         mail_values = {
             'subject': subject,
-
-            # ✅ FIX IS HERE (IMPORTANT)
             'email_from': self._get_approval_sender(),
-
             'email_to': user.email,
             'body_html': body_html,
         }
@@ -144,10 +136,7 @@ class SaleOrder(models.Model):
 
         mail_values = {
             'subject': subject,
-
-            # ✅ FIXED
             'email_from': self._get_approval_sender(),
-
             'email_to': user.email,
             'body_html': '<div style="font-family:Arial, sans-serif; font-size:13px;">%s</div>' % body,
         }
@@ -155,20 +144,6 @@ class SaleOrder(models.Model):
         if attachment:
             mail_values['attachment_ids'] = [(6, 0, [attachment.id])]
 
-        self.env['mail.mail'].sudo().create(mail_values).send()
-
-    def _send_notification_email(self, user, subject, body, attachment=None):
-        self.ensure_one()
-        if not user or not user.email:
-            return
-        mail_values = {
-            'subject': subject,
-            'email_from': self.company_id.email or self.user_id.email,
-            'email_to': user.email,
-            'body_html': '<div style="font-family:Arial, sans-serif; font-size:13px;">%s</div>' % body,
-        }
-        if attachment:
-            mail_values['attachment_ids'] = [(6, 0, [attachment.id])]
         self.env['mail.mail'].sudo().create(mail_values).send()
 
     def _process_approval(self, action, approval_step):
@@ -304,7 +279,6 @@ class SaleOrder(models.Model):
         We want to intercept it and block the confirmation ONLY if the
         person signing is the external customer on the portal.
         """
-
         # Check if this is happening during a web request
         if request and request.session:
 
@@ -362,7 +336,7 @@ class SaleOrder(models.Model):
 
         # fallback chain
         return (
-                self.company_id.email
-                or self.env.ref('base.user_admin').email
-                or self.user_id.email
+            self.company_id.email
+            or self.env.ref('base.user_admin').email
+            or self.user_id.email
         )
