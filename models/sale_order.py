@@ -122,16 +122,16 @@ class SaleOrder(models.Model):
         </div>
         """
 
-        # Get the main system admin's email as the fallback
-        admin_email = self.env.ref('base.user_admin').email
-
         mail_values = {
             'subject': subject,
-            # Tries Salesperson -> Then Admin -> Then Company as a final safety net
-            'email_from': self.user_id.email or admin_email or self.company_id.email,
+
+            # ✅ FIX IS HERE (IMPORTANT)
+            'email_from': self._get_approval_sender(),
+
             'email_to': user.email,
             'body_html': body_html,
         }
+
         if attachment:
             mail_values['attachment_ids'] = [(6, 0, [attachment.id])]
 
@@ -142,16 +142,16 @@ class SaleOrder(models.Model):
         if not user or not user.email:
             return
 
-        # Get the main system admin's email as the fallback
-        admin_email = self.env.ref('base.user_admin').email
-
         mail_values = {
             'subject': subject,
-            # Tries Salesperson -> Then Admin -> Then Company as a final safety net
-            'email_from': self.user_id.email or admin_email or self.company_id.email,
+
+            # ✅ FIXED
+            'email_from': self._get_approval_sender(),
+
             'email_to': user.email,
             'body_html': '<div style="font-family:Arial, sans-serif; font-size:13px;">%s</div>' % body,
         }
+
         if attachment:
             mail_values['attachment_ids'] = [(6, 0, [attachment.id])]
 
@@ -350,3 +350,19 @@ class SaleOrder(models.Model):
                     'approval_token': False,
                 })
         return True
+
+    def _get_approval_sender(self):
+        self.ensure_one()
+
+        user = self.env.user
+
+        # If real internal user (Revisor/Manager approving in UI)
+        if user and not user._is_public():
+            return user.email_formatted or user.email
+
+        # fallback chain
+        return (
+                self.company_id.email
+                or self.env.ref('base.user_admin').email
+                or self.user_id.email
+        )
