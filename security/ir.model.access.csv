@@ -1,3 +1,3 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_fleet_driver,access_fleet_driver_admin,model_fleet_driver,stock.group_stock_manager,1,1,1,1
-
+access_fleet_driver_user,access_fleet_driver_user,model_fleet_driver,stock.group_stock_user,1,1,0,0

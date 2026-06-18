@@ -361,3 +361,12 @@ class SaleOrder(models.Model):
             or self.env.ref('base.user_admin').email
             or self.user_id.email
         )
+
+    # Add this with your other fields
+    is_salesperson = fields.Boolean(compute='_compute_is_salesperson')
+
+    @api.depends('user_id')
+    def _compute_is_salesperson(self):
+        for rec in self:
+            # Returns True if the logged-in user is the Salesperson
+            rec.is_salesperson = (rec.user_id == self.env.user)
