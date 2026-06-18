@@ -86,21 +86,31 @@ class SaleOrder(models.Model):
         if revisor and revisor.email:
             self._send_approval_email(
                 revisor, 'revisor',
-                _('Sale Order %s Requires Revisor Approval') % self.name, attachment
+                _('Sale Order %s Requires Revisor Approval') % self.name,
+                attachment=attachment,
+                sender_user=self.user_id # Force sender: Salesperson
             )
         if manager and manager.email:
             self._send_approval_email(
                 manager, 'manager',
-                _('Sale Order %s Workflow Initialization Notification') % self.name, attachment
+                _('Sale Order %s Workflow Initialization Notification') % self.name,
+                attachment=attachment,
+                sender_user=self.user_id # Force sender: Salesperson
             )
 
-    def _send_approval_email(self, user, approval_step, subject, attachment=None):
+    def _send_approval_email(self, user, approval_step, subject, attachment=None, sender_user=None):
         self.ensure_one()
         if not user or not user.email:
             return
 
         approve_url = self.get_approval_url('approve', approval_step)
         reject_url = self.get_approval_url('reject', approval_step)
+
+        # ✅ FORCE EXACT SENDER EMAIL
+        if sender_user and sender_user.email:
+            email_from = sender_user.email_formatted or sender_user.email
+        else:
+            email_from = self._get_approval_sender()
 
         body_html = f"""
         <div style="font-family:Arial, sans-serif; font-size:13px;">
@@ -119,7 +129,7 @@ class SaleOrder(models.Model):
 
         mail_values = {
             'subject': subject,
-            'email_from': self._get_approval_sender(),
+            'email_from': email_from,
             'email_to': user.email,
             'body_html': body_html,
         }
@@ -129,14 +139,20 @@ class SaleOrder(models.Model):
 
         self.env['mail.mail'].sudo().create(mail_values).send()
 
-    def _send_notification_email(self, user, subject, body, attachment=None):
+    def _send_notification_email(self, user, subject, body, attachment=None, sender_user=None):
         self.ensure_one()
         if not user or not user.email:
             return
 
+        # ✅ FORCE EXACT SENDER EMAIL
+        if sender_user and sender_user.email:
+            email_from = sender_user.email_formatted or sender_user.email
+        else:
+            email_from = self._get_approval_sender()
+
         mail_values = {
             'subject': subject,
-            'email_from': self._get_approval_sender(),
+            'email_from': email_from,
             'email_to': user.email,
             'body_html': '<div style="font-family:Arial, sans-serif; font-size:13px;">%s</div>' % body,
         }
@@ -151,9 +167,12 @@ class SaleOrder(models.Model):
         if self.state != 'to_approve':
             return _('Sale Order %s is not currently awaiting verification.') % self.name
 
+        revisor, manager = self._approval_users()
+        current_approver = manager if approval_step == 'manager' else revisor
+
         if action == 'reject':
             self.write({
-                'state': 'cancel', # <--- Changed this to standard Odoo cancel state
+                'state': 'cancel',
                 'approval_stage': 'rejected',
                 'approval_token': False,
             })
@@ -161,7 +180,8 @@ class SaleOrder(models.Model):
                 self._send_notification_email(
                     self.user_id,
                     _('Sale Order %s Rejected and Cancelled') % self.name,
-                    _('<p>Sale Order <strong>%s</strong> was rejected by the approver and has been cancelled.</p>') % self.name
+                    _('<p>Sale Order <strong>%s</strong> was rejected by the approver and has been cancelled.</p>') % self.name,
+                    sender_user=current_approver # Force sender: Whoever rejected it
                 )
             return _('Sale Order %s has been permanently cancelled.') % self.name
 
@@ -178,9 +198,7 @@ class SaleOrder(models.Model):
         revisor, manager = self._approval_users()
         self.write({'approval_stage': 'pending_manager'})
         self.message_post(
-            body=_(
-                'Quotation approved by Revisor: %s'
-            ) % revisor.name,
+            body=_('Quotation approved by Revisor: %s') % revisor.name,
             subtype_xmlid='mail.mt_note',
         )
 
@@ -192,15 +210,17 @@ class SaleOrder(models.Model):
                     '<p>Quotation Number: <strong>%s</strong></p>'
                     '<p>The Revisor has approved this quotation.</p>'
                     '<p>Waiting for Manager approval.</p>'
-                ) % self.name
+                ) % self.name,
+                sender_user=revisor # Force sender: Revisor
             )
 
-        # Generate a clean, updated attachment reflecting changes (if any) made by Revisor
         manager_attachment = self._create_sale_order_pdf_attachment(link_to_order=False)
         if manager:
             self._send_approval_email(
                 manager, 'manager',
-                _('Second Approval Stage Needed: Sale Order %s') % self.name, manager_attachment
+                _('Second Approval Stage Needed: Sale Order %s') % self.name,
+                attachment=manager_attachment,
+                sender_user=revisor # Force sender: Revisor
             )
 
         return _('First stage verification completed for Sale Order %s.') % self.name
@@ -209,7 +229,6 @@ class SaleOrder(models.Model):
         self.ensure_one()
         revisor, manager = self._approval_users()
 
-        # 1. CLEANUP OLD PDFS FIRST
         old_attachments = self.env['ir.attachment'].sudo().search([
             ('res_model', '=', 'sale.order'),
             ('res_id', '=', self.id),
@@ -219,19 +238,14 @@ class SaleOrder(models.Model):
         if old_attachments:
             old_attachments.unlink()
 
-        # 2. STATE CHANGE MUST HAPPEN BEFORE PDF GENERATION
-        # This allows the PDF engine to "see" that the order is approved
         self.write({
             'state': 'draft',
             'approval_stage': 'approved',
             'approval_token': False,
         })
 
-        # 3. GENERATE THE FINAL PDF
-        # Now that the state is 'approved', the PDF will include the signatures!
         final_attachment = self._create_sale_order_pdf_attachment(link_to_order=True)
 
-        # 4. Post onto chatter
         self.message_post(
             body=_('Quotation approved by Manager: %s') % manager.name,
             attachment_ids=[final_attachment.id],
@@ -246,11 +260,18 @@ class SaleOrder(models.Model):
             '<p>You may now send it to the customer.</p>'
         ) % (self.name, self.partner_id.name, self.currency_id.symbol, self.amount_total,)
 
-        # 5. Send Emails back to the salesperson with the newly signed PDF
         if self.user_id:
-            self._send_notification_email(self.user_id, _('Sale Order %s Approved') % self.name, success_msg, final_attachment)
+            self._send_notification_email(
+                self.user_id, _('Sale Order %s Approved') % self.name, success_msg,
+                attachment=final_attachment,
+                sender_user=manager # Force sender: Manager
+            )
         if revisor and revisor != self.user_id:
-            self._send_notification_email(revisor, _('Sale Order %s Approved') % self.name, success_msg, final_attachment)
+            self._send_notification_email(
+                revisor, _('Sale Order %s Approved') % self.name, success_msg,
+                attachment=final_attachment,
+                sender_user=manager # Force sender: Manager
+            )
 
         return _('Sale Order %s successfully shifted to Odoo standard Quotation pipeline.') % self.name
 
