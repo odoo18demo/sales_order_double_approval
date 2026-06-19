@@ -2,6 +2,7 @@ import base64
 import uuid
 from odoo import _, fields, models, api
 from odoo.http import request
+from odoo.exceptions import UserError
 from odoo import http
 
 
@@ -49,8 +50,10 @@ class SaleOrder(models.Model):
     def _create_sale_order_pdf_attachment(self, link_to_order=False):
         self.ensure_one()
 
-        # Match Odoo's native naming exactly to prevent the "Send by Email" duplicate
-        file_name = _('Quotation - %s.pdf') % self.name
+        if self.state == 'sale':
+            file_name = _('Sales Order - %s.pdf') % self.name
+        else:
+            file_name = _('Quotation - %s.pdf') % self.name
 
         values = {
             'name': file_name,
@@ -282,17 +285,19 @@ class SaleOrder(models.Model):
     def button_approve(self):
         for order in self:
             revisor, manager = order._approval_users()
+            current_user = self.env.user
 
-            approval_step = (
-                'manager'
-                if order.approval_stage == 'pending_manager'
-                else 'revisor'
-            )
-
-            order._process_approval(
-                'approve',
-                approval_step
-            )
+            if current_user == manager:
+                # Manager can approve at any point — acts as final approval,
+                # skipping the revisor stage if they haven't approved yet
+                approval_step = 'manager'
+            elif current_user == revisor:
+                if order.approval_stage != 'pending_revisor':
+                    raise UserError(_('You have already approved this stage.'))
+                approval_step = 'revisor'
+            else:
+                raise UserError(_('You are not authorized to approve this Sale Order.'))
+            order._process_approval('approve', approval_step)
 
     def _validate_order(self):
         """
@@ -335,6 +340,34 @@ class SaleOrder(models.Model):
             user = self.env.user
             rec.is_revisor = (rec.team_id.user_id == user)
             rec.is_manager = (rec.team_id.second_approval_id == user)
+
+    def action_confirm(self):
+        res = super(SaleOrder, self).action_confirm()
+        for order in self:
+            order._send_confirmation_email_to_manager()
+        return res
+
+    def _send_confirmation_email_to_manager(self):
+        self.ensure_one()
+        revisor, manager = self._approval_users()
+        if not manager or not manager.email:
+            return
+
+        attachment = self._create_sale_order_pdf_attachment(link_to_order=True)
+
+        body = _(
+            '<p>Sale Order <strong>%s</strong> has been confirmed.</p>'
+            '<p>Customer: <strong>%s</strong></p>'
+            '<p>Total Amount: <strong>%s %.2f</strong></p>'
+        ) % (self.name, self.partner_id.name, self.currency_id.symbol or '', self.amount_total)
+
+        self._send_notification_email(
+            manager,
+            _('Sale Order %s Confirmed') % self.name,
+            body,
+            attachment=attachment,
+            sender_user=self.user_id,  # Force sender: Salesperson
+        )
 
     def action_cancel(self):
         for order in self:

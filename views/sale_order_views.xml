@@ -20,16 +20,21 @@
                         string="Approve"
                         type="object"
                         class="btn-primary"
-                        invisible="state != 'to_approve' or not (is_revisor or is_manager)"/>
+                        invisible="state != 'to_approve' or not ((is_revisor and approval_stage == 'pending_revisor') or is_manager)"/>
             </header>
+            <!-- Confirm button — visible from 'sent' state (has id) -->
+            <xpath expr="//button[@id='action_confirm']" position="attributes">
+                <attribute name="invisible">state != 'sent' or not is_salesperson</attribute>
+            </xpath>
+
+            <!-- Confirm button — visible from 'draft' state (no id, target by position) -->
+            <xpath expr="(//button[@name='action_confirm'])[2]" position="attributes">
+                <attribute name="invisible">state != 'draft' or not is_salesperson</attribute>
+            </xpath>
             <xpath expr="//button[@name='action_cancel']" position="attributes">
                 <attribute name="invisible">state != 'draft_approval'</attribute>
                 <attribute name="confirm">Are you sure you want to cancel this quotation?</attribute>
             </xpath>
-            <xpath expr="//button[@name='action_quotation_send']" position="attributes">
-                <attribute name="invisible">state in ['draft_approval', 'to_approve']</attribute>
-            </xpath>
-
             <xpath expr="//field[@name='team_id']" position="after">
                 <field name="approval_stage" readonly="1" invisible="state not in ['draft_approval', 'to_approve']"/>
                 <field name="approval_token" readonly="1" groups="base.group_no_one" invisible="state not in ['draft_approval', 'to_approve']"/>
