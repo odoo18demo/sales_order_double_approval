@@ -22,6 +22,7 @@
         'views/res_config_settings_views.xml',
         'views/crm_team_view_inherit.xml',
         'views/sale_order_views.xml',
+        'views/mrp_production_form_inherit_view.xml',
         'views/stock_picking_view.xml',
         'views/stock_delivery_note_report.xml',
         'views/templates.xml',
