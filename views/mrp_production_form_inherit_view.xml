@@ -7,11 +7,11 @@
             <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
             <field name="arch" type="xml">
 
-                <xpath expr="//header/button[@name='button_mark_done' and @string='Produce' and @invisible='move_raw_ids or not show_produce']" position="attributes">
+                <xpath expr="//header/button[@name='button_mark_done' and @invisible='move_raw_ids or not show_produce']" position="attributes">
                     <attribute name="confirm"></attribute>
                 </xpath>
 
-                <xpath expr="//header/button[@name='button_mark_done' and @string='Produce All' and @invisible='move_raw_ids or not show_produce_all']" position="attributes">
+                <xpath expr="//header/button[@name='button_mark_done' and @invisible='move_raw_ids or not show_produce_all']" position="attributes">
                     <attribute name="confirm"></attribute>
                 </xpath>
 
