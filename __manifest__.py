@@ -12,7 +12,7 @@
     'company': 'Cybrosys Techno Solutions',
     'maintainer': 'Cybrosys Techno Solutions',
     'website': 'https://www.cybrosys.com/',
-    'depends': ['sales_team','base', 'sale_management','mrp','stock','mail',],
+    'depends': ['sales_team', 'base', 'sale_management', 'mrp', 'stock', 'mail', 'united_custom_layout'],
     'data': [
         'security/ir.model.access.csv',
         'data/email_template.xml',

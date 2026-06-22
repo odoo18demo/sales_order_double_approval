@@ -40,9 +40,9 @@ class SaleOrder(models.Model):
 
     def _render_sale_order_pdf(self):
         self.ensure_one()
-        # Odoo 18 action report rendering engine execution syntax
+        # Pointing to the new United Custom Layout
         pdf_content, _ = self.env['ir.actions.report'].sudo()._render_qweb_pdf(
-            'sale.report_saleorder',
+            'united_custom_layout.report_united_sale_order_document',
             self.ids,
         )
         return base64.b64encode(pdf_content).decode('utf-8')
