@@ -50,8 +50,15 @@ class SaleOrder(models.Model):
     def _create_sale_order_pdf_attachment(self, link_to_order=False):
         self.ensure_one()
 
+        # 1. If the order is fully confirmed
         if self.state == 'sale':
             file_name = _('Sales Order - %s.pdf') % self.name
+
+        # 2. If it is in your custom double-approval process
+        elif self.state in ['draft_approval', 'to_approve']:
+            file_name = _('Draft - %s.pdf') % self.name
+
+        # 3. If it is standard Odoo draft or sent
         else:
             file_name = _('Quotation - %s.pdf') % self.name
 
