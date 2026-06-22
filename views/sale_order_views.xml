@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
+    <record id="sale_order_search_remove_my_quotation" model="ir.ui.view">
+        <field name="name">sale.order.search.remove.my.quotation</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//filter[@name='my_quotation']" position="replace"/>
+
+        </field>
+    </record>
     <record id="view_order_form_inherit_approval_workflow" model="ir.ui.view">
         <field name="name">sale.order.form.view.inherit.sales.order.double.approval</field>
         <field name="model">sale.order</field>
