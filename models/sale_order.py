@@ -427,25 +427,29 @@ class SaleOrder(models.Model):
                 rec.is_current_approver = False
 
 
-# CREATE THIS NEW CLASS at the bottom of your Python file
-class SaleOrderLine(models.Model):
-    _inherit = 'sale.order.line'
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            if 'order_id' in vals:
-                order = self.env['sale.order'].browse(vals['order_id'])
-                # Block adding new lines unless it's in the initial draft stage
-                if order.state not in ['draft_approval']:
-                    raise UserError(
-                        _("Security restriction: You cannot add new products to an order that is currently pending approval or already approved."))
-        return super(SaleOrderLine, self).create(vals_list)
-
-    def unlink(self):
-        for line in self:
-            # Block deleting lines unless it's in the initial draft stage
-            if line.order_id.state not in ['draft_approval']:
-                raise UserError(
-                    _("Security restriction: You cannot delete products from an order that is currently pending approval or already approved."))
-        return super(SaleOrderLine, self).unlink()
+# # CREATE THIS NEW CLASS at the bottom of your Python file
+# class SaleOrderLine(models.Model):
+#     _inherit = 'sale.order.line'
+#
+#     @api.model_create_multi
+#     def create(self, vals_list):
+#         for vals in vals_list:
+#             if 'order_id' in vals:
+#                 order = self.env['sale.order'].browse(vals['order_id'])
+#                 # ALLOW if the system is creating lines (like backorders or picking moves)
+#                 # Odoo's internal processes often set the context 'create_from_picking'
+#                 if self.env.context.get('create_from_picking') or self.env.context.get('skip_security_check'):
+#                     continue
+#                 if order.state not in ['draft_approval']:
+#                     raise UserError(_("Security restriction: You cannot add new products while pending approval."))
+#         return super(SaleOrderLine, self).create(vals_list)
+#
+#     def unlink(self):
+#         # ALLOW if the system is deleting lines (like canceling moves)
+#         if self.env.context.get('skip_security_check'):
+#             return super(SaleOrderLine, self).unlink()
+#
+#         for line in self:
+#             if line.order_id.state not in ['draft_approval']:
+#                 raise UserError(_("Security restriction: You cannot delete products while pending approval."))
+#         return super(SaleOrderLine, self).unlink()
