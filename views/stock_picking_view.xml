@@ -23,7 +23,7 @@
                 class="btn-primary"/>
         </xpath>
         <!-- Hide the Print button shown when state = done -->
-        <xpath expr="//header/button[@name='561' and @type='action']" position="attributes">
+        <xpath expr="//header/button[@name='375' and @type='action']" position="attributes">
             <attribute name="invisible">1</attribute>
         </xpath>
         <xpath expr="//header/button[@name='do_print_picking']" position="attributes">
