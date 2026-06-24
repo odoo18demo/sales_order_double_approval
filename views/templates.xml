@@ -102,6 +102,7 @@
                         width: 95%;
                         max-width: 1100px;
                         max-height: 85vh;
+                        overflow-x: hidden; /* FIX: Prevents horizontal scrolling entirely */
                         overflow-y: auto;
                         box-shadow: 0 8px 30px rgba(0,0,0,0.2);
                     }
@@ -115,6 +116,7 @@
                         justify-content: space-between;
                         position: sticky;
                         top: 0;
+                        z-index: 10;
                     }
                     .modal-header h3 {
                         margin: 0;
@@ -153,13 +155,14 @@
                         font-weight: 600;
                         color: #495057;
                         border-bottom: 2px solid #dee2e6;
-                        white-space: nowrap;
+                        /* FIX: Removed white-space: nowrap */
                     }
                     .customer-table td {
                         padding: 10px 12px;
                         border-bottom: 1px solid #f1f3f5;
                         color: #212529;
-                        white-space: nowrap;
+                        word-wrap: break-word; /* FIX: Allows long text to wrap beautifully */
+                        /* FIX: Removed white-space: nowrap */
                     }
                     .customer-table tr:hover td {
                         background: #f8f9fa;
@@ -167,7 +170,6 @@
                 </style>
             </head>
             <body>
-                <!-- MODAL -->
                 <div class="modal-overlay" id="detailModal">
                     <div class="modal-box">
                         <div class="modal-header">
@@ -202,7 +204,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- NOTE MODAL -->
                 <div class="modal-overlay" id="noteModal">
                     <div class="modal-box" style="max-width:700px;">
                         <div class="modal-header">
@@ -226,7 +227,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- HIDDEN INPUTS -->
                 <t t-foreach="products" t-as="prod">
                     <input type="hidden"
                            t-attf-id="pname_{{ prod_index }}"
@@ -241,14 +241,12 @@
                            t-attf-id="porders_{{ prod_index }}"
                            t-att-value="prod['orders_json']"/>
                 </t>
-                <!-- HEADER -->
                 <div class="refresh-bar">
                     Auto-refresh in <b id="countdown">20</b>s
                 </div>
                 <div class="page-title">
                     &#127981; Manufacturing Overview
                 </div>
-                <!-- CARDS -->
                 <div class="mo-grid" id="moGrid">
                     <t t-foreach="products" t-as="prod">
                         <div class="mo-card"
