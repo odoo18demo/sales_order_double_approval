@@ -410,3 +410,42 @@ class SaleOrder(models.Model):
         for rec in self:
             # Returns True if the logged-in user is the Salesperson
             rec.is_salesperson = (rec.user_id == self.env.user)
+
+    is_current_approver = fields.Boolean(compute='_compute_is_current_approver')
+
+    @api.depends('state', 'approval_stage', 'is_revisor', 'is_manager')
+    def _compute_is_current_approver(self):
+        for rec in self:
+            if rec.state == 'to_approve':
+                if rec.approval_stage == 'pending_revisor' and rec.is_revisor:
+                    rec.is_current_approver = True
+                elif rec.approval_stage == 'pending_manager' and rec.is_manager:
+                    rec.is_current_approver = True
+                else:
+                    rec.is_current_approver = False
+            else:
+                rec.is_current_approver = False
+
+
+# CREATE THIS NEW CLASS at the bottom of your Python file
+class SaleOrderLine(models.Model):
+    _inherit = 'sale.order.line'
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if 'order_id' in vals:
+                order = self.env['sale.order'].browse(vals['order_id'])
+                # Block adding new lines unless it's in the initial draft stage
+                if order.state not in ['draft_approval']:
+                    raise UserError(
+                        _("Security restriction: You cannot add new products to an order that is currently pending approval or already approved."))
+        return super(SaleOrderLine, self).create(vals_list)
+
+    def unlink(self):
+        for line in self:
+            # Block deleting lines unless it's in the initial draft stage
+            if line.order_id.state not in ['draft_approval']:
+                raise UserError(
+                    _("Security restriction: You cannot delete products from an order that is currently pending approval or already approved."))
+        return super(SaleOrderLine, self).unlink()

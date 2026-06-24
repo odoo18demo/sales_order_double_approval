@@ -185,14 +185,15 @@
                             <table class="customer-table">
                                 <thead>
                                     <tr>
-                                        <th>Origin (SO)</th>
-                                        <th>Customer</th>
-                                        <th>City</th>
-                                        <th>Salesperson</th>
-                                        <th>Item</th>
-                                        <th>Qty</th>
-                                        <th>Color</th>
+                                        <th>#</th>
+                                        <th>Order Date</th>
+                                        <th>Customer Name</th>
+                                        <th>Address</th>
+                                        <th>Sales Man</th>
+                                        <th>Item Name</th>
                                         <th>Delivery Date</th>
+                                        <th>Quantity</th>
+                                        <th>Color</th>
                                         <th>Notes</th>
                                     </tr>
                                 </thead>
@@ -352,13 +353,14 @@
                                 tbody.innerHTML +=
                                     '<tr>' +
                                     '<td>' + order.origin + '</td>' +
+                                    '<td>' + order.date_order + '</td>' +
                                     '<td>' + order.customer + '</td>' +
                                     '<td>' + order.customer_city + '</td>' +
                                     '<td>' + order.salesperson + '</td>' +
                                     '<td>' + order.item_name + '</td>' +
+                                    '<td>' + order.delivery_date + '</td>' +
                                     '<td>' + order.qty + ' ' + prod.uom +'</td>' +
                                     '<td>' + (order.color || '') + '</td>' +
-                                    '<td>' + order.delivery_date + '</td>' +
                                     '<td>' +
                                     (
                                         order.note ?

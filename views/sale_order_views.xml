@@ -94,7 +94,10 @@
             </xpath>
 
             <xpath expr="//field[@name='order_line']" position="attributes">
-                <attribute name="readonly">state in ['cancel', 'sale'] or (is_salesperson and state != 'draft_approval')</attribute>
+                <attribute name="readonly">state in ['cancel', 'sale', 'draft', 'sent'] or (state == 'to_approve' and not is_current_approver)</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/list/field[@name='product_id']" position="attributes">
+                <attribute name="readonly">parent.state != 'draft_approval'</attribute>
             </xpath>
 
             <xpath expr="//page[@name='other_information']" position="after">

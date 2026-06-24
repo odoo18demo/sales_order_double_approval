@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="finance_team_list_view" model="ir.ui.view">
+        <field name="name">finance.team.list.view</field>
+        <field name="model">financial.team</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="user_id"/>
+            </list>
+        </field>
+    </record>
+    <record id="finance_team_form_view" model="ir.ui.view">
+        <field name="name">finance.team.form.view</field>
+        <field name="model">financial.team</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="user_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_finance_team" model="ir.actions.act_window">
+        <field name="name">Finance Team</field>
+        <field name="res_model">financial.team</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <menuitem
+        id="menu_financial_team_root"
+        name="Financial Teams"
+        parent="sale.menu_sale_config"
+        action="action_finance_team"
+    />
+</odoo>
