@@ -22,13 +22,15 @@
                 string="Delivery Note"
                 class="btn-primary"/>
         </xpath>
-        <!-- Hide the Print button shown when state = done -->
-<!--        <xpath expr="//header/button[@name='375' and @type='action']" position="attributes">-->
-<!--            <attribute name="invisible">1</attribute>-->
-<!--        </xpath>-->
-<!--        <xpath expr="//header/button[@name='do_print_picking']" position="attributes">-->
-<!--            <attribute name="invisible">1</attribute>-->
-<!--        </xpath>-->
+        <!-- Hide print button when state = assigned (stable @name, no issue) -->
+        <xpath expr="//header/button[@name='do_print_picking']" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+
+        <!-- Hide print button when state = done (use stable @type + @groups + @data-hotkey) -->
+        <xpath expr="//header/button[@type='action' and @groups='base.group_user' and @data-hotkey='o']" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
     </field>
 </record>
 </odoo>
