@@ -18,11 +18,13 @@
                         color: #6c757d;
                         margin-bottom: 16px;
                     }
-                    .page-title {
-                        font-size: 20px;
-                        font-weight: 700;
-                        color: #042c53;
+                    /* NEW: Logo Container Styling */
+                    .logo-container {
                         margin-bottom: 20px;
+                    }
+                    .logo-container img {
+                        max-height: 60px;
+                        width: auto;
                     }
                     .mo-grid {
                         display: grid;
@@ -49,15 +51,14 @@
                         background: #042c53;
                         display: flex;
                         justify-content: space-between;
-                        /* FIX: align to the top so if text wraps, the badge stays in place */
                         align-items: flex-start;
-                        gap: 10px; /* Safe space between text and color badge */
+                        gap: 10px;
                     }
                     .mo-card-body {
                         padding: 14px 16px;
                     }
                     .mo-qty {
-                        font-size: 28px;
+                        font-size: 30px;
                         font-weight: 700;
                         color: #042c53;
                     }
@@ -66,10 +67,12 @@
                         color: #6c757d;
                         margin-top: 2px;
                     }
+                    /* UPDATED: Bigger font, removed bold */
                     .mo-order-count {
                         margin-top: 10px;
-                        font-size: 12px;
-                        color: #6c757d;
+                        font-size: 18px;
+                        font-weight: 400;
+                        color: #042c53;
                         border-top: 1px solid #f1f3f5;
                         padding-top: 8px;
                     }
@@ -208,9 +211,7 @@
                             <button class="modal-close" id="closeNoteModal">&#10005;</button>
                         </div>
                         <div class="modal-body">
-                            <div id="noteContent"
-                                 style="white-space: pre-wrap; font-size: 14px; color: #212529; line-height: 1.7; padding: 8px; background: #f8f9fa; border-radius: 6px; min-height: 60px;">
-                            </div>
+                            <div id="noteContent" style="white-space: pre-wrap; font-size: 14px; color: #212529; line-height: 1.7; padding: 8px; background: #f8f9fa; border-radius: 6px; min-height: 60px;"></div>
                         </div>
                     </div>
                 </div>
@@ -223,7 +224,9 @@
                 </t>
 
                 <div class="refresh-bar">Auto-refresh in <b id="countdown">20</b>s</div>
-                <div class="page-title">&#127981; Manufacturing Overview</div>
+                <div class="logo-container">
+                    <img t-attf-src="/web/image?model=res.company&amp;id={{ request.env.user.company_id.id }}&amp;field=logo" alt="Company Logo"/>
+                </div>
 
                 <div class="mo-grid" id="moGrid">
                     <t t-foreach="products" t-as="prod">
