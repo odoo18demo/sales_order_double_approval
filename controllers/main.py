@@ -60,19 +60,12 @@ class MrpScreen(http.Controller):
                 else 'No Customer'
             )
 
-            _logger.info(
-                "MO: %s | SO: %s | Customer: %s | Remaining Qty: %s",
-                mo.name,
-                sale_order.name,
-                customer,
-                remaining_qty
-            )
-
             if pid not in product_map:
                 product_map[pid] = {
                     'product_name': mo.product_id.name,
                     'total_qty': 0,
                     'uom': mo.product_uom_id.name,
+                    'color': mo.product_id.product_tmpl_id.prod_color or '', # <-- ADDED TOP-LEVEL COLOR HERE
                     'orders': [],
                 }
 
@@ -89,7 +82,6 @@ class MrpScreen(http.Controller):
 
             product_map[pid]['total_qty'] += remaining_qty
 
-            # FIXED: Properly extract and format the Sale Order Date
             order_date_str = '—'
             if sale_order.date_order:
                 order_date_str = sale_order.date_order.strftime('%d-%m-%Y')
@@ -114,7 +106,7 @@ class MrpScreen(http.Controller):
                 'note': html2plaintext(sale_order.display_note) if sale_order.display_note else '',
                 'qty': remaining_qty,
                 'state': mo.state,
-                'date_order': order_date_str, # <--- THIS FIXES THE "UNDEFINED" ISSUE
+                'date_order': order_date_str,
                 'date': (
                     str(mo.date_start)
                     if mo.date_start

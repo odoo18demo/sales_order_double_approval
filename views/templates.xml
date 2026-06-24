@@ -5,8 +5,7 @@
             <head>
                 <meta charset="UTF-8"/>
                 <title>Manufacturing Orders</title>
-                <link rel="stylesheet"
-                      href="/web/static/lib/bootstrap/css/bootstrap.css"/>
+                <link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css"/>
                 <style>
                     body {
                         background: #f8f9fa;
@@ -48,6 +47,11 @@
                         font-size: 14px;
                         color: #ffffff;
                         background: #042c53;
+                        display: flex;
+                        justify-content: space-between;
+                        /* FIX: align to the top so if text wraps, the badge stays in place */
+                        align-items: flex-start;
+                        gap: 10px; /* Safe space between text and color badge */
                     }
                     .mo-card-body {
                         padding: 14px 16px;
@@ -102,7 +106,7 @@
                         width: 95%;
                         max-width: 1100px;
                         max-height: 85vh;
-                        overflow-x: hidden; /* FIX: Prevents horizontal scrolling entirely */
+                        overflow-x: hidden;
                         overflow-y: auto;
                         box-shadow: 0 8px 30px rgba(0,0,0,0.2);
                     }
@@ -155,14 +159,12 @@
                         font-weight: 600;
                         color: #495057;
                         border-bottom: 2px solid #dee2e6;
-                        /* FIX: Removed white-space: nowrap */
                     }
                     .customer-table td {
                         padding: 10px 12px;
                         border-bottom: 1px solid #f1f3f5;
                         color: #212529;
-                        word-wrap: break-word; /* FIX: Allows long text to wrap beautifully */
-                        /* FIX: Removed white-space: nowrap */
+                        word-wrap: break-word;
                     }
                     .customer-table tr:hover td {
                         background: #f8f9fa;
@@ -173,17 +175,11 @@
                 <div class="modal-overlay" id="detailModal">
                     <div class="modal-box">
                         <div class="modal-header">
-                            <h3 id="modalTitle">
-                                Product Details
-                            </h3>
-                            <button class="modal-close"
-                                    id="closeModal">
-                                &#10005;
-                            </button>
+                            <h3 id="modalTitle">Product Details</h3>
+                            <button class="modal-close" id="closeModal">&#10005;</button>
                         </div>
                         <div class="modal-body">
-                            <div class="modal-total"
-                                 id="modalTotal"></div>
+                            <div class="modal-total" id="modalTotal"></div>
                             <table class="customer-table">
                                 <thead>
                                     <tr>
@@ -204,148 +200,102 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="modal-overlay" id="noteModal">
                     <div class="modal-box" style="max-width:700px;">
                         <div class="modal-header">
                             <h3>Sale Order Note</h3>
-                            <button class="modal-close"
-                                    id="closeNoteModal">
-                                &#10005;
-                            </button>
+                            <button class="modal-close" id="closeNoteModal">&#10005;</button>
                         </div>
                         <div class="modal-body">
                             <div id="noteContent"
-                                 style="white-space: pre-wrap;
-                                        font-size: 14px;
-                                        color: #212529;
-                                        line-height: 1.7;
-                                        padding: 8px;
-                                        background: #f8f9fa;
-                                        border-radius: 6px;
-                                        min-height: 60px;">
+                                 style="white-space: pre-wrap; font-size: 14px; color: #212529; line-height: 1.7; padding: 8px; background: #f8f9fa; border-radius: 6px; min-height: 60px;">
                             </div>
                         </div>
                     </div>
                 </div>
+
                 <t t-foreach="products" t-as="prod">
-                    <input type="hidden"
-                           t-attf-id="pname_{{ prod_index }}"
-                           t-att-value="prod['product_name']"/>
-                    <input type="hidden"
-                           t-attf-id="pqty_{{ prod_index }}"
-                           t-att-value="prod['total_qty']"/>
-                    <input type="hidden"
-                           t-attf-id="puom_{{ prod_index }}"
-                           t-att-value="prod['uom']"/>
-                    <input type="hidden"
-                           t-attf-id="porders_{{ prod_index }}"
-                           t-att-value="prod['orders_json']"/>
+                    <input type="hidden" t-attf-id="pname_{{ prod_index }}" t-att-value="prod['product_name']"/>
+                    <input type="hidden" t-attf-id="pqty_{{ prod_index }}" t-att-value="prod['total_qty']"/>
+                    <input type="hidden" t-attf-id="puom_{{ prod_index }}" t-att-value="prod['uom']"/>
+                    <input type="hidden" t-attf-id="porders_{{ prod_index }}" t-att-value="prod['orders_json']"/>
                 </t>
-                <div class="refresh-bar">
-                    Auto-refresh in <b id="countdown">20</b>s
-                </div>
-                <div class="page-title">
-                    &#127981; Manufacturing Overview
-                </div>
+
+                <div class="refresh-bar">Auto-refresh in <b id="countdown">20</b>s</div>
+                <div class="page-title">&#127981; Manufacturing Overview</div>
+
                 <div class="mo-grid" id="moGrid">
                     <t t-foreach="products" t-as="prod">
-                        <div class="mo-card"
-                             t-attf-data-index="{{ prod_index }}">
+                        <div class="mo-card" t-attf-data-index="{{ prod_index }}">
+
                             <div class="mo-card-header">
-                                <t t-out="prod['product_name']"/>
+                                <span style="word-wrap: break-word;"><t t-out="prod['product_name']"/></span>
+                                <t t-if="prod['color']">
+                                    <div t-attf-style="width: 18px; height: 18px; border-radius: 4px; border: 1px solid #adb5bd; background-color: {{ prod['color'] }}; flex-shrink: 0;" t-att-title="prod['color']"></div>
+                                </t>
                             </div>
+
                             <div class="mo-card-body">
                                 <div class="mo-qty">
                                     <t t-out="prod['total_qty']"/>
-                                    <span style="font-size:14px;
-                                                 font-weight:400;
-                                                 color:#6c757d;">
-                                        <t t-out="prod['uom']"/>
-                                    </span>
+                                    <span style="font-size:14px; font-weight:400; color:#6c757d;"><t t-out="prod['uom']"/></span>
                                 </div>
-                                <div class="mo-qty-label">
-                                    Total Quantity
-                                </div>
-                                <div class="mo-order-count">
-                                    <t t-out="len(prod['orders'])"/>
-                                    order(s) active
-                                </div>
-                                <div class="click-hint">
-                                    &#128065; Click to view customers
-                                </div>
+                                <div class="mo-qty-label">Total Quantity</div>
+                                <div class="mo-order-count"><t t-out="len(prod['orders'])"/> order(s) active</div>
+                                <div class="click-hint">&#128065; Click to view customers</div>
                             </div>
                         </div>
                     </t>
                     <t t-if="not products">
-                        <div class="empty-state">
-                            No active manufacturing orders found.
-                        </div>
+                        <div class="empty-state">No active manufacturing orders found.</div>
                     </t>
                 </div>
+
                 <script>
                     //<![CDATA[
                     var productsData = [];
                     var i = 0;
                     while (document.getElementById('pname_' + i)) {
-                        var ordersRaw =
-                            document.getElementById('porders_' + i).value;
+                        var ordersRaw = document.getElementById('porders_' + i).value;
                         var orders = [];
-                        try {
-                            orders = JSON.parse(ordersRaw);
-                        } catch(e) {
-                            orders = [];
-                        }
+                        try { orders = JSON.parse(ordersRaw); } catch(e) { orders = []; }
                         productsData.push({
-                            product_name:
-                                document.getElementById('pname_' + i).value,
-                            total_qty:
-                                document.getElementById('pqty_' + i).value,
-                            uom:
-                                document.getElementById('puom_' + i).value,
+                            product_name: document.getElementById('pname_' + i).value,
+                            total_qty: document.getElementById('pqty_' + i).value,
+                            uom: document.getElementById('puom_' + i).value,
                             orders: orders
                         });
                         i++;
                     }
+
                     var isModalOpen = false;
-                    document.getElementById('moGrid')
-                        .addEventListener('click', function(e) {
+
+                    document.getElementById('moGrid').addEventListener('click', function(e) {
                         var card = e.target.closest('.mo-card');
                         if (!card) return;
-                        var index =
-                            parseInt(card.getAttribute('data-index'), 10);
+                        var index = parseInt(card.getAttribute('data-index'), 10);
                         showDetail(index);
                     });
+
                     document.addEventListener('click', function(e){
                         if(e.target.classList.contains('note-link')){
-                            var note = decodeURIComponent(
-                                e.target.getAttribute('data-note') || ''
-                            );
+                            var note = decodeURIComponent(e.target.getAttribute('data-note') || '');
                             showNote(note);
                         }
                     });
+
                     function showDetail(index) {
                         var prod = productsData[index];
                         if (!prod) return;
-                        document.getElementById('modalTitle').innerText =
-                            prod.product_name;
-                        document.getElementById('modalTotal').innerHTML =
-                            'Total: <b>' +
-                            prod.total_qty +
-                            ' ' +
-                            prod.uom +
-                            '</b> across ' +
-                            prod.orders.length +
-                            ' order(s)';
-                        var tbody =
-                            document.getElementById('modalTableBody');
+                        document.getElementById('modalTitle').innerText = prod.product_name;
+                        document.getElementById('modalTotal').innerHTML = 'Total: <b>' + prod.total_qty + ' ' + prod.uom + '</b> across ' + prod.orders.length + ' order(s)';
+
+                        var tbody = document.getElementById('modalTableBody');
                         tbody.innerHTML = '';
+
                         if (prod.orders.length === 0) {
-                            tbody.innerHTML =
-                                '<tr>' +
-                                '<td colspan="7" style="text-align:center;">' +
-                                'No orders found' +
-                                '</td>' +
-                                '</tr>';
+                            tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">No orders found</td></tr>';
                         } else {
                             prod.orders.forEach(function(order) {
                                 tbody.innerHTML +=
@@ -358,79 +308,67 @@
                                     '<td>' + order.item_name + '</td>' +
                                     '<td>' + order.delivery_date + '</td>' +
                                     '<td>' + order.qty + ' ' + prod.uom +'</td>' +
-                                    '<td>' + (order.color || '') + '</td>' +
+
                                     '<td>' +
-                                    (
-                                        order.note ?
-                                        '<a href="javascript:void(0)" ' +
-                                        'class="note-link" ' +
-                                        'data-note="' +
-                                        encodeURIComponent(order.note) +
-                                        '" ' +
-                                        'style="color:#042c53;font-weight:600;">' +
-                                        'View' +
-                                        '</a>'
-                                        :
-                                        ''
-                                    ) +
+                                        (order.color ?
+                                        '<div style="display: flex; align-items: center; gap: 6px;">' +
+                                            '<div style="width: 16px; height: 16px; border-radius: 4px; border: 1px solid #adb5bd; background-color: ' + order.color + ';"></div>' +
+                                            '<span>' + order.color + '</span>' +
+                                        '</div>'
+                                        : '—') +
+                                    '</td>' +
+
+                                    '<td>' +
+                                    (order.note ? '<a href="javascript:void(0)" class="note-link" data-note="' + encodeURIComponent(order.note) + '" style="color:#042c53;font-weight:600;">View</a>' : '') +
                                     '</td>' +
                                     '</tr>';
                             });
                         }
-                        document.getElementById('detailModal')
-                            .classList.add('open');
+                        document.getElementById('detailModal').classList.add('open');
                         isModalOpen = true;
                     }
-                    document.getElementById('closeModal')
-                        .addEventListener('click', function() {
-                        document.getElementById('detailModal')
-                            .classList.remove('open');
+
+                    document.getElementById('closeModal').addEventListener('click', function() {
+                        document.getElementById('detailModal').classList.remove('open');
                         isModalOpen = false;
                         sec = 20;
                     });
-                    document.getElementById('detailModal')
-                        .addEventListener('click', function(e) {
+
+                    document.getElementById('detailModal').addEventListener('click', function(e) {
                         if (e.target === this) {
                             this.classList.remove('open');
                             isModalOpen = false;
                             sec = 20;
                         }
                     });
+
                     function showNote(note){
-                        document.getElementById('noteContent').innerText =
-                            note || 'No notes available.';
+                        document.getElementById('noteContent').innerText = note || 'No notes available.';
                         document.getElementById('noteModal').classList.add('open');
                         isModalOpen = true;
                     }
-                    document.getElementById('closeNoteModal')
-                    .addEventListener('click', function(){
-                        document.getElementById('noteModal')
-                        .classList.remove('open');
+
+                    document.getElementById('closeNoteModal').addEventListener('click', function(){
+                        document.getElementById('noteModal').classList.remove('open');
                         isModalOpen = false;
                         sec = 20;
                     });
-                    document.getElementById('noteModal')
-                    .addEventListener('click', function(e){
+
+                    document.getElementById('noteModal').addEventListener('click', function(e){
                         if(e.target === this){
                             this.classList.remove('open');
                             isModalOpen = false;
                             sec = 20;
                         }
                     });
+
                     var sec = 20;
                     setInterval(function() {
-                        if (isModalOpen) {
-                            return;
-                        }
+                        if (isModalOpen) return;
                         sec--;
-                        var el =
-                            document.getElementById('countdown');
-                        if (el) {
-                            el.innerText = sec;
-                        }
-                        if (sec <= 0) {
-                            window.location.reload();
-                        }
+                        var el = document.getElementById('countdown');
+                        if (el) el.innerText = sec;
+                        if (sec <= 0) window.location.reload();
                     }, 1000);
                     //]]>
                 </script>
