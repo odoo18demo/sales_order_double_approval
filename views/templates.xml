@@ -223,10 +223,23 @@
                     <input type="hidden" t-attf-id="porders_{{ prod_index }}" t-att-value="prod['orders_json']"/>
                 </t>
 
-                <div class="refresh-bar">Auto-refresh in <b id="countdown">20</b>s</div>
-                <div class="logo-container">
-                    <img t-attf-src="/web/image?model=res.company&amp;id={{ request.env.user.company_id.id }}&amp;field=logo" alt="Company Logo"/>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+
+                <div class="logo-container" style="margin-bottom:0;">
+                    <img t-attf-src="/web/image?model=res.company&amp;id={{ request.env.user.company_id.id }}&amp;field=logo"
+                         alt="Company Logo"/>
                 </div>
+
+                <div style="text-align:right;">
+                    <a href="/odoo/orders" class="btn btn-primary">
+                        View Sale Orders
+                    </a>
+                    <div class="refresh-bar" style="margin:8px 0 0 0;">
+                        Auto-refresh in <b id="countdown">20</b>s
+                    </div>
+                </div>
+
+            </div>
 
                 <div class="mo-grid" id="moGrid">
                     <t t-foreach="products" t-as="prod">
