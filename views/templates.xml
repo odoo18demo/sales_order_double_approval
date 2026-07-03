@@ -21,14 +21,18 @@
                     .logo-container { margin-bottom: 20px; }
                     .logo-container img { max-height: 60px; width: auto; }
 
-                    /* Grid View Styles */
+                    /* Grid View Styles - EXACTLY 4 PER ROW */
                     .mo-grid {
                         display: grid;
-                        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+                        grid-template-columns: repeat(4, 1fr);
                         gap: 16px;
                     }
+                    @media (max-width: 1300px) { .mo-grid { grid-template-columns: repeat(3, 1fr); } }
+                    @media (max-width: 992px) { .mo-grid { grid-template-columns: repeat(2, 1fr); } }
+                    @media (max-width: 600px) { .mo-grid { grid-template-columns: 1fr; } }
+
                     .mo-card {
-                        background: #ffffff; border-radius: 8px;
+                        background: #ffffff; border-radius: 6px;
                         border: 1px solid #dee2e6; overflow: hidden;
                         cursor: pointer; transition: box-shadow 0.2s;
                     }
@@ -37,19 +41,19 @@
                         border-color: #042c53;
                     }
                     .mo-card-header {
-                        padding: 12px 16px; font-weight: 600; font-size: 14px;
+                        padding: 16px; font-weight: 600; font-size: 14px;
                         color: #ffffff; background: #042c53;
-                        display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;
+                        display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;
+                        min-height: 70px;
                     }
-                    .mo-card-body { padding: 14px 16px; }
-                    .mo-qty { font-size: 30px; font-weight: 700; color: #042c53; }
-                    .mo-qty-label { font-size: 12px; color: #6c757d; margin-top: 2px; }
-                    .mo-order-count {
-                        margin-top: 10px; font-size: 18px; font-weight: 400; color: #042c53;
-                        border-top: 1px solid #f1f3f5; padding-top: 8px;
+
+                    /* New Card Body Layout (Horizontal) */
+                    .mo-card-body {
+                        padding: 16px;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
                     }
-                    .click-hint { font-size: 11px; color: #042c53; margin-top: 6px; font-weight: 500; }
-                    .empty-state { text-align: center; padding: 60px 20px; color: #6c757d; font-size: 15px; }
 
                     /* Table Styles */
                     .customer-table {
@@ -174,22 +178,37 @@
                 <div id="view-grid" style="display: block;">
                     <div class="mo-grid" id="moGrid">
                         <t t-foreach="products" t-as="prod">
-                            <div class="mo-card" t-attf-data-index="{{ prod_index }}">
+                            <div class="mo-card" t-attf-data-index="{{ prod_index }}" title="Click to view full details">
+
                                 <div class="mo-card-header">
-                                    <span style="word-wrap: break-word;"><t t-out="prod['product_name']"/></span>
-                                    <t t-if="prod['color']">
-                                        <div t-attf-style="width: 18px; height: 18px; border-radius: 4px; border: 1px solid #adb5bd; background-color: {{ prod['color'] }}; flex-shrink: 0;" t-att-title="prod['color']"></div>
-                                    </t>
-                                </div>
-                                <div class="mo-card-body">
-                                    <div class="mo-qty">
-                                        <t t-out="prod['total_qty']"/>
-                                        <span style="font-size:14px; font-weight:400; color:#6c757d;"><t t-out="prod['uom']"/></span>
+                                    <span style="flex: 1; word-wrap: break-word; line-height: 1.4;">
+                                        <t t-out="prod['product_name']"/>
+                                    </span>
+                                    <div style="display: flex; align-items: center; gap: 10px; flex-shrink: 0;">
+                                        <t t-if="prod['color']">
+                                            <div t-attf-style="width: 16px; height: 16px; border-radius: 2px; border: 1px solid #ffffff; background-color: {{ prod['color'] }};" t-att-title="prod['color']"></div>
+                                        </t>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.9;">
+                                            <path d="M8 3H5a2 2 0 0 0-2 2v3"></path>
+                                            <path d="M21 8V5a2 2 0 0 0-2-2h-3"></path>
+                                            <path d="M3 16v3a2 2 0 0 0 2 2h3"></path>
+                                            <path d="M16 21h3a2 2 0 0 0 2-2v-3"></path>
+                                        </svg>
                                     </div>
-                                    <div class="mo-qty-label">Total Quantity</div>
-                                    <div class="mo-order-count"><t t-out="len(prod['orders'])"/> order(s) active</div>
-                                    <div class="click-hint">&#128065; Click to view customers</div>
                                 </div>
+
+                                <div class="mo-card-body">
+                                    <div>
+                                        <span style="font-size: 13px; color: #495057;">QTY-Ordered :</span>
+                                        <span style="font-size: 24px; color: #212529; font-weight: 400; margin: 0 4px; line-height: 1;"><t t-out="prod['total_qty']"/></span>
+                                        <span style="font-size: 13px; color: #6c757d;"><t t-out="prod['uom']"/></span>
+                                    </div>
+                                    <div>
+                                        <span style="font-size: 13px; color: #495057;">orders No :</span>
+                                        <span style="font-size: 24px; color: #212529; font-weight: 400; margin-left: 4px; line-height: 1;"><t t-out="len(prod['orders'])"/></span>
+                                    </div>
+                                </div>
+
                             </div>
                         </t>
                         <t t-if="not products">
@@ -236,7 +255,7 @@
 
                     // --- 1. DATA EXTRACTION ---
                     var productsData = [];
-                    var flatOrders = []; // Holds every product from every order individually
+                    var flatOrders = [];
 
                     var i = 0;
                     while (document.getElementById('pname_' + i)) {
@@ -254,7 +273,6 @@
                             orders: orders
                         });
 
-                        // Flatten orders
                         orders.forEach(function(o) {
                             var orderCopy = Object.assign({}, o);
                             orderCopy.uom = uom;
@@ -293,7 +311,6 @@
                         var term = document.getElementById('searchSO').value.toLowerCase().trim();
                         var groupBy = document.getElementById('groupBySelect').value;
 
-                        // Apply Search Filter
                         var filtered = flatOrders.filter(function(o) {
                             return o.origin.toLowerCase().includes(term);
                         });
@@ -307,7 +324,6 @@
                         }
 
                         if (groupBy === 'none') {
-                            // FLAT VIEW: Sorted entirely by SO Number Descending (e.g., S00085 > S00078)
                             filtered.sort(function(a, b) {
                                 return b.origin.localeCompare(a.origin);
                             });
@@ -317,7 +333,6 @@
                             });
 
                         } else if (groupBy === 'so') {
-                            // GROUP BY: Sale Order
                             var soGroups = {};
                             filtered.forEach(function(o) {
                                 if (!soGroups[o.origin]) soGroups[o.origin] = [];
@@ -328,7 +343,6 @@
                                 return { origin: key, orders: soGroups[key] };
                             });
 
-                            // Sort Sale Orders Descending
                             soArray.sort(function(a, b) { return b.origin.localeCompare(a.origin); });
 
                             soArray.forEach(function(g) {
@@ -342,7 +356,6 @@
                             });
 
                         } else if (groupBy === 'product') {
-                            // GROUP BY: Product
                             var prodGroups = {};
                             filtered.forEach(function(o) {
                                 if (!prodGroups[o.item_name]) prodGroups[o.item_name] = [];
@@ -353,7 +366,6 @@
                                 return { item_name: key, orders: prodGroups[key] };
                             });
 
-                            // Sort Products Alphabetically
                             prodArray.sort(function(a, b) { return a.item_name.localeCompare(b.item_name); });
 
                             prodArray.forEach(function(g) {
@@ -362,7 +374,6 @@
                                         'Product: <span style="font-size: 16px;">' + g.item_name + '</span>' +
                                         '</td></tr>';
 
-                                // Sort items inside the group by SO Number Descending
                                 g.orders.sort(function(a, b) { return b.origin.localeCompare(a.origin); });
                                 g.orders.forEach(function(o) { html += buildRowHTML(o); });
                             });
@@ -375,7 +386,6 @@
                     var isListView = false;
                     var isModalOpen = false;
 
-                    // Toggle between Grid and Full List
                     document.getElementById('btnToggleView').addEventListener('click', function() {
                         if (!isListView) {
                             document.getElementById('view-grid').style.display = 'none';
@@ -391,11 +401,9 @@
                         }
                     });
 
-                    // Input triggers re-render
                     document.getElementById('searchSO').addEventListener('input', renderAllOrdersTable);
                     document.getElementById('groupBySelect').addEventListener('change', renderAllOrdersTable);
 
-                    // Grid Card Clicks (Opens single-product modal)
                     document.getElementById('moGrid').addEventListener('click', function(e) {
                         var card = e.target.closest('.mo-card');
                         if (!card) return;
@@ -407,7 +415,6 @@
                         var tbody = document.getElementById('modalTableBody');
                         tbody.innerHTML = '';
 
-                        // Sort modal orders by SO Number Descending
                         var sortedOrders = [...prod.orders].sort((a, b) => b.origin.localeCompare(a.origin));
 
                         sortedOrders.forEach(function(o) {
@@ -420,7 +427,6 @@
                         isModalOpen = true;
                     });
 
-                    // Note Listeners
                     document.addEventListener('click', function(e){
                         if(e.target.classList.contains('note-link')){
                             var note = decodeURIComponent(e.target.getAttribute('data-note') || '');
@@ -430,7 +436,6 @@
                         }
                     });
 
-                    // Modal Close Events
                     document.getElementById('closeModal').addEventListener('click', function() {
                         document.getElementById('detailModal').classList.remove('open');
                         isModalOpen = false; sec = 20;
@@ -446,7 +451,6 @@
                         if (e.target === this) { this.classList.remove('open'); isModalOpen = false; sec = 20; }
                     });
 
-                    // Auto Refresh Logic
                     var sec = 20;
                     setInterval(function() {
                         if (isModalOpen || isListView) return;
