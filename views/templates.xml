@@ -18,163 +18,96 @@
                         color: #6c757d;
                         margin-bottom: 16px;
                     }
-                    /* NEW: Logo Container Styling */
-                    .logo-container {
-                        margin-bottom: 20px;
-                    }
-                    .logo-container img {
-                        max-height: 60px;
-                        width: auto;
-                    }
+                    .logo-container { margin-bottom: 20px; }
+                    .logo-container img { max-height: 60px; width: auto; }
+
+                    /* Grid View Styles */
                     .mo-grid {
                         display: grid;
                         grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
                         gap: 16px;
                     }
                     .mo-card {
-                        background: #ffffff;
-                        border-radius: 8px;
-                        border: 1px solid #dee2e6;
-                        overflow: hidden;
-                        cursor: pointer;
-                        transition: box-shadow 0.2s;
+                        background: #ffffff; border-radius: 8px;
+                        border: 1px solid #dee2e6; overflow: hidden;
+                        cursor: pointer; transition: box-shadow 0.2s;
                     }
                     .mo-card:hover {
                         box-shadow: 0 4px 12px rgba(0,0,0,0.12);
                         border-color: #042c53;
                     }
                     .mo-card-header {
-                        padding: 12px 16px;
-                        font-weight: 600;
-                        font-size: 14px;
-                        color: #ffffff;
-                        background: #042c53;
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: flex-start;
-                        gap: 10px;
+                        padding: 12px 16px; font-weight: 600; font-size: 14px;
+                        color: #ffffff; background: #042c53;
+                        display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;
                     }
-                    .mo-card-body {
-                        padding: 14px 16px;
-                    }
-                    .mo-qty {
-                        font-size: 30px;
-                        font-weight: 700;
-                        color: #042c53;
-                    }
-                    .mo-qty-label {
-                        font-size: 12px;
-                        color: #6c757d;
-                        margin-top: 2px;
-                    }
-                    /* UPDATED: Bigger font, removed bold */
+                    .mo-card-body { padding: 14px 16px; }
+                    .mo-qty { font-size: 30px; font-weight: 700; color: #042c53; }
+                    .mo-qty-label { font-size: 12px; color: #6c757d; margin-top: 2px; }
                     .mo-order-count {
-                        margin-top: 10px;
-                        font-size: 18px;
-                        font-weight: 400;
-                        color: #042c53;
-                        border-top: 1px solid #f1f3f5;
-                        padding-top: 8px;
+                        margin-top: 10px; font-size: 18px; font-weight: 400; color: #042c53;
+                        border-top: 1px solid #f1f3f5; padding-top: 8px;
                     }
-                    .click-hint {
-                        font-size: 11px;
-                        color: #042c53;
-                        margin-top: 6px;
-                        font-weight: 500;
-                    }
-                    .empty-state {
-                        text-align: center;
-                        padding: 60px 20px;
-                        color: #6c757d;
-                        font-size: 15px;
-                    }
-                    .modal-overlay {
-                        display: none;
-                        position: fixed;
-                        top: 0;
-                        left: 0;
-                        width: 100%;
-                        height: 100%;
-                        background: rgba(0,0,0,0.5);
-                        z-index: 9999;
-                        align-items: center;
-                        justify-content: center;
-                    }
-                    .modal-overlay.open {
-                        display: flex;
-                    }
-                    .modal-box {
-                        background: #fff;
-                        border-radius: 10px;
-                        width: 95%;
-                        max-width: 1100px;
-                        max-height: 85vh;
-                        overflow-x: hidden;
-                        overflow-y: auto;
-                        box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-                    }
-                    .modal-header {
-                        background: #042c53;
-                        color: white;
-                        padding: 16px 20px;
-                        border-radius: 10px 10px 0 0;
-                        display: flex;
-                        align-items: center;
-                        justify-content: space-between;
-                        position: sticky;
-                        top: 0;
-                        z-index: 10;
-                    }
-                    .modal-header h3 {
-                        margin: 0;
-                        font-size: 16px;
-                        font-weight: 600;
-                    }
-                    .modal-close {
-                        background: none;
-                        border: none;
-                        color: white;
-                        font-size: 20px;
-                        cursor: pointer;
-                        line-height: 1;
-                    }
-                    .modal-body {
-                        padding: 20px;
-                    }
-                    .modal-total {
-                        background: #f0f4f8;
-                        border-radius: 6px;
-                        padding: 12px 16px;
-                        margin-bottom: 16px;
-                        font-size: 14px;
-                        color: #042c53;
-                        font-weight: 600;
-                    }
+                    .click-hint { font-size: 11px; color: #042c53; margin-top: 6px; font-weight: 500; }
+                    .empty-state { text-align: center; padding: 60px 20px; color: #6c757d; font-size: 15px; }
+
+                    /* Table Styles */
                     .customer-table {
-                        width: 100%;
-                        border-collapse: collapse;
-                        font-size: 13px;
+                        width: 100%; border-collapse: collapse; font-size: 13px;
+                        background: #fff; border: 1px solid #dee2e6; border-radius: 8px; overflow: hidden;
                     }
                     .customer-table th {
-                        background: #f8f9fa;
-                        padding: 10px 12px;
-                        text-align: left;
-                        font-weight: 600;
-                        color: #495057;
-                        border-bottom: 2px solid #dee2e6;
+                        background: #f8f9fa; padding: 12px 15px; text-align: left;
+                        font-weight: 600; color: #495057; border-bottom: 2px solid #dee2e6;
                     }
                     .customer-table td {
-                        padding: 10px 12px;
-                        border-bottom: 1px solid #f1f3f5;
-                        color: #212529;
-                        word-wrap: break-word;
+                        padding: 12px 15px; border-bottom: 1px solid #f1f3f5; color: #212529; word-wrap: break-word;
                     }
-                    .customer-table tr:hover td {
-                        background: #f8f9fa;
+                    .customer-table tr:hover td { background: #f8f9fa; }
+
+                    /* Modals */
+                    .modal-overlay {
+                        display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                        background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center;
+                    }
+                    .modal-overlay.open { display: flex; }
+                    .modal-box {
+                        background: #fff; border-radius: 10px; width: 95%; max-width: 1100px;
+                        max-height: 85vh; overflow-x: hidden; overflow-y: auto; box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+                    }
+                    .modal-header {
+                        background: #042c53; color: white; padding: 16px 20px; border-radius: 10px 10px 0 0;
+                        display: flex; align-items: center; justify-content: space-between;
+                        position: sticky; top: 0; z-index: 10;
+                    }
+                    .modal-header h3 { margin: 0; font-size: 16px; font-weight: 600; }
+                    .modal-close { background: none; border: none; color: white; font-size: 20px; cursor: pointer; line-height: 1; }
+                    .modal-body { padding: 20px; }
+
+                    /* List View Filters Bar */
+                    .filters-bar {
+                        background: #ffffff; padding: 16px; border-radius: 8px;
+                        border: 1px solid #dee2e6; margin-bottom: 20px;
+                        display: flex; gap: 16px; align-items: center; flex-wrap: wrap;
+                    }
+                    .filters-bar input[type="text"] {
+                        padding: 10px 14px; border: 1px solid #ced4da; border-radius: 6px;
+                        font-size: 14px; flex: 1; min-width: 250px; max-width: 400px;
+                    }
+
+                    /* Group By Dropdown Styling */
+                    .group-dropdown-wrapper {
+                        display: flex; align-items: center; gap: 8px; border: 1px solid #ced4da;
+                        padding: 8px 14px; border-radius: 6px; background: #fff;
+                    }
+                    .group-dropdown-wrapper select {
+                        border: none; background: transparent; font-size: 14px;
+                        font-weight: 600; color: #042c53; outline: none; cursor: pointer;
                     }
                 </style>
             </head>
             <body>
+
                 <div class="modal-overlay" id="detailModal">
                     <div class="modal-box">
                         <div class="modal-header">
@@ -182,18 +115,17 @@
                             <button class="modal-close" id="closeModal">&#10005;</button>
                         </div>
                         <div class="modal-body">
-                            <div class="modal-total" id="modalTotal"></div>
                             <table class="customer-table">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
+                                        <th># Ref</th>
                                         <th>Order Date</th>
-                                        <th>Customer Name</th>
+                                        <th>Customer</th>
                                         <th>Address</th>
                                         <th>Sales Man</th>
                                         <th>Item Name</th>
-                                        <th>Delivery Date</th>
-                                        <th>Quantity</th>
+                                        <th>Delivery</th>
+                                        <th>Qty</th>
                                         <th>Color</th>
                                         <th>Notes</th>
                                     </tr>
@@ -211,7 +143,7 @@
                             <button class="modal-close" id="closeNoteModal">&#10005;</button>
                         </div>
                         <div class="modal-body">
-                            <div id="noteContent" style="white-space: pre-wrap; font-size: 14px; color: #212529; line-height: 1.7; padding: 8px; background: #f8f9fa; border-radius: 6px; min-height: 60px;"></div>
+                            <div id="noteContent" style="white-space: pre-wrap; font-size: 14px; color: #212529; line-height: 1.7; padding: 12px; background: #f8f9fa; border-radius: 6px; min-height: 80px;"></div>
                         </div>
                     </div>
                 </div>
@@ -224,168 +156,306 @@
                 </t>
 
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+                    <div class="logo-container" style="margin-bottom:0;">
+                        <img t-attf-src="/web/image?model=res.company&amp;id={{ request.env.user.company_id.id }}&amp;field=logo" alt="Company Logo"/>
+                    </div>
+                    <div style="text-align:right;">
 
-                <div class="logo-container" style="margin-bottom:0;">
-                    <img t-attf-src="/web/image?model=res.company&amp;id={{ request.env.user.company_id.id }}&amp;field=logo"
-                         alt="Company Logo"/>
-                </div>
+                        <a href="javascript:void(0)" id="btnToggleView" style="color: #042c53; font-weight: 600; text-decoration: underline; font-size: 15px;">
+                            View All Sale Orders
+                        </a>
 
-                <div style="text-align:right;">
-                    <a href="/odoo/orders" class="btn btn-primary">
-                        View Sale Orders
-                    </a>
-                    <div class="refresh-bar" style="margin:8px 0 0 0;">
-                        Auto-refresh in <b id="countdown">20</b>s
+                        <div class="refresh-bar" style="margin:8px 0 0 0;">
+                            Auto-refresh in <b id="countdown">20</b>s
+                        </div>
                     </div>
                 </div>
 
-            </div>
-
-                <div class="mo-grid" id="moGrid">
-                    <t t-foreach="products" t-as="prod">
-                        <div class="mo-card" t-attf-data-index="{{ prod_index }}">
-
-                            <div class="mo-card-header">
-                                <span style="word-wrap: break-word;"><t t-out="prod['product_name']"/></span>
-                                <t t-if="prod['color']">
-                                    <div t-attf-style="width: 18px; height: 18px; border-radius: 4px; border: 1px solid #adb5bd; background-color: {{ prod['color'] }}; flex-shrink: 0;" t-att-title="prod['color']"></div>
-                                </t>
-                            </div>
-
-                            <div class="mo-card-body">
-                                <div class="mo-qty">
-                                    <t t-out="prod['total_qty']"/>
-                                    <span style="font-size:14px; font-weight:400; color:#6c757d;"><t t-out="prod['uom']"/></span>
+                <div id="view-grid" style="display: block;">
+                    <div class="mo-grid" id="moGrid">
+                        <t t-foreach="products" t-as="prod">
+                            <div class="mo-card" t-attf-data-index="{{ prod_index }}">
+                                <div class="mo-card-header">
+                                    <span style="word-wrap: break-word;"><t t-out="prod['product_name']"/></span>
+                                    <t t-if="prod['color']">
+                                        <div t-attf-style="width: 18px; height: 18px; border-radius: 4px; border: 1px solid #adb5bd; background-color: {{ prod['color'] }}; flex-shrink: 0;" t-att-title="prod['color']"></div>
+                                    </t>
                                 </div>
-                                <div class="mo-qty-label">Total Quantity</div>
-                                <div class="mo-order-count"><t t-out="len(prod['orders'])"/> order(s) active</div>
-                                <div class="click-hint">&#128065; Click to view customers</div>
+                                <div class="mo-card-body">
+                                    <div class="mo-qty">
+                                        <t t-out="prod['total_qty']"/>
+                                        <span style="font-size:14px; font-weight:400; color:#6c757d;"><t t-out="prod['uom']"/></span>
+                                    </div>
+                                    <div class="mo-qty-label">Total Quantity</div>
+                                    <div class="mo-order-count"><t t-out="len(prod['orders'])"/> order(s) active</div>
+                                    <div class="click-hint">&#128065; Click to view customers</div>
+                                </div>
                             </div>
+                        </t>
+                        <t t-if="not products">
+                            <div class="empty-state">No active manufacturing orders found.</div>
+                        </t>
+                    </div>
+                </div>
+
+                <div id="view-list" style="display: none;">
+
+                    <div class="filters-bar">
+                        <input type="text" id="searchSO" placeholder="Search Sale Order (e.g. S00078)..." autocomplete="off" />
+
+                        <div class="group-dropdown-wrapper">
+                            <span style="font-size: 16px; line-height: 1;">&#128269;</span> <select id="groupBySelect">
+                                <option value="none">No Grouping</option>
+                                <option value="so">Group by Sale Order</option>
+                                <option value="product">Group by Product</option>
+                            </select>
                         </div>
-                    </t>
-                    <t t-if="not products">
-                        <div class="empty-state">No active manufacturing orders found.</div>
-                    </t>
+                    </div>
+
+                    <table class="customer-table">
+                        <thead>
+                            <tr>
+                                <th>SO Number</th>
+                                <th>Order Date</th>
+                                <th>Customer Name</th>
+                                <th>Address</th>
+                                <th>Sales Man</th>
+                                <th>Item Name</th>
+                                <th>Delivery Date</th>
+                                <th>Quantity</th>
+                                <th>Color</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody id="allOrdersTableBody"></tbody>
+                    </table>
                 </div>
 
                 <script>
                     //<![CDATA[
+
+                    // --- 1. DATA EXTRACTION ---
                     var productsData = [];
+                    var flatOrders = []; // Holds every product from every order individually
+
                     var i = 0;
                     while (document.getElementById('pname_' + i)) {
+                        var pName = document.getElementById('pname_' + i).value;
+                        var uom = document.getElementById('puom_' + i).value;
                         var ordersRaw = document.getElementById('porders_' + i).value;
+
                         var orders = [];
                         try { orders = JSON.parse(ordersRaw); } catch(e) { orders = []; }
+
                         productsData.push({
-                            product_name: document.getElementById('pname_' + i).value,
+                            product_name: pName,
                             total_qty: document.getElementById('pqty_' + i).value,
-                            uom: document.getElementById('puom_' + i).value,
+                            uom: uom,
                             orders: orders
+                        });
+
+                        // Flatten orders
+                        orders.forEach(function(o) {
+                            var orderCopy = Object.assign({}, o);
+                            orderCopy.uom = uom;
+                            flatOrders.push(orderCopy);
                         });
                         i++;
                     }
 
+                    // --- 2. HELPER FUNCTIONS ---
+                    function buildRowHTML(order) {
+                        return '<tr>' +
+                            '<td><b>' + order.origin + '</b></td>' +
+                            '<td>' + order.date_order + '</td>' +
+                            '<td>' + order.customer + '</td>' +
+                            '<td>' + order.customer_city + '</td>' +
+                            '<td>' + order.salesperson + '</td>' +
+                            '<td>' + order.item_name + '</td>' +
+                            '<td>' + order.delivery_date + '</td>' +
+                            '<td>' + order.qty + ' ' + order.uom +'</td>' +
+                            '<td>' +
+                                (order.color ?
+                                '<div style="display: flex; align-items: center; gap: 6px;">' +
+                                    '<div style="width: 16px; height: 16px; border-radius: 4px; border: 1px solid #adb5bd; background-color: ' + order.color + ';"></div>' +
+                                    '<span>' + order.color + '</span>' +
+                                '</div>'
+                                : '—') +
+                            '</td>' +
+                            '<td>' +
+                            (order.note ? '<a href="javascript:void(0)" class="note-link" data-note="' + encodeURIComponent(order.note) + '" style="color:#042c53;font-weight:600;text-decoration:underline;">View</a>' : '') +
+                            '</td>' +
+                            '</tr>';
+                    }
+
+                    // --- 3. RENDER FULL LIST VIEW ---
+                    function renderAllOrdersTable() {
+                        var term = document.getElementById('searchSO').value.toLowerCase().trim();
+                        var groupBy = document.getElementById('groupBySelect').value;
+
+                        // Apply Search Filter
+                        var filtered = flatOrders.filter(function(o) {
+                            return o.origin.toLowerCase().includes(term);
+                        });
+
+                        var tbody = document.getElementById('allOrdersTableBody');
+                        var html = '';
+
+                        if (filtered.length === 0) {
+                            tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; padding: 40px; color: #6c757d; font-size: 15px;">No sale orders match your search.</td></tr>';
+                            return;
+                        }
+
+                        if (groupBy === 'none') {
+                            // FLAT VIEW: Sorted entirely by SO Number Descending (e.g., S00085 > S00078)
+                            filtered.sort(function(a, b) {
+                                return b.origin.localeCompare(a.origin);
+                            });
+
+                            filtered.forEach(function(o) {
+                                html += buildRowHTML(o);
+                            });
+
+                        } else if (groupBy === 'so') {
+                            // GROUP BY: Sale Order
+                            var soGroups = {};
+                            filtered.forEach(function(o) {
+                                if (!soGroups[o.origin]) soGroups[o.origin] = [];
+                                soGroups[o.origin].push(o);
+                            });
+
+                            var soArray = Object.keys(soGroups).map(function(key) {
+                                return { origin: key, orders: soGroups[key] };
+                            });
+
+                            // Sort Sale Orders Descending
+                            soArray.sort(function(a, b) { return b.origin.localeCompare(a.origin); });
+
+                            soArray.forEach(function(g) {
+                                var firstOrder = g.orders[0];
+                                html += '<tr style="background-color: #e9ecef; border-top: 3px solid #042c53;">' +
+                                        '<td colspan="10" style="font-weight: 700; color: #042c53; font-size: 14px; padding-top: 15px; padding-bottom: 15px;">' +
+                                        'Sale Order: <span style="font-size: 16px; margin-right: 15px;">' + g.origin + '</span> | <span style="margin-left: 15px; font-weight:normal;">Customer: ' + firstOrder.customer + '</span>' +
+                                        '</td></tr>';
+
+                                g.orders.forEach(function(o) { html += buildRowHTML(o); });
+                            });
+
+                        } else if (groupBy === 'product') {
+                            // GROUP BY: Product
+                            var prodGroups = {};
+                            filtered.forEach(function(o) {
+                                if (!prodGroups[o.item_name]) prodGroups[o.item_name] = [];
+                                prodGroups[o.item_name].push(o);
+                            });
+
+                            var prodArray = Object.keys(prodGroups).map(function(key) {
+                                return { item_name: key, orders: prodGroups[key] };
+                            });
+
+                            // Sort Products Alphabetically
+                            prodArray.sort(function(a, b) { return a.item_name.localeCompare(b.item_name); });
+
+                            prodArray.forEach(function(g) {
+                                html += '<tr style="background-color: #d1ecf1; border-top: 3px solid #042c53;">' +
+                                        '<td colspan="10" style="font-weight: 700; color: #042c53; font-size: 14px; padding-top: 15px; padding-bottom: 15px;">' +
+                                        'Product: <span style="font-size: 16px;">' + g.item_name + '</span>' +
+                                        '</td></tr>';
+
+                                // Sort items inside the group by SO Number Descending
+                                g.orders.sort(function(a, b) { return b.origin.localeCompare(a.origin); });
+                                g.orders.forEach(function(o) { html += buildRowHTML(o); });
+                            });
+                        }
+
+                        tbody.innerHTML = html;
+                    }
+
+                    // --- 4. EVENT LISTENERS ---
+                    var isListView = false;
                     var isModalOpen = false;
 
+                    // Toggle between Grid and Full List
+                    document.getElementById('btnToggleView').addEventListener('click', function() {
+                        if (!isListView) {
+                            document.getElementById('view-grid').style.display = 'none';
+                            document.getElementById('view-list').style.display = 'block';
+                            this.innerText = "Back to Grid View";
+                            isListView = true;
+                            renderAllOrdersTable();
+                        } else {
+                            document.getElementById('view-grid').style.display = 'block';
+                            document.getElementById('view-list').style.display = 'none';
+                            this.innerText = "View All Sale Orders";
+                            isListView = false;
+                        }
+                    });
+
+                    // Input triggers re-render
+                    document.getElementById('searchSO').addEventListener('input', renderAllOrdersTable);
+                    document.getElementById('groupBySelect').addEventListener('change', renderAllOrdersTable);
+
+                    // Grid Card Clicks (Opens single-product modal)
                     document.getElementById('moGrid').addEventListener('click', function(e) {
                         var card = e.target.closest('.mo-card');
                         if (!card) return;
                         var index = parseInt(card.getAttribute('data-index'), 10);
-                        showDetail(index);
-                    });
 
-                    document.addEventListener('click', function(e){
-                        if(e.target.classList.contains('note-link')){
-                            var note = decodeURIComponent(e.target.getAttribute('data-note') || '');
-                            showNote(note);
-                        }
-                    });
-
-                    function showDetail(index) {
                         var prod = productsData[index];
-                        if (!prod) return;
                         document.getElementById('modalTitle').innerText = prod.product_name;
-                        document.getElementById('modalTotal').innerHTML = 'Total: <b>' + prod.total_qty + ' ' + prod.uom + '</b> across ' + prod.orders.length + ' order(s)';
 
                         var tbody = document.getElementById('modalTableBody');
                         tbody.innerHTML = '';
 
-                        if (prod.orders.length === 0) {
-                            tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">No orders found</td></tr>';
-                        } else {
-                            prod.orders.forEach(function(order) {
-                                tbody.innerHTML +=
-                                    '<tr>' +
-                                    '<td>' + order.origin + '</td>' +
-                                    '<td>' + order.date_order + '</td>' +
-                                    '<td>' + order.customer + '</td>' +
-                                    '<td>' + order.customer_city + '</td>' +
-                                    '<td>' + order.salesperson + '</td>' +
-                                    '<td>' + order.item_name + '</td>' +
-                                    '<td>' + order.delivery_date + '</td>' +
-                                    '<td>' + order.qty + ' ' + prod.uom +'</td>' +
+                        // Sort modal orders by SO Number Descending
+                        var sortedOrders = [...prod.orders].sort((a, b) => b.origin.localeCompare(a.origin));
 
-                                    '<td>' +
-                                        (order.color ?
-                                        '<div style="display: flex; align-items: center; gap: 6px;">' +
-                                            '<div style="width: 16px; height: 16px; border-radius: 4px; border: 1px solid #adb5bd; background-color: ' + order.color + ';"></div>' +
-                                            '<span>' + order.color + '</span>' +
-                                        '</div>'
-                                        : '—') +
-                                    '</td>' +
+                        sortedOrders.forEach(function(o) {
+                            var orderCopy = Object.assign({}, o);
+                            orderCopy.uom = prod.uom;
+                            tbody.innerHTML += buildRowHTML(orderCopy);
+                        });
 
-                                    '<td>' +
-                                    (order.note ? '<a href="javascript:void(0)" class="note-link" data-note="' + encodeURIComponent(order.note) + '" style="color:#042c53;font-weight:600;">View</a>' : '') +
-                                    '</td>' +
-                                    '</tr>';
-                            });
-                        }
                         document.getElementById('detailModal').classList.add('open');
                         isModalOpen = true;
-                    }
+                    });
 
+                    // Note Listeners
+                    document.addEventListener('click', function(e){
+                        if(e.target.classList.contains('note-link')){
+                            var note = decodeURIComponent(e.target.getAttribute('data-note') || '');
+                            document.getElementById('noteContent').innerText = note || 'No notes available.';
+                            document.getElementById('noteModal').classList.add('open');
+                            isModalOpen = true;
+                        }
+                    });
+
+                    // Modal Close Events
                     document.getElementById('closeModal').addEventListener('click', function() {
                         document.getElementById('detailModal').classList.remove('open');
-                        isModalOpen = false;
-                        sec = 20;
+                        isModalOpen = false; sec = 20;
                     });
-
-                    document.getElementById('detailModal').addEventListener('click', function(e) {
-                        if (e.target === this) {
-                            this.classList.remove('open');
-                            isModalOpen = false;
-                            sec = 20;
-                        }
-                    });
-
-                    function showNote(note){
-                        document.getElementById('noteContent').innerText = note || 'No notes available.';
-                        document.getElementById('noteModal').classList.add('open');
-                        isModalOpen = true;
-                    }
-
-                    document.getElementById('closeNoteModal').addEventListener('click', function(){
+                    document.getElementById('closeNoteModal').addEventListener('click', function() {
                         document.getElementById('noteModal').classList.remove('open');
-                        isModalOpen = false;
-                        sec = 20;
+                        isModalOpen = false; sec = 20;
+                    });
+                    document.getElementById('detailModal').addEventListener('click', function(e) {
+                        if (e.target === this) { this.classList.remove('open'); isModalOpen = false; sec = 20; }
+                    });
+                    document.getElementById('noteModal').addEventListener('click', function(e) {
+                        if (e.target === this) { this.classList.remove('open'); isModalOpen = false; sec = 20; }
                     });
 
-                    document.getElementById('noteModal').addEventListener('click', function(e){
-                        if(e.target === this){
-                            this.classList.remove('open');
-                            isModalOpen = false;
-                            sec = 20;
-                        }
-                    });
-
+                    // Auto Refresh Logic
                     var sec = 20;
                     setInterval(function() {
-                        if (isModalOpen) return;
+                        if (isModalOpen || isListView) return;
                         sec--;
                         var el = document.getElementById('countdown');
                         if (el) el.innerText = sec;
                         if (sec <= 0) window.location.reload();
                     }, 1000);
+
                     //]]>
                 </script>
             </body>
