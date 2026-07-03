@@ -111,4 +111,21 @@
             </xpath>
         </field>
     </record>
+    <record id="sale.action_accrued_revenue_entry" model="ir.actions.act_window">
+        <field name="binding_model_id" eval="False"/>
+    </record>
+    <record id="sale.action_sale_order_generate_link" model="ir.actions.act_window">
+        <field name="binding_model_id" eval="False"/>
+    </record>
+    <record id="sale.model_sale_order_send_mail" model="ir.actions.server">
+        <field name="binding_model_id" eval="False"/>
+    </record>
+    <record id="sale.model_sale_order_action_quotation_sent" model="ir.actions.server">
+        <field name="binding_model_id" eval="False"/>
+    </record>
+    <record id="sale.model_sale_order_action_share" model="ir.actions.server">
+        <field name="binding_model_id" eval="False"/>
+    </record>
 </odoo>
+
+

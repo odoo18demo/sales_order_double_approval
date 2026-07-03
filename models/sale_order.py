@@ -349,9 +349,30 @@ class SaleOrder(models.Model):
             rec.is_manager = (rec.team_id.second_approval_id == user)
 
     def action_confirm(self):
+        # 1. Run standard Odoo logic (This automatically creates the draft MO via MTO)
         res = super(SaleOrder, self).action_confirm()
+
         for order in self:
+            # Your existing email notification
             order._send_confirmation_email_to_manager()
+
+            # ==============================================================
+            # NEW LOGIC: Auto-Confirm Manufacturing Orders linked to this SO
+            # ==============================================================
+
+            # When Odoo creates an MO from a Sale Order, it sets the MO's
+            # 'origin' field to match the Sale Order's name (e.g., 'S00085').
+            # We use sudo() here just in case the Salesperson confirming the
+            # order doesn't have full Manufacturing access rights.
+            draft_mos = self.env['mrp.production'].sudo().search([
+                ('origin', '=', order.name),
+                ('state', '=', 'draft')
+            ])
+
+            # Loop through any found draft MOs and trigger their confirm action
+            for mo in draft_mos:
+                mo.action_confirm()
+
         return res
 
     def _send_confirmation_email_to_manager(self):
@@ -425,31 +446,3 @@ class SaleOrder(models.Model):
                     rec.is_current_approver = False
             else:
                 rec.is_current_approver = False
-
-
-# # CREATE THIS NEW CLASS at the bottom of your Python file
-# class SaleOrderLine(models.Model):
-#     _inherit = 'sale.order.line'
-#
-#     @api.model_create_multi
-#     def create(self, vals_list):
-#         for vals in vals_list:
-#             if 'order_id' in vals:
-#                 order = self.env['sale.order'].browse(vals['order_id'])
-#                 # ALLOW if the system is creating lines (like backorders or picking moves)
-#                 # Odoo's internal processes often set the context 'create_from_picking'
-#                 if self.env.context.get('create_from_picking') or self.env.context.get('skip_security_check'):
-#                     continue
-#                 if order.state not in ['draft_approval']:
-#                     raise UserError(_("Security restriction: You cannot add new products while pending approval."))
-#         return super(SaleOrderLine, self).create(vals_list)
-#
-#     def unlink(self):
-#         # ALLOW if the system is deleting lines (like canceling moves)
-#         if self.env.context.get('skip_security_check'):
-#             return super(SaleOrderLine, self).unlink()
-#
-#         for line in self:
-#             if line.order_id.state not in ['draft_approval']:
-#                 raise UserError(_("Security restriction: You cannot delete products while pending approval."))
-#         return super(SaleOrderLine, self).unlink()
