@@ -223,10 +223,13 @@
                         <input type="text" id="searchSO" placeholder="Search Sale Order (e.g. S00078)..." autocomplete="off" />
 
                         <div class="group-dropdown-wrapper">
-                            <span style="font-size: 16px; line-height: 1;">&#128269;</span> <select id="groupBySelect">
+                            <span style="font-size: 16px; line-height: 1;">&#128269;</span>
+                            <select id="groupBySelect">
                                 <option value="none">No Grouping</option>
                                 <option value="so">Group by Sale Order</option>
                                 <option value="product">Group by Product</option>
+                                <option value="salesman">Group by Sales Man</option>
+                                <option value="customer">Group by Customer</option>
                             </select>
                         </div>
                     </div>
@@ -327,7 +330,6 @@
                             filtered.sort(function(a, b) {
                                 return b.origin.localeCompare(a.origin);
                             });
-
                             filtered.forEach(function(o) {
                                 html += buildRowHTML(o);
                             });
@@ -338,20 +340,16 @@
                                 if (!soGroups[o.origin]) soGroups[o.origin] = [];
                                 soGroups[o.origin].push(o);
                             });
-
                             var soArray = Object.keys(soGroups).map(function(key) {
                                 return { origin: key, orders: soGroups[key] };
                             });
-
                             soArray.sort(function(a, b) { return b.origin.localeCompare(a.origin); });
-
                             soArray.forEach(function(g) {
                                 var firstOrder = g.orders[0];
                                 html += '<tr style="background-color: #e9ecef; border-top: 3px solid #042c53;">' +
                                         '<td colspan="10" style="font-weight: 700; color: #042c53; font-size: 14px; padding-top: 15px; padding-bottom: 15px;">' +
                                         'Sale Order: <span style="font-size: 16px; margin-right: 15px;">' + g.origin + '</span> | <span style="margin-left: 15px; font-weight:normal;">Customer: ' + firstOrder.customer + '</span>' +
                                         '</td></tr>';
-
                                 g.orders.forEach(function(o) { html += buildRowHTML(o); });
                             });
 
@@ -361,19 +359,55 @@
                                 if (!prodGroups[o.item_name]) prodGroups[o.item_name] = [];
                                 prodGroups[o.item_name].push(o);
                             });
-
                             var prodArray = Object.keys(prodGroups).map(function(key) {
                                 return { item_name: key, orders: prodGroups[key] };
                             });
-
                             prodArray.sort(function(a, b) { return a.item_name.localeCompare(b.item_name); });
-
                             prodArray.forEach(function(g) {
                                 html += '<tr style="background-color: #d1ecf1; border-top: 3px solid #042c53;">' +
                                         '<td colspan="10" style="font-weight: 700; color: #042c53; font-size: 14px; padding-top: 15px; padding-bottom: 15px;">' +
                                         'Product: <span style="font-size: 16px;">' + g.item_name + '</span>' +
                                         '</td></tr>';
+                                g.orders.sort(function(a, b) { return b.origin.localeCompare(a.origin); });
+                                g.orders.forEach(function(o) { html += buildRowHTML(o); });
+                            });
 
+                        } else if (groupBy === 'salesman') {
+                            var smGroups = {};
+                            filtered.forEach(function(o) {
+                                var sm = o.salesperson || 'No Sales Man';
+                                if (!smGroups[sm]) smGroups[sm] = [];
+                                smGroups[sm].push(o);
+                            });
+                            var smArray = Object.keys(smGroups).map(function(key) {
+                                return { salesperson: key, orders: smGroups[key] };
+                            });
+                            smArray.sort(function(a, b) { return a.salesperson.localeCompare(b.salesperson); });
+                            smArray.forEach(function(g) {
+                                html += '<tr style="background-color: #d1ecf1; border-top: 3px solid #042c53;">' +
+                                        '<td colspan="10" style="font-weight: 700; color: #042c53; font-size: 14px; padding-top: 15px; padding-bottom: 15px;">' +
+                                        'Sales Man: <span style="font-size: 16px;">' + g.salesperson + '</span>' +
+                                        '</td></tr>';
+                                g.orders.sort(function(a, b) { return b.origin.localeCompare(a.origin); });
+                                g.orders.forEach(function(o) { html += buildRowHTML(o); });
+                            });
+
+                        } else if (groupBy === 'customer') {
+                            var custGroups = {};
+                            filtered.forEach(function(o) {
+                                var cust = o.customer || 'No Customer';
+                                if (!custGroups[cust]) custGroups[cust] = [];
+                                custGroups[cust].push(o);
+                            });
+                            var custArray = Object.keys(custGroups).map(function(key) {
+                                return { customer: key, orders: custGroups[key] };
+                            });
+                            custArray.sort(function(a, b) { return a.customer.localeCompare(b.customer); });
+                            custArray.forEach(function(g) {
+                                html += '<tr style="background-color: #d1ecf1; border-top: 3px solid #042c53;">' +
+                                        '<td colspan="10" style="font-weight: 700; color: #042c53; font-size: 14px; padding-top: 15px; padding-bottom: 15px;">' +
+                                        'Customer: <span style="font-size: 16px;">' + g.customer + '</span>' +
+                                        '</td></tr>';
                                 g.orders.sort(function(a, b) { return b.origin.localeCompare(a.origin); });
                                 g.orders.forEach(function(o) { html += buildRowHTML(o); });
                             });
