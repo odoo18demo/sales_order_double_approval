@@ -20,6 +20,7 @@
                     name="%(action_report_delivery_note_custom)d"
                     type="action"
                     string="Print Delivery Note"
+                    invisible="state != 'done'"
                     class="btn-primary"/>
             </xpath>
             <!-- Hide print button when state = assigned (stable @name, no issue) -->
