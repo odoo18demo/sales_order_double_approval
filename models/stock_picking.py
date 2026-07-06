@@ -24,7 +24,11 @@ class StockPicking(models.Model):
     truck_plate_no = fields.Char(string="Truck Plate No")
     customer_phone = fields.Char(string="Customer Phone")
     city_code = fields.Char(string="City Code")
-    leave_time = fields.Float(string="Leave Time")
+    # leave_time = fields.Float(string="Leave Time")
+    leave_datetime = fields.Datetime(
+        string="Leave Time",
+        default=fields.Datetime.now
+    )
 
     def button_validate(self):
         _logger.warning("CUSTOM BUTTON_VALIDATE CALLED")

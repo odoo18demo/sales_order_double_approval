@@ -63,6 +63,7 @@ class MrpScreen(http.Controller):
             if pid not in product_map:
                 product_map[pid] = {
                     'product_name': mo.product_id.name,
+                    'default_code': mo.product_id.default_code or '',
                     'total_qty': 0,
                     'uom': mo.product_uom_id.name,
                     'color': mo.product_id.product_tmpl_id.prod_color or '', # <-- ADDED TOP-LEVEL COLOR HERE

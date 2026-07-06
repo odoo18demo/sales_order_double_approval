@@ -13,7 +13,7 @@
             <xpath expr="//field[@name='origin']" position="after">
                     <field name="truck_plate_no" required="1"/>
                     <field name="customer_phone"/>
-                    <field name="leave_time" widget="float_time"/>
+                    <field name="leave_datetime"/>
             </xpath>
             <xpath expr="//header" position="inside">
                 <button

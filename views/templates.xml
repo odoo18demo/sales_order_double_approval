@@ -170,7 +170,7 @@
                         </a>
 
                         <div class="refresh-bar" style="margin:8px 0 0 0;">
-                            Auto-refresh in <b id="countdown">20</b>s
+                            Auto-refresh in <b id="countdown">10</b>s
                         </div>
                     </div>
                 </div>
@@ -182,6 +182,11 @@
 
                                 <div class="mo-card-header">
                                     <span style="flex: 1; word-wrap: break-word; line-height: 1.4;">
+                                        <t t-if="prod.get('default_code')">
+                                            <span style="opacity: 0.8; font-weight: normal; margin-right: 4px;">
+                                                [<t t-out="prod['default_code']"/>]
+                                            </span>
+                                        </t>
                                         <t t-out="prod['product_name']"/>
                                     </span>
                                     <div style="display: flex; align-items: center; gap: 10px; flex-shrink: 0;">
@@ -472,20 +477,20 @@
 
                     document.getElementById('closeModal').addEventListener('click', function() {
                         document.getElementById('detailModal').classList.remove('open');
-                        isModalOpen = false; sec = 20;
+                        isModalOpen = false; sec = 10;
                     });
                     document.getElementById('closeNoteModal').addEventListener('click', function() {
                         document.getElementById('noteModal').classList.remove('open');
-                        isModalOpen = false; sec = 20;
+                        isModalOpen = false; sec = 10;
                     });
                     document.getElementById('detailModal').addEventListener('click', function(e) {
-                        if (e.target === this) { this.classList.remove('open'); isModalOpen = false; sec = 20; }
+                        if (e.target === this) { this.classList.remove('open'); isModalOpen = false; sec = 10; }
                     });
                     document.getElementById('noteModal').addEventListener('click', function(e) {
-                        if (e.target === this) { this.classList.remove('open'); isModalOpen = false; sec = 20; }
+                        if (e.target === this) { this.classList.remove('open'); isModalOpen = false; sec = 10; }
                     });
 
-                    var sec = 20;
+                    var sec = 10;
                     setInterval(function() {
                         if (isModalOpen || isListView) return;
                         sec--;
