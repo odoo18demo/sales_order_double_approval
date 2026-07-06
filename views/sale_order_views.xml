@@ -126,6 +126,25 @@
     <record id="sale.model_sale_order_action_share" model="ir.actions.server">
         <field name="binding_model_id" eval="False"/>
     </record>
+    <record id="sale.menu_sale_order" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+    <record id="sale.menu_sale_invoicing" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+    <record id="sale.menu_sales_config" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+    <record id="sale.menu_product_combos" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+    <record id="sale.payment_menu" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+    <record id="sale.sale_menu_config_activities" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+
 </odoo>
 
 

@@ -46,4 +46,15 @@
     <record id="stock.stock_split_picking" model="ir.actions.server">
         <field name="binding_model_id" eval="False"/>
     </record>
+    <record id="stock.menu_wms_barcode_nomenclature_all" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+    <record id="delievry_default_filter_remove" model="ir.ui.view">
+        <field name="name">delivery.order.search.remove.my.quotation</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='delivery']" position="replace"/>
+        </field>
+    </record>
 </odoo>
