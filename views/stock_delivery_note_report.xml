@@ -118,25 +118,28 @@
                         <hr/>
                         <span t-field="o.note"/>
                     </div>
-                    <table style="width:100%;margin-top:50px;text-align:center;">
-                        <tr>
-                            <td style="width:33%;">
-                                <strong>Warehouse Manager</strong>
-                                <br/><br/><br/><br/>
-                                __________________
-                            </td>
-                            <td style="width:33%;">
-                                <strong>Driver Signature</strong>
-                                <br/><br/><br/><br/>
-                                __________________
-                            </td>
-                            <td style="width:33%;">
-                                <strong>Customer Signature</strong>
-                                <br/><br/><br/><br/>
-                                __________________
-                            </td>
-                        </tr>
-                    </table>
+                    <!-- ADDED: t-if to check the context -->
+                    <t t-if="not env.context.get('hide_signatures')">
+                        <table style="width:100%;margin-top:50px;text-align:center;">
+                            <tr>
+                                <td style="width:33%;">
+                                    <strong>Warehouse Manager</strong>
+                                    <br/><br/><br/><br/>
+                                    __________________
+                                </td>
+                                <td style="width:33%;">
+                                    <strong>Driver Signature</strong>
+                                    <br/><br/><br/><br/>
+                                    __________________
+                                </td>
+                                <td style="width:33%;">
+                                    <strong>Customer Signature</strong>
+                                    <br/><br/><br/><br/>
+                                    __________________
+                                </td>
+                            </tr>
+                        </table>
+                    </t>
                 </div>
             </t>
         </t>

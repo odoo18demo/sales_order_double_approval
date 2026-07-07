@@ -65,14 +65,19 @@ class StockPicking(models.Model):
         sale = self.sale_id
         if not sale:
             return
+
         # GENERATE DELIVERY NOTE PDF
         report_action = self.env.ref(
             'sales_order_double_approval.action_report_delivery_note_custom'
         )
-        pdf_content, _ = self.env['ir.actions.report']._render_qweb_pdf(
+        # ADDED: with_context(hide_signatures=True) to pass the flag to the PDF
+        pdf_content, _ = self.env['ir.actions.report'].with_context(
+            hide_signatures=True
+        )._render_qweb_pdf(
             report_action.report_name,
             [self.id]
         )
+
         _logger.warning("PDF GENERATED SUCCESSFULLY")
         attachment = self.env['ir.attachment'].sudo().create({
             'name': f'Delivery_Note_{self.name}.pdf',
@@ -117,7 +122,7 @@ class StockPicking(models.Model):
         email_to = ",".join(emails)
         validator = self.env.user
         # EMAIL BODY
-        subject = f"Delivery Validated - {self.name}"
+        subject = f"Delivery Validated - {sale.name}"
         body = f"""
         <div style="font-family:Arial,sans-serif;">
             <p>
