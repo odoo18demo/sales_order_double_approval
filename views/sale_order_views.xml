@@ -33,7 +33,9 @@
                         class="btn-primary"
                         invisible="state != 'to_approve' or not ((is_revisor and approval_stage == 'pending_revisor') or is_manager)"/>
             </header>
-
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="domain">[('customer_rank', '>', 0), '|', ('create_uid', '=', uid), ('user_id', '=', uid)]</attribute>
+            </xpath>
             <xpath expr="//button[@id='action_confirm']" position="attributes">
                 <attribute name="invisible">state != 'sent' or not is_salesperson</attribute>
             </xpath>

@@ -12,7 +12,7 @@
     'company': 'Cybrosys Techno Solutions',
     'maintainer': 'Cybrosys Techno Solutions',
     'website': 'https://www.cybrosys.com/',
-    'depends': ['sales_team', 'base', 'sale_management', 'mrp', 'stock', 'mail', 'united_custom_layout'],
+    'depends': ['base','sales_team','sale_management', 'mrp', 'stock', 'mail', 'united_custom_layout'],
     'data': [
         'security/ir.model.access.csv',
         'data/email_template.xml',
@@ -26,6 +26,7 @@
         'views/mrp_production_form_inherit_view.xml',
         'views/stock_picking_view.xml',
         'views/stock_delivery_note_report.xml',
+        'views/delivery_slip_custom.xml',
         'views/templates.xml',
         'views/mail_layout_override.xml',
     ],

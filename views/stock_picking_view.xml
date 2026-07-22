@@ -15,6 +15,16 @@
                     <field name="customer_phone"/>
                     <field name="leave_datetime"/>
             </xpath>
+            <!-- GRAB ODOO'S DEFAULT sale_id AND MOVE IT UNDER leave_datetime -->
+            <xpath expr="//field[@name='leave_datetime']" position="after">
+                <field name="sale_id" position="move"/>
+            </xpath>
+
+            <!-- Ensure it is editable in draft state and disable creating new SOs from here -->
+            <xpath expr="//field[@name='sale_id']" position="attributes">
+                <attribute name="readonly">state != 'draft'</attribute>
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
             <xpath expr="//header" position="inside">
                 <button
                     name="%(action_report_delivery_note_custom)d"

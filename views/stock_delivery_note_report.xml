@@ -1,144 +1,150 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <template id="delivery_note_template">
-        <t t-call="web.html_container">
+        <t t-call="web.basic_layout">
             <t t-foreach="docs" t-as="o">
-                <div class="page">
-                    <div style="text-align:center;margin-bottom:20px;">
-                        <h2>Delivery Note</h2>
-                    </div>
-                    <table style="width:100%; margin-bottom:20px; border-collapse:separate; border-spacing:0 8px;">
+                <div class="page" style="font-family: 'DejaVu Sans', Arial, sans-serif;">
 
+                    <div style="text-align:center; margin-bottom:20px;">
+                        <h2>Delivery Note <br/><span style="font-size: 16px; font-weight: normal;">مذكرة تسليم</span></h2>
+                    </div>
+
+                    <table style="width:100%; margin-bottom:20px; border-collapse:separate; border-spacing:0 8px;">
                         <tr>
-                            <td style="width:20%;"><b>SN:</b></td>
+                            <td style="width:20%;"><b>SN / الرقم التسلسلي:</b></td>
                             <td style="width:30%;"><span t-field="o.name"/></td>
 
-                            <td style="width:20%;"><b>Date:</b></td>
+                            <td style="width:20%;"><b>Date / التاريخ:</b></td>
                             <td style="width:30%;"><span t-field="o.scheduled_date"/></td>
                         </tr>
 
                         <tr>
-                            <td><b>City Code:</b></td>
+                            <td><b>City Code / رمز المدينة:</b></td>
                             <td><span t-field="o.city_code"/></td>
 
-                            <td><b>Salesman:</b></td>
+                            <td><b>Salesman / مندوب المبيعات:</b></td>
                             <td><span t-field="o.sale_id.user_id"/></td>
                         </tr>
 
                         <tr>
-                            <td><b>Customer:</b></td>
+                            <td><b>Customer / العميل:</b></td>
                             <td><span t-field="o.partner_id"/></td>
 
-                            <td><b>Customer Phone:</b></td>
+                            <td><b>Customer Phone / هاتف العميل:</b></td>
                             <td><span t-field="o.customer_phone"/></td>
                         </tr>
 
                         <tr>
-                            <td><b>Address:</b></td>
+                            <td><b>Address / العنوان:</b></td>
                             <td><span t-esc="o.partner_id.contact_address"/></td>
 
-                            <td><b>Leave Time:</b></td>
-                            <td>
-                                <span t-field="o.leave_datetime"/>
-                            </td>
+                            <td><b>Leave Time / وقت المغادرة:</b></td>
+                            <td><span t-field="o.leave_datetime"/></td>
                         </tr>
 
                         <tr>
-                            <td><b>Sales Order:</b></td>
+                            <td><b>Sales Order / أمر المبيعات:</b></td>
                             <td><span t-esc="o.origin"/></td>
 
-                            <td><b>Truck Plate No:</b></td>
+                            <td><b>Truck Plate No / رقم اللوحة:</b></td>
                             <td><span t-field="o.truck_plate_no"/></td>
                         </tr>
 
                         <tr>
-                            <td><b>Driver Name:</b></td>
+                            <td><b>Driver Name / اسم السائق:</b></td>
                             <td><span t-field="o.driver_name"/></td>
-                            <td><b>Driver Mobile:</b></td>
+                            <td><b>Driver Mobile / جوال السائق:</b></td>
                             <td><span t-field="o.driver_mobile"/></td>
                             <td></td>
                             <td></td>
                         </tr>
-
                     </table>
-                    <table style="width:100%;border-collapse:collapse;margin-top:20px;">
+
+                    <table style="width:100%; border-collapse:collapse; margin-top:20px;">
                         <thead>
                             <tr>
-                                <th style="border:1px solid #000;padding:6px;">#</th>
-                                <th style="border:1px solid #000;padding:6px;">Item Code</th>
-                                <th style="border:1px solid #000;padding:6px;">Description</th>
-                                <th style="border:1px solid #000;padding:6px;">Qty (MTR)</th>
-                                <th style="border:1px solid #000;padding:6px;">Qty</th>
-                                <th style="border:1px solid #000;padding:6px;">Unit</th>
+                                <th style="border:1px solid #000; padding:6px; text-align:center;">#</th>
+                                <th style="border:1px solid #000; padding:6px;">Item Code <br/><span style="font-size:10px; font-weight:normal;">رمز الصنف</span></th>
+                                <th style="border:1px solid #000; padding:6px;">Description <br/><span style="font-size:10px; font-weight:normal;">الوصف</span></th>
+                                <th style="border:1px solid #000; padding:6px; text-align:right;">Qty (MTR) <br/><span style="font-size:10px; font-weight:normal;">الكمية (متر)</span></th>
+                                <th style="border:1px solid #000; padding:6px; text-align:right;">Qty <br/><span style="font-size:10px; font-weight:normal;">الكمية</span></th>
+                                <th style="border:1px solid #000; padding:6px;">Unit <br/><span style="font-size:10px; font-weight:normal;">الوحدة</span></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr t-foreach="o.move_ids_without_package" t-as="line">
-                                <td style="border:1px solid #000;padding:6px;">
+                            <t t-set="delivered_lines" t-value="o.move_ids_without_package.filtered(lambda l: l.quantity > 0)"/>
+
+                            <tr t-foreach="delivered_lines" t-as="line">
+                                <td style="border:1px solid #000; padding:6px; text-align:center;">
                                     <span t-esc="line_index + 1"/>
                                 </td>
-                                <td style="border:1px solid #000;padding:6px;">
+                                <td style="border:1px solid #000; padding:6px;">
                                     <span t-field="line.product_id.default_code"/>
                                 </td>
-                                <td style="border:1px solid #000;padding:6px;">
-                                    <span t-esc="(line.name or '').replace('Â', '').replace('\xa0', ' ')"/>
+                                <td style="border:1px solid #000; padding:6px;">
+                                    <span t-esc="line.product_id.name.replace('Â', '').replace('\xa0', ' ')"/>
                                 </td>
-                                <td style="border:1px solid #000;padding:6px;text-align:right;">
+                                <td style="border:1px solid #000; padding:6px; text-align:right;">
                                     <span t-field="line.qty_meter"/>
                                 </td>
-                                <td style="border:1px solid #000;padding:6px;text-align:right;">
+                                <td style="border:1px solid #000; padding:6px; text-align:right;">
                                     <span t-field="line.quantity"/>
                                 </td>
-                                <td style="border:1px solid #000;padding:6px;">
+                                <td style="border:1px solid #000; padding:6px;">
                                     <span t-field="line.product_uom"/>
                                 </td>
                             </tr>
 
                             <tr>
-                                <td colspan="3" style="border:1px solid #000;padding:6px;text-align:right; font-weight:bold;">
-                                    Total
+                                <td colspan="3" style="border:1px solid #000; padding:6px; text-align:right; font-weight:bold;">
+                                    Total / الإجمالي
                                 </td>
-                                <td style="border:1px solid #000;padding:6px;text-align:right; font-weight:bold;">
-                                    <span t-esc="sum(o.move_ids_without_package.mapped('qty_meter'))"/>
+                                <td style="border:1px solid #000; padding:6px; text-align:right; font-weight:bold;">
+                                    <span t-esc="sum(delivered_lines.mapped('qty_meter'))"/>
                                 </td>
-                                <td style="border:1px solid #000;padding:6px;text-align:right; font-weight:bold;">
-                                    <span t-esc="sum(o.move_ids_without_package.mapped('quantity'))"/>
+                                <td style="border:1px solid #000; padding:6px; text-align:right; font-weight:bold;">
+                                    <span t-esc="sum(delivered_lines.mapped('quantity'))"/>
                                 </td>
-                                <td style="border:1px solid #000;padding:6px; font-weight:bold;">
-                                    <t t-if="o.move_ids_without_package">
-                                        <span t-esc="o.move_ids_without_package[-1].product_uom.name"/>
+                                <td style="border:1px solid #000; padding:6px; font-weight:bold;">
+                                    <t t-if="delivered_lines">
+                                        <span t-esc="delivered_lines[-1].product_uom.name"/>
                                     </t>
                                 </td>
                             </tr>
-
                         </tbody>
                     </table>
+
                     <div style="margin-top:25px;">
-                        <strong>Notes:</strong>
+                        <strong>Notes / الملاحظات:</strong>
                         <hr/>
                         <span t-field="o.note"/>
                     </div>
-                    <!-- ADDED: t-if to check the context -->
+
                     <t t-if="not env.context.get('hide_signatures')">
-                        <table style="width:100%;margin-top:50px;text-align:center;">
-                            <tr>
-                                <td style="width:33%;">
-                                    <strong>Warehouse Manager</strong>
-                                    <br/><br/><br/><br/>
-                                    __________________
-                                </td>
-                                <td style="width:33%;">
-                                    <strong>Driver Signature</strong>
-                                    <br/><br/><br/><br/>
-                                    __________________
-                                </td>
-                                <td style="width:33%;">
-                                    <strong>Customer Signature</strong>
-                                    <br/><br/><br/><br/>
-                                    __________________
-                                </td>
-                            </tr>
-                        </table>
+                        <div style="margin-top:50px; width:100%; text-align:center;">
+
+                            <div style="display:inline-block; width:32%; vertical-align:top;">
+                                <strong>Warehouse Manager</strong><br/>
+                                <span style="font-size:12px;">أمين المستودع</span>
+                                <br/><br/><br/><br/>
+                                <div style="border-top:1px solid #000; width:120px; margin:0 auto;"></div>
+                            </div>
+
+                            <div style="display:inline-block; width:32%; vertical-align:top;">
+                                <strong>Driver Signature</strong><br/>
+                                <span style="font-size:12px;">توقيع السائق</span>
+                                <br/><br/><br/><br/>
+                                <div style="border-top:1px solid #000; width:120px; margin:0 auto;"></div>
+                            </div>
+
+                            <div style="display:inline-block; width:32%; vertical-align:top;">
+                                <strong>Customer Signature</strong><br/>
+                                <span style="font-size:12px;">توقيع العميل</span>
+                                <br/><br/><br/><br/>
+                                <div style="border-top:1px solid #000; width:120px; margin:0 auto;"></div>
+                            </div>
+
+                        </div>
                     </t>
                 </div>
             </t>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="custom_delivery_slip_inherit" inherit_id="stock.report_delivery_document">
+
+        <xpath expr="//t[@t-set='address']" position="replace">
+            <t t-set="address"> </t>
+        </xpath>
+
+        <xpath expr="//div[hasclass('page')]" position="replace">
+            <div class="page" style="font-family: 'DejaVu Sans', Arial, sans-serif;">
+
+                <h2 style="text-align:center; font-size:18px; margin-bottom: 20px;">
+                    Delivery Note <br/>
+                    <span style="font-size: 14px; font-weight: normal;">مذكرة تسليم</span>
+                </h2>
+
+                <div class="row" style="margin-bottom: 20px;">
+                    <div class="col-6">
+                        <div style="padding: 5px;"><b>SN / الرقم التسلسلي:</b> <span t-field="o.name"/></div>
+                        <div style="padding: 5px;"><b>City Code / رمز المدينة:</b> <span t-field="o.city_code"/></div>
+                        <div style="padding: 5px;"><b>Customer / العميل:</b> <span t-field="o.partner_id.name"/></div>
+                        <div style="padding: 5px;"><b>Address / العنوان:</b> <span t-esc="o.partner_id.contact_address"/></div>
+                        <div style="padding: 5px;"><b>Sales Order / أمر المبيعات:</b> <span t-field="o.origin"/></div>
+                        <div style="padding: 5px;"><b>Driver Name / اسم السائق:</b> <span t-field="o.driver_name"/></div>
+                    </div>
+                    <div class="col-6">
+                        <div style="padding: 5px;"><b>Date / التاريخ:</b> <span t-field="o.scheduled_date"/></div>
+                        <div style="padding: 5px;"><b>Salesman / مندوب المبيعات:</b> <span t-field="o.sale_id.user_id.name"/></div>
+                        <div style="padding: 5px;"><b>Customer Phone / هاتف العميل:</b> <span t-field="o.customer_phone"/></div>
+                        <div style="padding: 5px;"><b>Leave Time / وقت المغادرة:</b> <span t-field="o.leave_datetime"/></div>
+                        <div style="padding: 5px;"><b>Truck Plate No / رقم اللوحة:</b> <span t-field="o.truck_plate_no"/></div>
+                        <div style="padding: 5px;"><b>Driver Mobile / جوال السائق:</b> <span t-field="o.driver_mobile"/></div>
+                    </div>
+                </div>
+
+                <table style="width:100%; border-collapse: collapse; margin-top: 20px;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid black;">
+                            <th style="padding: 8px;">
+                                <strong>Product</strong><br/>
+                                <span style="font-size: 10px; font-weight: normal;">المنتج</span>
+                            </th>
+                            <th style="padding: 8px;" class="text-end">
+                                <strong>Qty (MTR)</strong><br/>
+                                <span style="font-size: 10px; font-weight: normal;">الكمية (متر)</span>
+                            </th>
+                            <th style="padding: 8px;" class="text-end">
+                                <strong>Qty</strong><br/>
+                                <span style="font-size: 10px; font-weight: normal;">الكمية</span>
+                            </th>
+                            <th style="padding: 8px;" class="text-end">
+                                <strong>Unit</strong><br/>
+                                <span style="font-size: 10px; font-weight: normal;">الوحدة</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="lines" t-value="o.move_ids.filtered(lambda x: x.product_uom_qty)"/>
+                        <tr t-foreach="lines" t-as="move" style="border-bottom: 1px solid #eee;">
+                            <td style="padding: 8px;">
+                                <span t-esc="move.product_id.name.replace('Â', '').replace('\xa0', ' ')"/>
+                            </td>
+                            <td style="padding: 8px;" class="text-end"><span t-field="move.qty_meter"/></td>
+                            <td style="padding: 8px;" class="text-end"><span t-field="move.quantity"/></td>
+                            <td style="padding: 8px;" class="text-end"><span t-field="move.product_uom"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </xpath>
+    </template>
+</odoo>

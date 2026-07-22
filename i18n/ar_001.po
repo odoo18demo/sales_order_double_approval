@@ -1,0 +1,140 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sales_order_double_approval
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0-20260119\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-22 05:40+0000\n"
+"PO-Revision-Date: 2026-07-22 05:40+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+
+#. module: sales_order_double_approval
+#: model:ir.model.fields,field_description:sales_order_double_approval.field_stock_picking__city_code
+msgid "City Code"
+msgstr "رمز المدينة"
+
+#. module: sales_order_double_approval
+#: model:ir.model,name:sales_order_double_approval.model_res_company
+msgid "Companies"
+msgstr "الشركات"
+
+#. module: sales_order_double_approval
+#: model:ir.model.fields,field_description:sales_order_double_approval.field_stock_picking__customer_phone
+msgid "Customer Phone"
+msgstr "رقم هاتف العميل"
+
+#. module: sales_order_double_approval
+#: model:ir.model.fields.selection,name:sales_order_double_approval.selection__sale_order__approval_stage__draft
+#: model:ir.model.fields.selection,name:sales_order_double_approval.selection__sale_order__state__draft_approval
+msgid "Draft"
+msgstr "مسودة"
+
+#. module: sales_order_double_approval
+#: model:ir.model.fields,field_description:sales_order_double_approval.field_stock_picking__driver_name
+msgid "Driver"
+msgstr "السائق"
+
+#. module: sales_order_double_approval
+#: model:ir.model.fields,field_description:sales_order_double_approval.field_stock_picking__driver_mobile
+msgid "Driver Mobile"
+msgstr "جوال السائق"
+
+#. module: sales_order_double_approval
+#: model:ir.model.fields,field_description:sales_order_double_approval.field_fleet_driver__name
+msgid "Driver Name"
+msgstr "اسم السائق"
+
+#. module: sales_order_double_approval
+#: model:ir.actions.act_window,name:sales_order_double_approval.action_fleet_driver
+#: model:ir.model,name:sales_order_double_approval.model_fleet_driver
+#: model:ir.ui.menu,name:sales_order_double_approval.menu_fleet_driver
+msgid "Drivers"
+msgstr "السائقون"
+
+#. module: sales_order_double_approval
+#: model:ir.model.fields,field_description:sales_order_double_approval.field_financial_team__user_id
+msgid "Finance Manager"
+msgstr "مدير الشؤون المالية"
+
+#. module: sales_order_double_approval
+#: model:ir.ui.menu,name:sales_order_double_approval.menu_financial_team_root
+msgid "Financial Teams"
+msgstr "الفرق المالية"
+
+#. module: sales_order_double_approval
+#: model:ir.model.fields,field_description:sales_order_double_approval.field_stock_picking__leave_datetime
+msgid "Leave Time"
+msgstr "وقت المغادرة"
+
+#. module: sales_order_double_approval
+#: model:ir.model.fields,field_description:sales_order_double_approval.field_fleet_driver__license_no
+msgid "License No"
+msgstr "رقم رخصة القيادة"
+
+#. module: sales_order_double_approval
+#: model:ir.model.fields,field_description:sales_order_double_approval.field_crm_team__second_approval_id
+msgid "Manager"
+msgstr "المدير"
+
+#. module: sales_order_double_approval
+#: model:ir.model.fields.selection,name:sales_order_double_approval.selection__sale_order__state__to_approve
+msgid "Pending Approval"
+msgstr "بإنتظار الموافقة"
+
+#. module: sales_order_double_approval
+#: model:ir.model.fields,field_description:sales_order_double_approval.field_fleet_driver__phone
+msgid "Phone"
+msgstr "رقم هاتف السائق"
+
+#. module: sales_order_double_approval
+#: model_terms:ir.ui.view,arch_db:sales_order_double_approval.view_picking_form_inherit_delivery_info
+msgid "Print Delivery Note"
+msgstr "طباعة سند التسليم"
+
+#. module: sales_order_double_approval
+#: model_terms:ir.ui.view,arch_db:sales_order_double_approval.team_crm_view_inherit
+msgid "Revisor"
+msgstr "المراجع المالي"
+
+#. module: sales_order_double_approval
+#: model:ir.model,name:sales_order_double_approval.model_sale_order
+msgid "Sales Order"
+msgstr "أمر البيع"
+
+#. module: sales_order_double_approval
+#: model:ir.model,name:sales_order_double_approval.model_crm_team
+msgid "Sales Team"
+msgstr "فريق المبيعات"
+
+#. module: sales_order_double_approval
+#: model:ir.model.fields,field_description:sales_order_double_approval.field_sale_order__state
+msgid "Status"
+msgstr "الحالة"
+
+#. module: sales_order_double_approval
+#: model_terms:ir.ui.view,arch_db:sales_order_double_approval.view_order_form_inherit_approval_workflow
+msgid "Submit for Approval"
+msgstr "إرسال للاعتماد"
+
+#. module: sales_order_double_approval
+#: model:ir.model.fields,field_description:sales_order_double_approval.field_financial_team__name
+msgid "Team Name"
+msgstr "اسم الفريق المالي"
+
+#. module: sales_order_double_approval
+#: model:ir.model.fields,field_description:sales_order_double_approval.field_stock_picking__truck_plate_no
+msgid "Truck Plate No"
+msgstr "رقم لوحة الشاحنة"
+
+
+
+
+

@@ -4,6 +4,9 @@ from odoo import _, fields, models, api
 from odoo.http import request
 from odoo.exceptions import UserError
 from odoo import http
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class SaleOrder(models.Model):
@@ -357,21 +360,29 @@ class SaleOrder(models.Model):
             order._send_confirmation_email_to_manager()
 
             # ==============================================================
-            # NEW LOGIC: Auto-Confirm Manufacturing Orders linked to this SO
+            # ADVANCED LOGIC: Auto-Confirm, Reserve, and Produce All MOs
             # ==============================================================
-
-            # When Odoo creates an MO from a Sale Order, it sets the MO's
-            # 'origin' field to match the Sale Order's name (e.g., 'S00085').
-            # We use sudo() here just in case the Salesperson confirming the
-            # order doesn't have full Manufacturing access rights.
             draft_mos = self.env['mrp.production'].sudo().search([
                 ('origin', '=', order.name),
-                ('state', '=', 'draft')
+                ('state', 'in', ['draft', 'confirmed'])
             ])
 
-            # Loop through any found draft MOs and trigger their confirm action
             for mo in draft_mos:
-                mo.action_confirm()
+                # Step 1: Confirm the MO if it's still in draft
+                if mo.state == 'draft':
+                    mo.action_confirm()
+
+                # Step 2: Check availability / reserve raw materials
+                mo.action_assign()
+
+                # Step 3: Automatically mark the production as Done (Produce All)
+                try:
+                    # Check if components are available or force completion
+                    mo.button_mark_done()
+                except Exception as e:
+                    # If components are missing or serial numbers are required,
+                    # it will catch the error gracefully without breaking the Sale Order confirmation.
+                    _logger.warning("Could not auto-produce MO %s: %s", mo.name, str(e))
 
         return res
 
