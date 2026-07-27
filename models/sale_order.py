@@ -457,3 +457,14 @@ class SaleOrder(models.Model):
                     rec.is_current_approver = False
             else:
                 rec.is_current_approver = False
+
+    can_edit_payment_term = fields.Boolean(
+        compute="_compute_can_edit_payment_term"
+    )
+
+    @api.depends_context('uid')
+    def _compute_can_edit_payment_term(self):
+        can_edit = self.env.user.has_group('sales_team.group_sale_manager')
+
+        for order in self:
+            order.can_edit_payment_term = can_edit
