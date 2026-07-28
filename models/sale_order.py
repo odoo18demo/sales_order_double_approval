@@ -468,3 +468,43 @@ class SaleOrder(models.Model):
 
         for order in self:
             order.can_edit_payment_term = can_edit
+
+    delivery_badge_status = fields.Selection([
+        ('pending', 'Pending Delivery'),
+        ('partial', 'Partially Delivered'),
+        ('full', 'Fully Delivered')
+    ], string="Delivery Status", compute="_compute_delivery_badge_status", store=True)
+
+    # The flag to track if the user manually short-closed the order
+    is_force_delivered = fields.Boolean(string="Force Fully Delivered", default=False, copy=False)
+
+    @api.depends('order_line.product_uom_qty', 'order_line.qty_delivered', 'is_force_delivered')
+    def _compute_delivery_badge_status(self):
+        for order in self:
+            # 1. If the user clicked our manual button, force it to 'full'
+            if order.is_force_delivered:
+                order.delivery_badge_status = 'full'
+                continue
+
+            # 2. Otherwise, calculate based on physical quantities
+            # (We filter out services/shipping costs to only check physical stock)
+            storable_lines = order.order_line.filtered(lambda l: l.product_id.type != 'service')
+
+            if not storable_lines:
+                order.delivery_badge_status = 'pending'
+                continue
+
+            total_ordered = sum(storable_lines.mapped('product_uom_qty'))
+            total_delivered = sum(storable_lines.mapped('qty_delivered'))
+
+            if total_delivered >= total_ordered:
+                order.delivery_badge_status = 'full'
+            elif total_delivered > 0:
+                order.delivery_badge_status = 'partial'
+            else:
+                order.delivery_badge_status = 'pending'
+
+    def action_force_fully_delivered(self):
+        """ Button action to mark the order as fully delivered manually """
+        for order in self:
+            order.is_force_delivered = True
