@@ -48,7 +48,8 @@ class MrpScreen(http.Controller):
 
             remaining_qty = ordered_qty - delivered_qty
 
-            if remaining_qty <= 0:
+            # ✅ CHANGE 1: Skip if mathematically done OR if manually forced by the toggle!
+            if remaining_qty <= 0 or sale_order.is_force_delivered:
                 continue
 
             processed_so_lines.add(so_product_key)
@@ -124,11 +125,15 @@ class MrpScreen(http.Controller):
 
         products_json = json.dumps(products, ensure_ascii=False)
 
+        # ✅ CHANGE 2: Set this back to True to remove the "Details Restricted" message!
+        show_qty_and_details = True
+
         return request.render(
             'sales_order_double_approval.mrp_screen_template',
             {
                 'productions': productions,
                 'products': products,
                 'products_json': products_json,
+                'show_qty_and_details': show_qty_and_details,
             }
         )
