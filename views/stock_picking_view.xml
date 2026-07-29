@@ -15,6 +15,11 @@
                     <field name="customer_phone"/>
                     <field name="leave_datetime"/>
             </xpath>
+            <xpath expr="//field[@name='group_id']" position="after">
+                <field name="is_force_delivered"
+                       widget="boolean_toggle"
+                       invisible="state != 'done'"/>
+            </xpath>
             <!-- GRAB ODOO'S DEFAULT sale_id AND MOVE IT UNDER leave_datetime -->
             <xpath expr="//field[@name='leave_datetime']" position="after">
                 <field name="sale_id" position="move"/>

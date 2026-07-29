@@ -33,12 +33,12 @@
             <xpath expr="//field[@name='payment_term_id']" position="before">
                 <field name="can_edit_payment_term" invisible="1"/>
             </xpath>
-            <xpath expr="//field[@name='payment_term_id']" position="after">
-                <field name="is_force_delivered"
-                       string="Force Fully Delivered"
-                       widget="boolean_toggle"
-                       invisible="state != 'sale' and delivery_badge_status != 'partial'"/>
-            </xpath>
+<!--            <xpath expr="//field[@name='payment_term_id']" position="after">-->
+<!--                <field name="is_force_delivered"-->
+<!--                       string="Force Fully Delivered"-->
+<!--                       widget="boolean_toggle"-->
+<!--                       invisible="state != 'sale' and delivery_badge_status != 'partial'"/>-->
+<!--            </xpath>-->
             <field name="state" position="attributes">
                 <attribute name="statusbar_visible">draft_approval,to_approve,draft,sent,sale</attribute>
             </field>

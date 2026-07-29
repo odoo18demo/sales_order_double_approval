@@ -225,3 +225,6 @@ class StockPicking(models.Model):
                 if matching_line:
                     # Force the connection in the database!
                     move.sale_line_id = matching_line[0].id
+
+    # ADD THIS: The manual toggle for the warehouse team
+    is_force_delivered = fields.Boolean(string="Force Fully Delivered", default=False, copy=False)

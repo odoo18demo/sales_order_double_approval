@@ -475,8 +475,21 @@ class SaleOrder(models.Model):
         ('full', 'Fully Delivered')
     ], string="Delivery Status", compute="_compute_delivery_badge_status", store=True)
 
-    # The flag to track if the user manually short-closed the order
-    is_force_delivered = fields.Boolean(string="Force Fully Delivered", default=False, copy=False)
+    # 1. Change this from a manual Boolean to a computed Boolean
+    is_force_delivered = fields.Boolean(
+        string="Force Fully Delivered",
+        compute="_compute_is_force_delivered",
+        store=True
+    )
+
+    # 2. Add this new compute method to watch the Delivery orders
+    @api.depends('picking_ids.is_force_delivered', 'picking_ids.state')
+    def _compute_is_force_delivered(self):
+        for order in self:
+            # If ANY active delivery has the toggle ON, the Sale Order is forced to 'Fully Delivered'!
+            order.is_force_delivered = any(
+                p.is_force_delivered for p in order.picking_ids if p.state != 'cancel'
+            )
 
     @api.depends('order_line.product_uom_qty', 'order_line.qty_delivered', 'is_force_delivered')
     def _compute_delivery_badge_status(self):
