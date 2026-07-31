@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_picking_deep_cancel_wizard_form" model="ir.ui.view">
+        <field name="name">picking.deep.cancel.wizard.form</field>
+        <field name="model">picking.deep.cancel.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Confirm Cancellation Workflow">
+                <sheet>
+                    <group>
+                        <field name="warning_text" readonly="1" nolabel="1"/>
+                        <field name="picking_id" invisible="1"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_cancel_everything"
+                            string="Cancel EVERYTHING (Order &amp; Manufacturing)"
+                            type="object"
+                            class="btn-danger"/>
+
+                    <button name="action_cancel_only_delivery"
+                            string="Cancel ONLY this Delivery"
+                            type="object"
+                            class="btn-warning"/>
+
+                    <button string="Discard"
+                            class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

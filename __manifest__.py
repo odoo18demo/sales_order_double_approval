@@ -27,6 +27,7 @@
         'views/stock_picking_view.xml',
         'views/stock_delivery_note_report.xml',
         'views/delivery_slip_custom.xml',
+        'views/picking_cancel_wizard_view.xml',
         'views/templates.xml',
         'views/mail_layout_override.xml',
     ],

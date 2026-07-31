@@ -409,14 +409,18 @@ class SaleOrder(models.Model):
         )
 
     def action_cancel(self):
+        # 1. Trigger core Odoo logic FIRST!
+        # This tells Odoo to go cancel the deliveries and the main order.
+        res = super(SaleOrder, self).action_cancel()
+
         for order in self:
-            if order.state == 'draft_approval':
-                order.write({
-                    'state': 'cancel',
-                    'approval_stage': 'rejected',
-                    'approval_token': False,
-                })
-        return True
+            # 2. Update your custom approval states safely
+            order.write({
+                'state': 'cancel',
+                'approval_stage': 'rejected',
+                'approval_token': False,
+            })
+        return res
 
     def _get_approval_sender(self):
         self.ensure_one()
