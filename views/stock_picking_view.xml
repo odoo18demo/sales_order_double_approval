@@ -27,7 +27,9 @@
             <xpath expr="//field[@name='leave_datetime']" position="after">
                 <field name="sale_id" position="move"/>
             </xpath>
-
+<!--            <xpath expr="//field[@name='sale_id']" position="attributes">-->
+<!--                <attribute name="domain">[('state', '=', 'sale')]</attribute>-->
+<!--            </xpath>-->
             <!-- Ensure it is editable in draft state and disable creating new SOs from here -->
             <xpath expr="//field[@name='sale_id']" position="attributes">
                 <attribute name="readonly">state != 'draft'</attribute>

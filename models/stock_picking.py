@@ -44,11 +44,11 @@ class StockPicking(models.Model):
                         raise UserError(
                             f"Error: You cannot add new products ({move.product_id.display_name}) to a Delivery that were not on the approved Sale Order!")
 
-                    # 2. Block delivering more than the demanded quantity
-                    if move.quantity > move.product_uom_qty:
-                        raise UserError(
-                            f"Error: You are trying to deliver {move.quantity} of {move.product_id.display_name}, but only {move.product_uom_qty} was ordered!")
-        # ==============================================================
+        #             # 2. Block delivering more than the demanded quantity
+        #             if move.quantity > move.product_uom_qty:
+        #                 raise UserError(
+        #                     f"Error: You are trying to deliver {move.quantity} of {move.product_id.display_name}, but only {move.product_uom_qty} was ordered!")
+        # # ==============================================================
 
         self = self.with_context(
             skip_backorder=True,

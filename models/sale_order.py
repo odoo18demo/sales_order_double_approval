@@ -352,6 +352,11 @@ class SaleOrder(models.Model):
             rec.is_manager = (rec.team_id.second_approval_id == user)
 
     def action_confirm(self):
+        # for order in self:
+        #     # Swap the #draft name for the real sequence right before confirming
+        #     if order.name and order.name.startswith('#draft'):
+        #         new_name = self.env['ir.sequence'].next_by_code('sale.order') or order.name
+        #         order.write({'name': new_name})
         # 1. Run standard Odoo logic (This automatically creates the draft MO via MTO)
         res = super(SaleOrder, self).action_confirm()
 
@@ -525,3 +530,11 @@ class SaleOrder(models.Model):
         """ Button action to mark the order as fully delivered manually """
         for order in self:
             order.is_force_delivered = True
+
+    # @api.model_create_multi
+    # def create(self, vals_list):
+    #     for vals in vals_list:
+    #         if vals.get('name', _('New')) == _('New'):
+    #             # Assign the draft sequence instead of the standard sale.order sequence
+    #             vals['name'] = self.env['ir.sequence'].next_by_code('sale.order.draft') or _('New')
+    #     return super(SaleOrder, self).create(vals_list)
