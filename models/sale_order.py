@@ -458,9 +458,11 @@ class SaleOrder(models.Model):
     def _compute_is_current_approver(self):
         for rec in self:
             if rec.state == 'to_approve':
-                if rec.approval_stage == 'pending_revisor' and rec.is_revisor:
+                # 1. Manager has ultimate authority: they can edit at ANY point during approval
+                if rec.is_manager:
                     rec.is_current_approver = True
-                elif rec.approval_stage == 'pending_manager' and rec.is_manager:
+                # 2. Revisor is restricted: they can ONLY edit when it is explicitly their turn
+                elif rec.approval_stage == 'pending_revisor' and rec.is_revisor:
                     rec.is_current_approver = True
                 else:
                     rec.is_current_approver = False
