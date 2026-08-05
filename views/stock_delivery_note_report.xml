@@ -81,8 +81,12 @@
                                 <td style="border:1px solid #000; padding:6px;">
                                     <span t-field="line.product_id.default_code"/>
                                 </td>
-                                <td style="border:1px solid #000; padding:6px;">
+                                <td style="padding: 8px;">
                                     <span t-esc="line.product_id.name.replace('Â', '').replace('\xa0', ' ')"/>
+                                    <t t-if="line.product_id.arabic_name">
+                                        <br/>
+                                        <span style="font-size: 12px; color: #495057;" t-esc="line.product_id.arabic_name"/>
+                                    </t>
                                 </td>
                                 <td style="border:1px solid #000; padding:6px; text-align:right;">
                                     <span t-field="line.qty_meter"/>
