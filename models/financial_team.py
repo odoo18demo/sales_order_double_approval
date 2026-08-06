@@ -12,3 +12,10 @@ class FinancialTeam(models.Model):
     )
     active = fields.Boolean(default=True)
 
+    # NEW FIELD: Connect multiple users to this team
+    member_ids = fields.Many2many(
+        'res.users',
+        string='Team Members',
+        domain="[('share', '=', False)]"
+        # This ensures you only select internal employees, not external portal customers!
+    )

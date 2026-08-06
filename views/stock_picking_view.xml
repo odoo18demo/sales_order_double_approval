@@ -77,4 +77,25 @@
             <xpath expr="//filter[@name='delivery']" position="replace"/>
         </field>
     </record>
+    <record id="stock.stock_picking_type_menu" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+    <record id="mrp.mrp_operation_picking" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+    <record id="stock.menu_stock_adjustments" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+    <record id="stock.menu_product_stock" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+    <record id="stock.menu_valuation" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+    <record id="stock_account.menu_valuation" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+    <record id="stock.menu_warehouse_config" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
 </odoo>

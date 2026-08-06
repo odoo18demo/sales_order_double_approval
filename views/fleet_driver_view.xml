@@ -36,6 +36,6 @@
     </record>
     <menuitem id="menu_fleet_driver"
           name="Drivers"
-          parent="stock.menu_warehouse_config"
+          parent="stock.menu_stock_config_settings"
           action="action_fleet_driver"/>
 </odoo>
