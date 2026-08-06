@@ -22,7 +22,11 @@ class StockPicking(models.Model):
             self.driver_name.phone = self.driver_mobile
 
     truck_plate_no = fields.Char(string="Truck Plate No")
-    customer_phone = fields.Char(string="Customer Phone")
+    customer_phone = fields.Char(
+        string="Customer Phone",
+        related="partner_id.phone",
+        readonly=False  # Set to True if you want to lock it!
+    )
     city_code = fields.Char(string="City Code")
     # leave_time = fields.Float(string="Leave Time")
     leave_datetime = fields.Datetime(
