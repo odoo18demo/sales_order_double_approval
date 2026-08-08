@@ -13,7 +13,7 @@
                 </sheet>
                 <footer>
                     <button name="action_cancel_everything"
-                            string="Cancel EVERYTHING (Order &amp; Manufacturing)"
+                            string="Cancel EVERYTHING and SET to Draft"
                             type="object"
                             class="btn-danger"/>
 

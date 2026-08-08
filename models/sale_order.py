@@ -483,8 +483,9 @@ class SaleOrder(models.Model):
     delivery_badge_status = fields.Selection([
         ('pending', 'Pending Delivery'),
         ('partial', 'Partially Delivered'),
-        ('full', 'Fully Delivered')
-    ], string="Delivery Status", compute="_compute_delivery_badge_status", store=True)
+        ('full', 'Fully Delivered'),
+        ('cancelled', 'Cancelled')
+    ], string="Delivery Status", compute="_compute_delivery_badge_status", store=False)  # <--- CHANGE THIS
 
     # 1. Change this from a manual Boolean to a computed Boolean
     is_force_delivered = fields.Boolean(
@@ -492,7 +493,6 @@ class SaleOrder(models.Model):
         compute="_compute_is_force_delivered",
         store=True
     )
-
     # 2. Add this new compute method to watch the Delivery orders
     @api.depends('picking_ids.is_force_delivered', 'picking_ids.state')
     def _compute_is_force_delivered(self):
@@ -502,15 +502,21 @@ class SaleOrder(models.Model):
                 p.is_force_delivered for p in order.picking_ids if p.state != 'cancel'
             )
 
-    @api.depends('order_line.product_uom_qty', 'order_line.qty_delivered', 'is_force_delivered')
+    @api.depends('order_line.product_uom_qty', 'order_line.qty_delivered', 'is_force_delivered', 'state')
     def _compute_delivery_badge_status(self):
         for order in self:
-            # 1. If the user clicked our manual button, force it to 'full'
+
+            # 3. Check if the Sale Order is officially cancelled FIRST
+            if order.state == 'cancel':
+                order.delivery_badge_status = 'cancelled'
+                continue
+
+            # 4. If the user clicked our manual button, force it to 'full'
             if order.is_force_delivered:
                 order.delivery_badge_status = 'full'
                 continue
 
-            # 2. Otherwise, calculate based on physical quantities
+            # 5. Otherwise, calculate based on physical quantities
             # (We filter out services/shipping costs to only check physical stock)
             storable_lines = order.order_line.filtered(lambda l: l.product_id.type != 'service')
 

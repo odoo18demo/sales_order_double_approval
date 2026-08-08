@@ -200,10 +200,6 @@ class StockPicking(models.Model):
         if not self.sale_id or self.state != 'draft':
             return
 
-        # group_id on stock.picking is related='move_ids.group_id' (readonly) -
-        # it's only ever a mirror of what the moves carry, so it must be set
-        # THERE, not on self. This is also what makes sale_id (compute depends
-        # on group_id) resolve back to the right order instead of going blank.
         procurement_group = self.sale_id.procurement_group_id
 
         # 1. Update Customer Name & Origin
@@ -229,6 +225,10 @@ class StockPicking(models.Model):
                     'sale_line_id': line.id,
                     'company_id': self.company_id.id,
                     'group_id': procurement_group.id,
+                    # === ADD THESE 3 CRITICAL FIELDS TO STABILIZE THE VIRTUAL RECORD ===
+                    'picking_type_id': self.picking_type_id.id,
+                    'procure_method': 'make_to_stock',
+                    'state': 'draft',
                 }))
 
         if new_lines:
@@ -271,21 +271,84 @@ class StockPicking(models.Model):
     is_force_delivered = fields.Boolean(string="Force Fully Delivered", default=False, copy=False)
 
     def action_cancel(self):
-        # 1. Check if this is a manual click on a delivery with a Sale Order
-        # We use a secret context flag to bypass this if they chose "Cancel Only Delivery"
-        if not self.env.context.get('skip_deep_cancel_check'):
-            pickings_with_so = self.filtered(lambda p: p.sale_id)
+        # 1. Bypass check if the context flag is passed (e.g., from wizard "Cancel Only Delivery" button)
+        if self.env.context.get('skip_deep_cancel_check'):
+            return super(StockPicking, self).action_cancel()
 
-            if pickings_with_so:
-                # Pause the cancellation and open the Safety Net Wizard!
-                return {
-                    'name': 'Cancel Workflow Confirmation',
-                    'type': 'ir.actions.act_window',
-                    'res_model': 'picking.deep.cancel.wizard',
-                    'view_mode': 'form',
-                    'target': 'new',  # Pop-up modal
-                    'context': {'default_picking_id': pickings_with_so[0].id}
-                }
+        for picking in self:
+            # If the picking is already done, let standard Odoo handle it (normally raises an error)
+            if picking.state == 'done':
+                continue
 
-        # 2. If no Sale Order, or if they bypassed the wizard, do a normal cancel.
+            # If there is a linked Sale Order
+            if picking.sale_id:
+                # Check if this Sale Order has ANY OTHER deliveries that are already 'done'
+                other_done_deliveries = picking.sale_id.picking_ids.filtered(
+                    lambda p: p.state == 'done' and p.id != picking.id
+                )
+
+                # If NO other deliveries are done, show the Safety Net Wizard
+                if not other_done_deliveries:
+                    return {
+                        'name': 'Cancel Workflow Confirmation',
+                        'type': 'ir.actions.act_window',
+                        'res_model': 'picking.deep.cancel.wizard',
+                        'view_mode': 'form',
+                        'target': 'new',
+                        'context': {'default_picking_id': picking.id}
+                    }
+                # If there ARE other done deliveries, it skips the IF block and does normal cancel below
+
+        # 2. If no Sale Order, or SO has other done deliveries, do normal Odoo cancel
         return super(StockPicking, self).action_cancel()
+
+    delivery_badge_status = fields.Selection([
+        ('pending', 'Pending Delivery'),
+        ('partial', 'Partially Delivered'),
+        ('full', 'Fully Delivered'),
+        ('cancelled', 'Cancelled')
+    ], string="Delivery Status", compute="_compute_delivery_badge_status", store=False)
+
+    @api.depends('sale_id.delivery_badge_status', 'state', 'is_force_delivered')
+    def _compute_delivery_badge_status(self):
+        for picking in self:
+            # 1. ALWAYS check if the delivery itself is cancelled FIRST
+            if picking.state == 'cancel':
+                picking.delivery_badge_status = 'cancelled'
+
+            # 2. If linked to a Sale Order, perfectly mirror the SO's overall status
+            elif picking.sale_id:
+                picking.delivery_badge_status = picking.sale_id.delivery_badge_status
+
+            # 3. If NO Sale Order exists (Standalone Delivery)
+            else:
+                # If manually forced or officially validated as done
+                if picking.is_force_delivered or picking.state == 'done':
+                    picking.delivery_badge_status = 'full'
+                # If still in draft, waiting, or ready
+                else:
+                    picking.delivery_badge_status = 'pending'
+
+    def action_set_to_draft(self):
+        for picking in self:
+            if picking.state == 'cancel':
+                # 1. Reset the move lines (Detailed Operations)
+                picking.move_line_ids.write({'state': 'draft'})
+
+                # 2. Reset the moves (Operations)
+                picking.move_ids.write({'state': 'draft'})
+
+                # 3. Reset the Picking itself
+                picking.write({'state': 'draft'})
+
+    @api.onchange('quantity')
+    def _onchange_quantity_sync_demand(self):
+        """
+        If there is NO linked Sale Order (standalone delivery),
+        automatically make the Demand (product_uom_qty) equal
+        to whatever quantity is being delivered.
+    """
+        for move in self:
+            # Check if the parent picking has NO sale_id
+            if move.picking_id and not move.picking_id.sale_id:
+                move.product_uom_qty = move.quantity

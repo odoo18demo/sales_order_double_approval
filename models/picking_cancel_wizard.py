@@ -15,7 +15,6 @@ class PickingDeepCancelWizard(models.TransientModel):
     picking_id = fields.Many2one('stock.picking', string="Delivery Order")
     warning_text = fields.Text(
         default="This Delivery is linked to a Sale Order.\n\n"
-                "Do you want to completely TEAR DOWN the manufactured products, "
                 "cancel the Sale Order, and send it back to Draft?\n\n"
                 "Or do you just want to cancel this specific delivery document normally?"
     )

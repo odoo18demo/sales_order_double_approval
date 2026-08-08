@@ -11,6 +11,7 @@
                        decoration-success="delivery_badge_status == 'full'"
                        decoration-warning="delivery_badge_status == 'partial'"
                        decoration-info="delivery_badge_status == 'pending'"
+                       decoration-danger="delivery_badge_status == 'cancelled'"
                        optional="show"/>
             </xpath>
         </field>
