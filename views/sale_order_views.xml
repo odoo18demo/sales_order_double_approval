@@ -166,7 +166,6 @@
     <record id="sale.sale_menu_config_activities" model="ir.ui.menu">
         <field name="active" eval="False"/>
     </record>
-
 </odoo>
 
 

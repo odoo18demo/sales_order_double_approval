@@ -134,6 +134,35 @@ msgstr "اسم الفريق المالي"
 msgid "Truck Plate No"
 msgstr "رقم لوحة الشاحنة"
 
+#. module: sales_order_double_approval
+#: model:ir.model.fields,field_description:sales_order_double_approval.field_sale_order__delivery_badge_status
+#: model:ir.model.fields,field_description:sales_order_double_approval.field_stock_picking__delivery_badge_status
+msgid "Delivery Status"
+msgstr "حالة التسليم"
+
+#. module: sales_order_double_approval
+#: model:ir.model.fields.selection,name:sales_order_double_approval.selection__sale_order__delivery_badge_status__partial
+#: model:ir.model.fields.selection,name:sales_order_double_approval.selection__stock_picking__delivery_badge_status__partial
+msgid "Partially Delivered"
+msgstr "حملت جزئيا"
+
+#. module: sales_order_double_approval
+#: model:ir.model.fields.selection,name:sales_order_double_approval.selection__sale_order__delivery_badge_status__full
+#: model:ir.model.fields.selection,name:sales_order_double_approval.selection__stock_picking__delivery_badge_status__full
+msgid "Fully Delivered"
+msgstr "حملت بالكامل"
+
+#. module: sales_order_double_approval
+#: model:ir.model.fields.selection,name:sales_order_double_approval.selection__sale_order__delivery_badge_status__pending
+#: model:ir.model.fields.selection,name:sales_order_double_approval.selection__stock_picking__delivery_badge_status__pending
+msgid "Pending Delivery"
+msgstr "بإنتظار التحميل"
+
+#. module: sales_order_double_approval
+#: model:ir.model.fields.selection,name:sales_order_double_approval.selection__sale_order__delivery_badge_status__cancelled
+#: model:ir.model.fields.selection,name:sales_order_double_approval.selection__stock_picking__delivery_badge_status__cancelled
+msgid "Cancelled"
+msgstr "تم الإلغاء"
 
 
 
