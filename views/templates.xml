@@ -47,7 +47,6 @@
                         min-height: 70px;
                     }
 
-                    /* New Card Body Layout (Horizontal) */
                     .mo-card-body {
                         padding: 16px;
                         display: flex;
@@ -55,7 +54,6 @@
                         align-items: center;
                     }
 
-                    /* Table Styles */
                     .customer-table {
                         width: 100%; border-collapse: collapse; font-size: 13px;
                         background: #fff; border: 1px solid #dee2e6; border-radius: 8px; overflow: hidden;
@@ -69,7 +67,6 @@
                     }
                     .customer-table tr:hover td { background: #f8f9fa; }
 
-                    /* Modals */
                     .modal-overlay {
                         display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
                         background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center;
@@ -88,7 +85,6 @@
                     .modal-close { background: none; border: none; color: white; font-size: 20px; cursor: pointer; line-height: 1; }
                     .modal-body { padding: 20px; }
 
-                    /* List View Filters Bar */
                     .filters-bar {
                         background: #ffffff; padding: 16px; border-radius: 8px;
                         border: 1px solid #dee2e6; margin-bottom: 20px;
@@ -99,7 +95,6 @@
                         font-size: 14px; flex: 1; min-width: 250px; max-width: 400px;
                     }
 
-                    /* Group By Dropdown Styling */
                     .group-dropdown-wrapper {
                         display: flex; align-items: center; gap: 8px; border: 1px solid #ced4da;
                         padding: 8px 14px; border-radius: 6px; background: #fff;
@@ -164,11 +159,9 @@
                         <img t-attf-src="/web/image?model=res.company&amp;id={{ request.env.user.company_id.id }}&amp;field=logo" alt="Company Logo"/>
                     </div>
                     <div style="text-align:right;">
-
                         <a href="javascript:void(0)" id="btnToggleView" style="color: #042c53; font-weight: 600; text-decoration: underline; font-size: 15px;">
                             View All Sale Orders
                         </a>
-
                         <div class="refresh-bar" style="margin:8px 0 0 0;">
                             Auto-refresh in <b id="countdown">10</b>s
                         </div>
@@ -179,7 +172,6 @@
                     <div class="mo-grid" id="moGrid">
                         <t t-foreach="products" t-as="prod">
                             <div class="mo-card" t-attf-data-index="{{ prod_index }}" title="Click to view full details">
-
                                 <div class="mo-card-header">
                                     <span style="flex: 1; word-wrap: break-word; line-height: 1.4;">
                                         <t t-if="prod.get('default_code')">
@@ -201,7 +193,6 @@
                                         </svg>
                                     </div>
                                 </div>
-
                                 <div class="mo-card-body">
                                     <div>
                                         <span style="font-size: 13px; color: #495057;">QTY-Ordered :</span>
@@ -213,7 +204,6 @@
                                         <span style="font-size: 24px; color: #212529; font-weight: 400; margin-left: 4px; line-height: 1;"><t t-out="len(prod['orders'])"/></span>
                                     </div>
                                 </div>
-
                             </div>
                         </t>
                         <t t-if="not products">
@@ -223,10 +213,8 @@
                 </div>
 
                 <div id="view-list" style="display: none;">
-
                     <div class="filters-bar">
                         <input type="text" id="searchSO" placeholder="Search Sale Order (e.g. S00078)..." autocomplete="off" />
-
                         <div class="group-dropdown-wrapper">
                             <span style="font-size: 16px; line-height: 1;">&#128269;</span>
                             <select id="groupBySelect">
@@ -235,6 +223,7 @@
                                 <option value="product">Group by Product</option>
                                 <option value="salesman">Group by Sales Man</option>
                                 <option value="customer">Group by Customer</option>
+                                <option value="color">Group by Color</option>
                             </select>
                         </div>
                     </div>
@@ -260,8 +249,6 @@
 
                 <script>
                     //<![CDATA[
-
-                    // --- 1. DATA EXTRACTION ---
                     var productsData = [];
                     var flatOrders = [];
 
@@ -289,7 +276,6 @@
                         i++;
                     }
 
-                    // --- 2. HELPER FUNCTIONS ---
                     function buildRowHTML(order) {
                         return '<tr>' +
                             '<td><b>' + order.origin + '</b></td>' +
@@ -314,7 +300,6 @@
                             '</tr>';
                     }
 
-                    // --- 3. RENDER FULL LIST VIEW ---
                     function renderAllOrdersTable() {
                         var term = document.getElementById('searchSO').value.toLowerCase().trim();
                         var groupBy = document.getElementById('groupBySelect').value;
@@ -416,12 +401,31 @@
                                 g.orders.sort(function(a, b) { return b.origin.localeCompare(a.origin); });
                                 g.orders.forEach(function(o) { html += buildRowHTML(o); });
                             });
+
+                        } else if (groupBy === 'color') {
+                            var colorGroups = {};
+                            filtered.forEach(function(o) {
+                                var col = o.color || 'No Color';
+                                if (!colorGroups[col]) colorGroups[col] = [];
+                                colorGroups[col].push(o);
+                            });
+                            var colorArray = Object.keys(colorGroups).map(function(key) {
+                                return { color: key, orders: colorGroups[key] };
+                            });
+                            colorArray.sort(function(a, b) { return a.color.localeCompare(b.color); });
+                            colorArray.forEach(function(g) {
+                                html += '<tr style="background-color: #d1ecf1; border-top: 3px solid #042c53;">' +
+                                        '<td colspan="10" style="font-weight: 700; color: #042c53; font-size: 14px; padding-top: 15px; padding-bottom: 15px;">' +
+                                        'Color: <span style="font-size: 16px;">' + g.color + '</span>' +
+                                        '</td></tr>';
+                                g.orders.sort(function(a, b) { return b.origin.localeCompare(a.origin); });
+                                g.orders.forEach(function(o) { html += buildRowHTML(o); });
+                            });
                         }
 
                         tbody.innerHTML = html;
                     }
 
-                    // --- 4. EVENT LISTENERS ---
                     var isListView = false;
                     var isModalOpen = false;
 
@@ -498,11 +502,9 @@
                         if (el) el.innerText = sec;
                         if (sec <= 0) window.location.reload();
                     }, 1000);
-
                     //]]>
                 </script>
             </body>
         </html>
     </template>
 </odoo>
-

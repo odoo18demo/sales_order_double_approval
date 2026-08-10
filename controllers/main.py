@@ -18,7 +18,6 @@ class MrpScreen(http.Controller):
 
         productions = request.env['mrp.production']
         product_map = {}
-
         processed_so_lines = set()
 
         for mo in all_productions:
@@ -34,21 +33,34 @@ class MrpScreen(http.Controller):
                 continue
 
             pid = mo.product_id.id
-
-            so_product_key = f"{sale_order.id}_{pid}"
-            if so_product_key in processed_so_lines:
-                continue
-
             sale_lines = sale_order.order_line.filtered(lambda l: l.product_id.id == pid)
             if not sale_lines:
                 continue
 
+            # --- COLOR RESOLUTION LOGIC ---
+            # 1. Check if any matching sale line has a custom color
+            line_color = ''
+            for line in sale_lines:
+                if line.prod_color:
+                    line_color = line.prod_color.name
+                    break
+
+            # 2. Fallback to product template master color if line color is empty
+            if not line_color and mo.product_id.product_tmpl_id.prod_color:
+                line_color = mo.product_id.product_tmpl_id.prod_color.name
+            # ------------------------------
+
+            # ✅ UNIQUE KEY INCLUDES COLOR: Separates cards if colors differ
+            product_color_key = f"{pid}_{line_color}"
+
+            so_product_key = f"{sale_order.id}_{product_color_key}"
+            if so_product_key in processed_so_lines:
+                continue
+
             ordered_qty = sum(sale_lines.mapped('product_uom_qty'))
             delivered_qty = sum(sale_lines.mapped('qty_delivered'))
-
             remaining_qty = ordered_qty - delivered_qty
 
-            # ✅ CHANGE 1: Skip if mathematically done OR if manually forced by the toggle!
             if remaining_qty <= 0 or sale_order.is_force_delivered:
                 continue
 
@@ -61,13 +73,18 @@ class MrpScreen(http.Controller):
                 else 'No Customer'
             )
 
-            if pid not in product_map:
-                product_map[pid] = {
-                    'product_name': mo.product_id.name,
+            if product_color_key not in product_map:
+                # Append color name to the card header display if a color exists
+                display_name = mo.product_id.name
+                if line_color:
+                    display_name = f"{mo.product_id.name} - {line_color}"
+
+                product_map[product_color_key] = {
+                    'product_name': display_name,
                     'default_code': mo.product_id.default_code or '',
                     'total_qty': 0,
                     'uom': mo.product_uom_id.name,
-                    'color': mo.product_id.product_tmpl_id.prod_color or '', # <-- ADDED TOP-LEVEL COLOR HERE
+                    'color': line_color,
                     'orders': [],
                 }
 
@@ -82,13 +99,13 @@ class MrpScreen(http.Controller):
                 except Exception:
                     delivery_date = str(picking.scheduled_date)
 
-            product_map[pid]['total_qty'] += remaining_qty
+            product_map[product_color_key]['total_qty'] += remaining_qty
 
             order_date_str = '—'
             if sale_order.date_order:
                 order_date_str = sale_order.date_order.strftime('%d-%m-%Y')
 
-            product_map[pid]['orders'].append({
+            product_map[product_color_key]['orders'].append({
                 'mo_name': mo.name,
                 'origin': mo.origin or '—',
                 'customer': customer,
@@ -103,7 +120,7 @@ class MrpScreen(http.Controller):
                     else '—'
                 ),
                 'item_name': mo.product_id.name or '—',
-                'color': mo.product_id.product_tmpl_id.prod_color or '',
+                'color': line_color,
                 'delivery_date': delivery_date,
                 'note': html2plaintext(sale_order.display_note) if sale_order.display_note else '',
                 'qty': remaining_qty,
@@ -124,8 +141,6 @@ class MrpScreen(http.Controller):
             )
 
         products_json = json.dumps(products, ensure_ascii=False)
-
-        # ✅ CHANGE 2: Set this back to True to remove the "Details Restricted" message!
         show_qty_and_details = True
 
         return request.render(

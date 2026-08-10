@@ -6,30 +6,32 @@
         <field name="email_from">{{ object.company_id.email or user.email }}</field>
         <field name="subject">Sale Order {{ object.name }} Requires Approval</field>
         <field name="body_html" type="html">
-<div style="margin: 0px; padding: 0px; font-family: Arial, sans-serif; font-size: 13px;">
-    <p>Dear Manager,</p>
-
-    <p>Sale Order <strong t-out="object.name">S00010</strong> requires your approval.</p>
-
-    <p>Customer: <strong t-out="object.partner_id.name">Customer Name</strong></p>
-
-    <p>Amount:
-        <strong>
-            <t t-out="object.currency_id.symbol">$</t>
-            <t t-out="'%.2f' % object.amount_total">0.00</t>
-        </strong>
-    </p>
-
-    <p>Please take action:</p>
-
-    <p>
-        <a t-attf-href="{{ object.get_approval_url('approve') }}"><strong>Approve</strong></a>
-        &#160;&#160;&#160;
-        <a t-attf-href="{{ object.get_approval_url('reject') }}"><strong>Reject</strong></a>
-    </p>
-
-    <p>Thank you!</p>
-</div>
+        <div style="margin: 0px; padding: 0px; font-family: Arial, sans-serif; font-size: 13px;">
+            <p>Dear Manager,</p>
+            <p>Sale Order <strong t-out="object.name">S00010</strong> requires your approval.</p>
+            <p>Customer: <strong t-out="object.partner_id.name">Customer Name</strong></p>
+            <p>Amount:
+                <strong>
+                    <t t-out="object.currency_id.symbol">$</t>
+                    <t t-out="'%.2f' % object.amount_total">0.00</t>
+                </strong>
+            </p>
+            <p>Please take action:</p>
+            <p>
+                <a t-attf-href="{{ object.get_approval_url('approve') }}"><strong>Approve</strong></a>
+                &#160;&#160;&#160;
+                <a t-attf-href="{{ object.get_approval_url('reject') }}"><strong>Reject</strong></a>
+            </p>
+            <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;"/>
+            <p>Or click below to log into Odoo and review the document:</p>
+            <p style="margin-top: 10px;">
+                <a t-attf-href="{{ object.get_base_url() }}/web#id={{ object.id }}&amp;model=sale.order&amp;view_type=form"
+                   style="background-color: #008784; color: white; padding: 8px 16px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">
+                   Log in &amp; View Order in Odoo
+                </a>
+            </p>
+            <p>Thank you!</p>
+        </div>
         </field>
         <field name="auto_delete" eval="False"/>
     </record>
