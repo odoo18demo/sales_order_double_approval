@@ -74,10 +74,13 @@ class MrpScreen(http.Controller):
             )
 
             if product_color_key not in product_map:
-                # Append color name to the card header display if a color exists
-                display_name = mo.product_id.name
-                if line_color:
-                    display_name = f"{mo.product_id.name} - {line_color}"
+                base_name = mo.product_id.name
+
+                # Check if the color name is already written inside the product name to prevent duplication
+                if line_color and line_color.lower() not in base_name.lower():
+                    display_name = f"{base_name} - {line_color}"
+                else:
+                    display_name = base_name
 
                 product_map[product_color_key] = {
                     'product_name': display_name,
