@@ -126,13 +126,10 @@ class StockPicking(models.Model):
         # Financial Managers
         fin_managers = self.env['financial.team'].search([('active', '=', True)])
         fin_emails = fin_managers.mapped('user_id.partner_id.email')
-
         # Salesperson (The person who created the order)
         salesperson_email = sale.user_id.partner_id.email if sale.user_id else False
-
         # Sales Team Manager
         manager_email = sale.team_id.user_id.partner_id.email if sale.team_id and sale.team_id.user_id else False
-
         # Combine all emails into one list
         emails = fin_emails + [salesperson_email, manager_email]
 
@@ -145,7 +142,8 @@ class StockPicking(models.Model):
 
         email_to = ",".join(valid_emails)
         validator = self.env.user
-
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        odoo_login_url = f"{base_url}/web#id={self.id}&model=stock.picking&view_type=form"
         # ==============================================================
         # 4. CREATE THE EMAIL MESSAGE
         # ==============================================================
@@ -172,6 +170,13 @@ class StockPicking(models.Model):
             </table>
             <p>
                 Please find the Delivery Note and the original Sale Order attached below.
+            </p>
+            <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;"/>
+            <p>Or click below to log into Odoo and review the Delivery Order:</p>
+            <p style="margin-top: 10px;">
+                <a href="{odoo_login_url}" style="background-color: #008784; color: white; padding: 8px 16px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">
+                   Log in &amp; View Delivery in Odoo
+                </a>
             </p>
         </div>
         """

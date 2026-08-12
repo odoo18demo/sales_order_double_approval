@@ -119,6 +119,11 @@ class SaleOrder(models.Model):
         approve_url = self.get_approval_url('approve', approval_step)
         reject_url = self.get_approval_url('reject', approval_step)
 
+        # 1. Fetch the base URL dynamically in Python
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        # 2. Construct the Odoo backend login URL for this specific Sales Order
+        odoo_login_url = f"{base_url}/web#id={self.id}&model=sale.order&view_type=form"
+
         # ✅ FORCE EXACT SENDER EMAIL
         if sender_user and sender_user.email:
             email_from = sender_user.email_formatted or sender_user.email
@@ -136,6 +141,13 @@ class SaleOrder(models.Model):
                 <a href="{approve_url}" style="background-color: #28a745; color: white; padding: 8px 16px; text-decoration: none; border-radius: 4px; font-weight: bold;">Approve</a>
                 &nbsp;&nbsp;
                 <a href="{reject_url}" style="background-color: #dc3545; color: white; padding: 8px 16px; text-decoration: none; border-radius: 4px; font-weight: bold;">Reject</a>
+            </p>
+            <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;"/>
+            <p>Or click below to log into Odoo and review the document:</p>
+            <p style="margin-top: 10px;">
+                <a href="{odoo_login_url}" style="background-color: #008784; color: white; padding: 8px 16px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">
+                   Log in &amp; View Order in Odoo
+                </a>
             </p>
         </div>
         """
