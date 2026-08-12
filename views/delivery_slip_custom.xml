@@ -55,7 +55,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <t t-set="lines" t-value="o.move_ids.filtered(lambda x: x.product_uom_qty)"/>
+                        <t t-set="lines" t-value="o.move_ids.filtered(lambda x: x.quantity > 0)"/>
                         <tr t-foreach="lines" t-as="move" style="border-bottom: 1px solid #eee;">
                             <td style="padding: 8px;">
                                 <span t-esc="move.product_id.name.replace('Â', '').replace('\xa0', ' ')"/>
