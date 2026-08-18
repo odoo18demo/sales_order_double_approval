@@ -6,15 +6,12 @@
             <field name="model">mrp.production</field>
             <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
             <field name="arch" type="xml">
-
                 <xpath expr="//header/button[@name='button_mark_done' and @invisible='move_raw_ids or not show_produce']" position="attributes">
                     <attribute name="confirm"></attribute>
                 </xpath>
-
                 <xpath expr="//header/button[@name='button_mark_done' and @invisible='move_raw_ids or not show_produce_all']" position="attributes">
                     <attribute name="confirm"></attribute>
                 </xpath>
-
             </field>
         </record>
         <record id="mrp_account.action_wip_accounting" model="ir.actions.act_window">
@@ -26,7 +23,6 @@
         <record id="mrp.action_mrp_production_split_multi" model="ir.actions.act_window">
             <field name="binding_model_id" eval="False"/>
         </record>
-
         <record id="mrp.action_production_order_lock_unlock" model="ir.actions.server">
             <field name="binding_model_id" eval="False"/>
         </record>
@@ -57,19 +53,7 @@
                 <xpath expr="//button[@name='button_unbuild']" position="attributes">
                     <attribute name="invisible">True</attribute>
                 </xpath>
-
             </field>
         </record>
-<!--        <record id="manufacture_default_filter_remove" model="ir.ui.view">-->
-<!--            <field name="name">manufacture.search.remove.my.quotation</field>-->
-<!--            <field name="model">mrp.production</field>-->
-<!--            <field name="inherit_id" ref="mrp.view_mrp_production_filter"/>-->
-<!--            <field name="arch" type="xml">-->
-<!--                <xpath expr="//filter[@name='todo']" position="replace"/>-->
-<!--                <xpath expr="//group" position="inside">-->
-<!--                    <filter string="Sales Order (Source)" name="groupby_origin" domain="[]" context="{'group_by': 'origin'}"/>-->
-<!--                </xpath>-->
-<!--            </field>-->
-<!--        </record>-->
     </data>
 </odoo>

@@ -21,9 +21,7 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.sale_order_view_search_inherit_quotation"/>
         <field name="arch" type="xml">
-
             <xpath expr="//filter[@name='my_quotation']" position="replace"/>
-
         </field>
     </record>
     <record id="view_order_form_inherit_approval_workflow" model="ir.ui.view">
@@ -37,7 +35,6 @@
             <field name="state" position="attributes">
                 <attribute name="statusbar_visible">draft_approval,to_approve,draft,sent,sale</attribute>
             </field>
-
             <header position="inside">
                 <button name="action_submit_for_approval"
                         string="Submit for Approval"
@@ -57,58 +54,45 @@
             <xpath expr="//button[@id='action_confirm']" position="attributes">
                 <attribute name="invisible">state != 'sent' or not is_salesperson</attribute>
             </xpath>
-
             <xpath expr="(//button[@name='action_confirm'])[2]" position="attributes">
                 <attribute name="invisible">state != 'draft' or not is_salesperson</attribute>
             </xpath>
-
             <xpath expr="//button[@name='action_cancel']" position="attributes">
                 <attribute name="invisible">state != 'draft_approval'</attribute>
                 <attribute name="confirm">Are you sure you want to cancel this quotation?</attribute>
             </xpath>
-
             <xpath expr="//field[@name='team_id'][not(ancestor::field)]" position="after">
                 <field name="is_salesperson" invisible="1"/>
                 <field name="approval_stage" readonly="1" invisible="state not in ['draft_approval', 'to_approve']"/>
                 <field name="approval_token" readonly="1" groups="base.group_no_one" invisible="state not in ['draft_approval', 'to_approve']"/>
             </xpath>
-
             <xpath expr="//field[@name='partner_id'][not(ancestor::field)]" position="attributes">
                 <attribute name="readonly">state in ['cancel', 'sale'] or (is_salesperson and state != 'draft_approval')</attribute>
             </xpath>
-
             <xpath expr="//field[@name='validity_date'][not(ancestor::field)]" position="attributes">
                 <attribute name="readonly">state in ['cancel', 'sale'] or (is_salesperson and state != 'draft_approval')</attribute>
             </xpath>
-
             <xpath expr="//field[@name='date_order'][not(ancestor::field)]" position="attributes">
                 <attribute name="readonly">state in ['cancel', 'sale'] or (is_salesperson and state != 'draft_approval')</attribute>
             </xpath>
-
             <xpath expr="//field[@name='payment_term_id'][not(ancestor::field)]" position="attributes">
                 <attribute name="readonly">state != 'draft_approval' or not can_edit_payment_term</attribute>
             </xpath>
-
             <xpath expr="//field[@name='user_id'][not(ancestor::field)]" position="attributes">
                 <attribute name="readonly">state in ['cancel', 'sale'] or (is_salesperson and state != 'draft_approval')</attribute>
             </xpath>
-
             <xpath expr="//field[@name='team_id'][not(ancestor::field)]" position="attributes">
                 <attribute name="readonly">state in ['cancel', 'sale'] or (is_salesperson and state != 'draft_approval')</attribute>
             </xpath>
-
             <xpath expr="//field[@name='client_order_ref'][not(ancestor::field)]" position="attributes">
                 <attribute name="readonly">state in ['cancel', 'sale'] or (is_salesperson and state != 'draft_approval')</attribute>
             </xpath>
-
             <xpath expr="//field[@name='tag_ids'][not(ancestor::field)]" position="attributes">
                 <attribute name="readonly">state in ['cancel', 'sale'] or (is_salesperson and state != 'draft_approval')</attribute>
             </xpath>
-
             <xpath expr="//field[@name='warehouse_id'][not(ancestor::field)]" position="attributes">
                 <attribute name="readonly">state in ['cancel', 'sale'] or (is_salesperson and state != 'draft_approval')</attribute>
             </xpath>
-
             <xpath expr="//field[@name='commitment_date'][not(ancestor::field)]" position="attributes">
                 <attribute name="readonly">state in ['cancel', 'sale'] or (is_salesperson and state != 'draft_approval')</attribute>
             </xpath>

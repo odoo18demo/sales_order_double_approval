@@ -8,7 +8,6 @@
                     <div style="text-align:center; margin-bottom:20px;">
                         <h2>Delivery Note <br/><span style="font-size: 16px; font-weight: normal;">مذكرة تسليم</span></h2>
                     </div>
-
                     <table style="width:100%; margin-bottom:20px; border-collapse:separate; border-spacing:0 8px;">
                         <tr>
                             <td style="width:20%;"><b>SN / الرقم التسلسلي:</b></td>
@@ -17,7 +16,6 @@
                             <td style="width:20%;"><b>Date / التاريخ:</b></td>
                             <td style="width:30%;"><span t-field="o.scheduled_date"/></td>
                         </tr>
-
                         <tr>
                             <td><b>City Code / رمز المدينة:</b></td>
                             <td><span t-field="o.city_code"/></td>
@@ -25,7 +23,6 @@
                             <td><b>Salesman / مندوب المبيعات:</b></td>
                             <td><span t-field="o.sale_id.user_id"/></td>
                         </tr>
-
                         <tr>
                             <td><b>Customer / العميل:</b></td>
                             <td><span t-field="o.partner_id"/></td>
@@ -33,7 +30,6 @@
                             <td><b>Customer Phone / هاتف العميل:</b></td>
                             <td><span t-field="o.customer_phone"/></td>
                         </tr>
-
                         <tr>
                             <td><b>Address / العنوان:</b></td>
                             <td><span t-esc="o.partner_id.contact_address"/></td>
@@ -41,7 +37,6 @@
                             <td><b>Leave Time / وقت المغادرة:</b></td>
                             <td><span t-field="o.leave_datetime"/></td>
                         </tr>
-
                         <tr>
                             <td><b>Sales Order / أمر المبيعات:</b></td>
                             <td><span t-esc="o.origin"/></td>
@@ -49,7 +44,6 @@
                             <td><b>Truck Plate No / رقم اللوحة:</b></td>
                             <td><span t-field="o.truck_plate_no"/></td>
                         </tr>
-
                         <tr>
                             <td><b>Driver Name / اسم السائق:</b></td>
                             <td><span t-field="o.driver_name"/></td>
@@ -59,7 +53,6 @@
                             <td></td>
                         </tr>
                     </table>
-
                     <table style="width:100%; border-collapse:collapse; margin-top:20px;">
                         <thead>
                             <tr>
@@ -117,13 +110,11 @@
                             </tr>
                         </tbody>
                     </table>
-
                     <div style="margin-top:25px;">
                         <strong>Notes / الملاحظات:</strong>
                         <hr/>
                         <span t-field="o.note"/>
                     </div>
-
                     <t t-if="not env.context.get('hide_signatures')">
                         <div style="margin-top:50px; width:100%; text-align:center;">
 
@@ -147,7 +138,6 @@
                                 <br/><br/><br/><br/>
                                 <div style="border-top:1px solid #000; width:120px; margin:0 auto;"></div>
                             </div>
-
                         </div>
                     </t>
                 </div>

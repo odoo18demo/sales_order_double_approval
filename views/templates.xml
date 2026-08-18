@@ -495,12 +495,30 @@
                     });
 
                     var sec = 10;
-                    setInterval(function() {
+
+                    // 1. Give the interval a name so we can stop it later
+                    var refreshTimer = setInterval(function() {
                         if (isModalOpen || isListView) return;
+
                         sec--;
                         var el = document.getElementById('countdown');
-                        if (el) el.innerText = sec;
-                        if (sec <= 0) window.location.reload();
+
+                        if (sec > 0) {
+                            // Keep updating the number normally if above 0
+                            if (el) el.innerText = sec;
+                        } else {
+                            // 2. When it hits 0 or below, stop the loop completely!
+                            clearInterval(refreshTimer);
+
+                            // 3. Change the text so it doesn't show negative numbers
+                            if (el) {
+                                el.innerText = "Reloading...";
+                                el.style.color = "#ff9800"; // Optional: make it orange so they notice
+                            }
+
+                            // 4. Trigger the reload
+                            window.location.reload();
+                        }
                     }, 1000);
                     //]]>
                 </script>

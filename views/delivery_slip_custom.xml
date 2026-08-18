@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <template id="custom_delivery_slip_inherit" inherit_id="stock.report_delivery_document">
-
         <xpath expr="//t[@t-set='address']" position="replace">
             <t t-set="address"> </t>
         </xpath>
-
         <xpath expr="//div[hasclass('page')]" position="replace">
             <div class="page" style="font-family: 'DejaVu Sans', Arial, sans-serif;">
-
                 <h2 style="text-align:center; font-size:18px; margin-bottom: 20px;">
                     Delivery Note <br/>
                     <span style="font-size: 14px; font-weight: normal;">مذكرة تسليم</span>
                 </h2>
-
                 <div class="row" style="margin-bottom: 20px;">
                     <div class="col-6">
                         <div style="padding: 5px;"><b>SN / الرقم التسلسلي:</b> <span t-field="o.name"/></div>
@@ -32,7 +28,6 @@
                         <div style="padding: 5px;"><b>Driver Mobile / جوال السائق:</b> <span t-field="o.driver_mobile"/></div>
                     </div>
                 </div>
-
                 <table style="width:100%; border-collapse: collapse; margin-top: 20px;">
                     <thead>
                         <tr style="border-bottom: 1px solid black;">
