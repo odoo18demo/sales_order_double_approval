@@ -6,7 +6,7 @@
                 <div class="page" style="font-family: 'DejaVu Sans', Arial, sans-serif;">
 
                     <div style="text-align:center; margin-bottom:20px;">
-                        <h2>Delivery Note <br/><span style="font-size: 16px; font-weight: normal;">مذكرة تسليم</span></h2>
+                        <h2>Delivery Note <br/><span style="font-size: 14px; font-weight: normal;">مذكرة تسليم</span></h2>
                     </div>
                     <table style="width:100%; margin-bottom:20px; border-collapse:separate; border-spacing:0 8px;">
                         <tr>
