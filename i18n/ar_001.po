@@ -164,6 +164,26 @@ msgstr "بإنتظار التحميل"
 msgid "Cancelled"
 msgstr "تم الإلغاء"
 
+#. module: sales_order_double_approval
+#: model:ir.model.fields,field_description:sales_order_double_approval.field_sale_order__display_note
+#: model_terms:ir.ui.view,arch_db:sales_order_double_approval.view_order_form_inherit_approval_workflow
+msgid "Note"
+msgstr "عرض الملاحظة"
+
+#. module: sales_order_double_approval
+#: model_terms:ir.ui.view,arch_db:sales_order_double_approval.view_order_form_inherit_approval_workflow
+msgid "Enter note here..."
+msgstr "أدخل الملاحظة هنا..."
+
+#. module: sales_order_double_approval
+#: model:ir.model.fields,field_description:sales_order_double_approval.field_sale_order__approval_stage
+msgid "Approval Stage"
+msgstr "مرحلة الموافقة"
+
+#. module: sales_order_double_approval
+#: model:ir.model.fields,field_description:sales_order_double_approval.field_sale_order__approval_token
+msgid "Approval Token"
+msgstr "رمز الموافقة"
 
 
 
