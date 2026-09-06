@@ -24,7 +24,7 @@ class StockPicking(models.Model):
     truck_plate_no = fields.Char(string="Truck Plate No")
     customer_phone = fields.Char(
         string="Customer Phone",
-        related="partner_id.phone",
+        related="partner_id.mobile",
         readonly=False  # Set to True if you want to lock it!
     )
     city_code = fields.Char(string="City Code")
