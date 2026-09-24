@@ -6,3 +6,4 @@ from . import crm_team
 from . import fleet_driver
 from . import picking_cancel_wizard
 from . import stock_picking
+from . import res_partner_inherit
