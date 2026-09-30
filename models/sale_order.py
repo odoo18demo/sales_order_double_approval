@@ -5,6 +5,7 @@ from odoo.http import request
 from odoo.exceptions import UserError
 from odoo import http
 import logging
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -551,10 +552,33 @@ class SaleOrder(models.Model):
         for order in self:
             order.is_force_delivered = True
 
-    # @api.model_create_multi
-    # def create(self, vals_list):
-    #     for vals in vals_list:
-    #         if vals.get('name', _('New')) == _('New'):
-    #             # Assign the draft sequence instead of the standard sale.order sequence
-    #             vals['name'] = self.env['ir.sequence'].next_by_code('sale.order.draft') or _('New')
-    #     return super(SaleOrder, self).create(vals_list)
+    # 1. Unlock the Sale Order Number (name) field and remove the 'New' default
+    name = fields.Char(
+        string="Order Reference",
+        required=True,
+        copy=False,
+        readonly=False,
+        default=False,
+    )
+
+    # 2. Prevent Odoo's core create() from generating a sequence if a manual number is typed
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get('name') or vals.get('name') == _('New'):
+                raise ValidationError(_("Please enter the Sale Order Number manually before saving!"))
+        return super(SaleOrder, self).create(vals_list)
+
+    # 3. Block duplicate Sale Order numbers (Important for MRP & Deliveries!)
+    @api.constrains('name')
+    def _check_unique_sale_order_name(self):
+        for order in self:
+            if order.name:
+                duplicate = self.sudo().search([
+                    ('name', '=', order.name.strip()),
+                    ('id', '!=', order.id),
+                ], limit=1)
+                if duplicate:
+                    raise ValidationError(
+                        _("Sale Order Number '%s' already exists! Please enter a unique number.") % order.name
+                    )
