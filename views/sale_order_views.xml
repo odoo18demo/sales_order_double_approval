@@ -64,7 +64,6 @@
                 <attribute name="invisible">state != 'draft' or not is_salesperson</attribute>
             </xpath>
             <xpath expr="//button[@name='action_cancel']" position="attributes">
-                <attribute name="invisible">state != 'draft_approval'</attribute>
                 <attribute name="confirm">Are you sure you want to cancel this quotation?</attribute>
             </xpath>
             <xpath expr="//field[@name='team_id'][not(ancestor::field)]" position="after">
