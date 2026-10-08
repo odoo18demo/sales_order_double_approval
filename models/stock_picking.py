@@ -7,7 +7,6 @@ _logger = logging.getLogger(__name__)
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
-    _order = 'sale_id desc'
 
     driver_name = fields.Many2one('fleet.driver', string="Driver")
     driver_mobile = fields.Char(string="Driver Mobile")

@@ -12,7 +12,6 @@ _logger = logging.getLogger(__name__)
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
-    _order = 'name desc'
 
     display_note = fields.Text(string='Note')
     # Odoo 18 requires explicit positioning for injected selection states
