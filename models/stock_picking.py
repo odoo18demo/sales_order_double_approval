@@ -7,16 +7,17 @@ _logger = logging.getLogger(__name__)
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
+    _order = 'origin desc'
 
     driver_name = fields.Many2one('fleet.driver', string="Driver")
     driver_mobile = fields.Char(string="Driver Mobile")
 
-    sale_order_number_numeric = fields.Integer(
-        string="Sale Order Number Numeric",
-        compute="_compute_sale_order_number_numeric",
-        store=True,
-        index=True,
-    )
+    # sale_order_number_numeric = fields.Integer(
+    #     string="Sale Order Number Numeric",
+    #     compute="_compute_sale_order_number_numeric",
+    #     store=True,
+    #     index=True,
+    # )
 
     @api.depends('sale_id', 'sale_id.name')
     def _compute_sale_order_number_numeric(self):
