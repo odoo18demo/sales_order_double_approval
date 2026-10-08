@@ -21,14 +21,11 @@ class StockPicking(models.Model):
     @api.depends('sale_id', 'sale_id.name')
     def _compute_sale_order_number_numeric(self):
         for picking in self:
-            if picking.sale_id and picking.sale_id.name:
-                name = picking.sale_id.name.strip()
+            name = picking.sale_id.name if picking.sale_id else ''
 
-                if name.isdigit():
-                    picking.sale_order_number_numeric = int(name)
-                else:
-                    picking.sale_order_number_numeric = 0
-            else:
+            try:
+                picking.sale_order_number_numeric = int(name.strip())
+            except (ValueError, AttributeError):
                 picking.sale_order_number_numeric = 0
 
     @api.onchange('driver_name')
