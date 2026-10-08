@@ -564,14 +564,14 @@ class SaleOrder(models.Model):
     order_number_numeric = fields.Integer(
         string="Order Number Numeric",
     )
-    #
-    # @api.depends('name')
-    # def _compute_order_number_numeric(self):
-    #     for order in self:
-    #         try:
-    #             order.order_number_numeric = int(order.name.strip())
-    #         except (ValueError, AttributeError):
-    #             order.order_number_numeric = 0
+
+    @api.depends('name')
+    def _compute_order_number_numeric(self):
+        for order in self:
+            try:
+                order.order_number_numeric = int(order.name.strip())
+            except (ValueError, AttributeError):
+                order.order_number_numeric = 0
     # 2. Prevent Odoo's core create() from generating a sequence if a manual number is typed
     @api.model_create_multi
     def create(self, vals_list):
