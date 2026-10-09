@@ -75,11 +75,17 @@ class MrpScreen(http.Controller):
                 processed_so_lines.add(so_product_key)
                 productions |= mo
 
-                customer = (
-                    sale_order.partner_id.name
-                    if sale_order.partner_id
-                    else 'No Customer'
-                )
+                # Replace the customer lookup with this:
+                if sale_order.partner_id:
+                    # Use display_name or fallback to parent company name, then name
+                    customer = (
+                            sale_order.partner_id.display_name
+                            or sale_order.partner_id.parent_id.name
+                            or sale_order.partner_id.name
+                            or '—'
+                    )
+                else:
+                    customer = 'No Customer'
 
                 if product_color_key not in product_map:
                     base_name = mo.product_id.name
@@ -117,14 +123,15 @@ class MrpScreen(http.Controller):
                 if sale_order.date_order:
                     order_date_str = sale_order.date_order.strftime('%d-%m-%Y')
 
+                # And ensure orders dictionary has clean fallbacks:
                 product_map[product_color_key]['orders'].append({
-                    'mo_name': mo.name,
+                    'mo_name': mo.name or '—',
                     'origin': mo.origin or '—',
                     'customer': customer,
                     'customer_city': (
-                        sale_order.partner_id.city
-                        if sale_order.partner_id
-                        else '—'
+                            sale_order.partner_id.city
+                            or (sale_order.partner_id.parent_id.city if sale_order.partner_id.parent_id else '—')
+                            or '—'
                     ),
                     'salesperson': (
                         sale_order.user_id.name
@@ -132,7 +139,7 @@ class MrpScreen(http.Controller):
                         else '—'
                     ),
                     'item_name': mo.product_id.name or '—',
-                    'color': line_color,
+                    'color': line_color or '',
                     'delivery_date': delivery_date,
                     'note': html2plaintext(sale_order.display_note) if sale_order.display_note else '',
                     'qty': remaining_qty,

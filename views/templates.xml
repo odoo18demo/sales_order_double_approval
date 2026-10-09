@@ -277,15 +277,19 @@
                     }
 
                     function buildRowHTML(order) {
+                        var custName = (order.customer && order.customer !== 'False') ? order.customer : '—';
+                        var custCity = (order.customer_city && order.customer_city !== 'False') ? order.customer_city : '—';
+                        var salesman = (order.salesperson && order.salesperson !== 'False') ? order.salesperson : '—';
+
                         return '<tr>' +
-                            '<td><b>' + order.origin + '</b></td>' +
-                            '<td>' + order.date_order + '</td>' +
-                            '<td>' + order.customer + '</td>' +
-                            '<td>' + order.customer_city + '</td>' +
-                            '<td>' + order.salesperson + '</td>' +
-                            '<td>' + order.item_name + '</td>' +
-                            '<td>' + order.delivery_date + '</td>' +
-                            '<td>' + order.qty + ' ' + order.uom +'</td>' +
+                            '<td><b>' + (order.origin || '—') + '</b></td>' +
+                            '<td>' + (order.date_order || '—') + '</td>' +
+                            '<td>' + custName + '</td>' +
+                            '<td>' + custCity + '</td>' +
+                            '<td>' + salesman + '</td>' +
+                            '<td>' + (order.item_name || '—') + '</td>' +
+                            '<td>' + (order.delivery_date || '—') + '</td>' +
+                            '<td>' + order.qty + ' ' + (order.uom || '') +'</td>' +
                             '<td>' +
                                 (order.color ?
                                 '<div style="display: flex; align-items: center; gap: 6px;">' +
@@ -304,21 +308,25 @@
                         var term = document.getElementById('searchSO').value.toLowerCase().trim();
                         var groupBy = document.getElementById('groupBySelect').value;
 
+                        // Search across SO origin, customer name, and item name
                         var filtered = flatOrders.filter(function(o) {
-                            return o.origin.toLowerCase().includes(term);
+                            var originMatch = (o.origin || '').toLowerCase().includes(term);
+                            var custMatch = (o.customer && o.customer !== 'False' ? o.customer : '').toLowerCase().includes(term);
+                            var itemMatch = (o.item_name || '').toLowerCase().includes(term);
+                            return originMatch || custMatch || itemMatch;
                         });
 
                         var tbody = document.getElementById('allOrdersTableBody');
                         var html = '';
 
                         if (filtered.length === 0) {
-                            tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; padding: 40px; color: #6c757d; font-size: 15px;">No sale orders match your search.</td></tr>';
+                            tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; padding: 40px; color: #6c757d; font-size: 15px;">No orders match your search.</td></tr>';
                             return;
                         }
 
                         if (groupBy === 'none') {
                             filtered.sort(function(a, b) {
-                                return b.origin.localeCompare(a.origin);
+                                return (b.origin || '').localeCompare(a.origin || '');
                             });
                             filtered.forEach(function(o) {
                                 html += buildRowHTML(o);
@@ -327,8 +335,9 @@
                         } else if (groupBy === 'so') {
                             var soGroups = {};
                             filtered.forEach(function(o) {
-                                if (!soGroups[o.origin]) soGroups[o.origin] = [];
-                                soGroups[o.origin].push(o);
+                                var key = o.origin || '—';
+                                if (!soGroups[key]) soGroups[key] = [];
+                                soGroups[key].push(o);
                             });
                             var soArray = Object.keys(soGroups).map(function(key) {
                                 return { origin: key, orders: soGroups[key] };
@@ -336,9 +345,10 @@
                             soArray.sort(function(a, b) { return b.origin.localeCompare(a.origin); });
                             soArray.forEach(function(g) {
                                 var firstOrder = g.orders[0];
+                                var displayCust = (firstOrder.customer && firstOrder.customer !== 'False') ? firstOrder.customer : '—';
                                 html += '<tr style="background-color: #e9ecef; border-top: 3px solid #042c53;">' +
                                         '<td colspan="10" style="font-weight: 700; color: #042c53; font-size: 14px; padding-top: 15px; padding-bottom: 15px;">' +
-                                        'Sale Order: <span style="font-size: 16px; margin-right: 15px;">' + g.origin + '</span> | <span style="margin-left: 15px; font-weight:normal;">Customer: ' + firstOrder.customer + '</span>' +
+                                        'Sale Order: <span style="font-size: 16px; margin-right: 15px;">' + g.origin + '</span> | <span style="margin-left: 15px; font-weight:normal;">Customer: ' + displayCust + '</span>' +
                                         '</td></tr>';
                                 g.orders.forEach(function(o) { html += buildRowHTML(o); });
                             });
@@ -346,8 +356,9 @@
                         } else if (groupBy === 'product') {
                             var prodGroups = {};
                             filtered.forEach(function(o) {
-                                if (!prodGroups[o.item_name]) prodGroups[o.item_name] = [];
-                                prodGroups[o.item_name].push(o);
+                                var key = o.item_name || '—';
+                                if (!prodGroups[key]) prodGroups[key] = [];
+                                prodGroups[key].push(o);
                             });
                             var prodArray = Object.keys(prodGroups).map(function(key) {
                                 return { item_name: key, orders: prodGroups[key] };
@@ -358,14 +369,14 @@
                                         '<td colspan="10" style="font-weight: 700; color: #042c53; font-size: 14px; padding-top: 15px; padding-bottom: 15px;">' +
                                         'Product: <span style="font-size: 16px;">' + g.item_name + '</span>' +
                                         '</td></tr>';
-                                g.orders.sort(function(a, b) { return b.origin.localeCompare(a.origin); });
+                                g.orders.sort(function(a, b) { return (b.origin || '').localeCompare(a.origin || ''); });
                                 g.orders.forEach(function(o) { html += buildRowHTML(o); });
                             });
 
                         } else if (groupBy === 'salesman') {
                             var smGroups = {};
                             filtered.forEach(function(o) {
-                                var sm = o.salesperson || 'No Sales Man';
+                                var sm = (o.salesperson && o.salesperson !== 'False') ? o.salesperson : 'No Sales Man';
                                 if (!smGroups[sm]) smGroups[sm] = [];
                                 smGroups[sm].push(o);
                             });
@@ -378,14 +389,14 @@
                                         '<td colspan="10" style="font-weight: 700; color: #042c53; font-size: 14px; padding-top: 15px; padding-bottom: 15px;">' +
                                         'Sales Man: <span style="font-size: 16px;">' + g.salesperson + '</span>' +
                                         '</td></tr>';
-                                g.orders.sort(function(a, b) { return b.origin.localeCompare(a.origin); });
+                                g.orders.sort(function(a, b) { return (b.origin || '').localeCompare(a.origin || ''); });
                                 g.orders.forEach(function(o) { html += buildRowHTML(o); });
                             });
 
                         } else if (groupBy === 'customer') {
                             var custGroups = {};
                             filtered.forEach(function(o) {
-                                var cust = o.customer || 'No Customer';
+                                var cust = (o.customer && o.customer !== 'False') ? o.customer : 'No Customer';
                                 if (!custGroups[cust]) custGroups[cust] = [];
                                 custGroups[cust].push(o);
                             });
@@ -398,7 +409,7 @@
                                         '<td colspan="10" style="font-weight: 700; color: #042c53; font-size: 14px; padding-top: 15px; padding-bottom: 15px;">' +
                                         'Customer: <span style="font-size: 16px;">' + g.customer + '</span>' +
                                         '</td></tr>';
-                                g.orders.sort(function(a, b) { return b.origin.localeCompare(a.origin); });
+                                g.orders.sort(function(a, b) { return (b.origin || '').localeCompare(a.origin || ''); });
                                 g.orders.forEach(function(o) { html += buildRowHTML(o); });
                             });
 
@@ -418,7 +429,7 @@
                                         '<td colspan="10" style="font-weight: 700; color: #042c53; font-size: 14px; padding-top: 15px; padding-bottom: 15px;">' +
                                         'Color: <span style="font-size: 16px;">' + g.color + '</span>' +
                                         '</td></tr>';
-                                g.orders.sort(function(a, b) { return b.origin.localeCompare(a.origin); });
+                                g.orders.sort(function(a, b) { return (b.origin || '').localeCompare(a.origin || ''); });
                                 g.orders.forEach(function(o) { html += buildRowHTML(o); });
                             });
                         }
