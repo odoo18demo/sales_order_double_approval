@@ -14,14 +14,6 @@
                        decoration-danger="delivery_badge_status == 'cancelled'"
                        optional="show"/>
             </xpath>
-        </field>
-    </record>
-    <!-- Make the Sale Order Number editable manually before confirmation, and lock it once confirmed -->
-    <record id="sale_order_list_numeric_sort" model="ir.ui.view">
-        <field name="name">sale.order.list.numeric.sort</field>
-        <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_quotation_tree_with_onboarding"/>
-        <field name="arch" type="xml">
             <xpath expr="//list" position="attributes">
                 <attribute name="default_order">order_number_numeric desc, id desc</attribute>
             </xpath>
