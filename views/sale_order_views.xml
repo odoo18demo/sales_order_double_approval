@@ -22,13 +22,13 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_quotation_tree_with_onboarding"/>
         <field name="arch" type="xml">
-            <!-- Force the tree view to sort by your new stored field -->
             <xpath expr="//list" position="attributes">
-                <attribute name="default_order">order_number_numeric desc</attribute>
+                <attribute name="default_order">order_number_numeric desc, id desc</attribute>
             </xpath>
-            <field name="name" position="after">
+
+            <xpath expr="//field[@name='name']" position="after">
                 <field name="order_number_numeric" column_invisible="True"/>
-            </field>
+            </xpath>
         </field>
     </record>
     <record id="sale_order_search_remove_my_quotation" model="ir.ui.view">
