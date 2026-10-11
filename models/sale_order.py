@@ -12,6 +12,9 @@ _logger = logging.getLogger(__name__)
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
+    # 1. Set the default sorting for the entire model
+    _order = 'order_number_numeric desc, id desc'
+
 
     display_note = fields.Text(string='Note')
     # Odoo 18 requires explicit positioning for injected selection states
@@ -560,16 +563,20 @@ class SaleOrder(models.Model):
         readonly=False,
         default=False,
     )
+    # 2. Add compute and store=True so Odoo can sort it in the database
     order_number_numeric = fields.Integer(
         string="Order Number Numeric",
+        compute="_compute_order_number_numeric",
+        store=True
     )
 
     @api.depends('name')
     def _compute_order_number_numeric(self):
         for order in self:
             try:
+                # Extracts the number and saves it in the database
                 order.order_number_numeric = int(order.name.strip())
-            except (ValueError, AttributeError):
+            except (ValueError, AttributeError, TypeError):
                 order.order_number_numeric = 0
     # 2. Prevent Odoo's core create() from generating a sequence if a manual number is typed
     @api.model_create_multi
