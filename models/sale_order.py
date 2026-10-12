@@ -1,11 +1,10 @@
 import base64
 import uuid
+import re
+import logging
 from odoo import _, fields, models, api
 from odoo.http import request
-from odoo.exceptions import UserError
-from odoo import http
-import logging
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -573,10 +572,12 @@ class SaleOrder(models.Model):
     @api.depends('name')
     def _compute_order_number_numeric(self):
         for order in self:
-            try:
-                # Extracts the number and saves it in the database
-                order.order_number_numeric = int(order.name.strip())
-            except (ValueError, AttributeError, TypeError):
+            if order.name:
+                # r'\D' finds every character that is NOT a digit and replaces it with nothing
+                # Example: "#draft00200" becomes "00200", which int() converts to 200
+                numeric_only = re.sub(r'\D', '', order.name)
+                order.order_number_numeric = int(numeric_only) if numeric_only else 0
+            else:
                 order.order_number_numeric = 0
     # 2. Prevent Odoo's core create() from generating a sequence if a manual number is typed
     @api.model_create_multi
