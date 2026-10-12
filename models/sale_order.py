@@ -566,7 +566,7 @@ class SaleOrder(models.Model):
     order_number_numeric = fields.Integer(
         string="Order Number Numeric",
         compute="_compute_order_number_numeric",
-        store=True
+        # store=True
     )
 
     @api.depends('name')
