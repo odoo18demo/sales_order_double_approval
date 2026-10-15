@@ -137,7 +137,7 @@ class SaleOrder(models.Model):
         <div style="font-family:Arial, sans-serif; font-size:13px;">
             <p>Dear {user.name},</p>
             <p>Sale Order <strong>{self.name}</strong> is awaiting your evaluation stage.</p>
-            <p>Customer: <strong>{self.partner_id.name}</strong></p>
+            <p>Customer: <strong>{self.partner_id.display_name}</strong></p>
             <p>Amount: <strong>{self.currency_id.symbol if self.currency_id else ''}{self.amount_total:.2f}</strong></p>
             <p>Please select an action to process the workflow tracking state:</p>
             <p style="margin-top: 20px;">
@@ -286,7 +286,7 @@ class SaleOrder(models.Model):
             '<p>Total Amount: <strong>%s %.2f</strong></p>'
             '<p>The quotation has been approved by the Manager.</p>'
             '<p>You may now send it to the customer.</p>'
-        ) % (self.name, self.partner_id.name, self.currency_id.symbol, self.amount_total,)
+        ) % (self.name, self.partner_id.display_name, self.currency_id.symbol, self.amount_total,)
 
         if self.user_id:
             self._send_notification_email(
@@ -418,7 +418,7 @@ class SaleOrder(models.Model):
             '<p>Sale Order <strong>%s</strong> has been confirmed.</p>'
             '<p>Customer: <strong>%s</strong></p>'
             '<p>Total Amount: <strong>%s %.2f</strong></p>'
-        ) % (self.name, self.partner_id.name, self.currency_id.symbol or '', self.amount_total)
+        ) % (self.name, self.partner_id.display_name, self.currency_id.symbol or '', self.amount_total)
 
         self._send_notification_email(
             manager,
