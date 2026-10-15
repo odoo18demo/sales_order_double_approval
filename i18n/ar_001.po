@@ -185,5 +185,75 @@ msgstr "مرحلة الموافقة"
 msgid "Approval Token"
 msgstr "رمز الموافقة"
 
+#. module: sales_order_double_approval
+#: model_terms:ir.ui.view,arch_db:sales_order_double_approval.view_order_form_inherit_approval_workflow
+msgid "Approve"
+msgstr "موافقة"
 
+#. module: sales_order_double_approval
+#: model:ir.model.fields.selection,name:sales_order_double_approval.selection__sale_order__approval_stage__approved
+msgid "Approved"
+msgstr "تمت الموافقة"
+
+#. module: sales_order_double_approval
+#: model_terms:ir.ui.view,arch_db:sales_order_double_approval.view_order_form_inherit_approval_workflow
+msgid "Are you sure you want to cancel this quotation?"
+msgstr "هل أنت متأكد أنك تريد إلغاء عرض السعر هذا؟"
+
+#. module: sales_order_double_approval
+#: model_terms:ir.ui.view,arch_db:sales_order_double_approval.view_picking_deep_cancel_wizard_form
+msgid "Cancel EVERYTHING and SET to Draft"
+msgstr "إلغاء كل شيء وإعادة التعيين إلى مسودة"
+
+#. module: sales_order_double_approval
+#: model_terms:ir.ui.view,arch_db:sales_order_double_approval.view_picking_deep_cancel_wizard_form
+msgid "Cancel ONLY this Delivery"
+msgstr "إلغاء عملية التسليم هذه فقط"
+
+#. module: sales_order_double_approval
+#: model_terms:ir.ui.view,arch_db:sales_order_double_approval.view_picking_deep_cancel_wizard_form
+msgid "Confirm Cancellation Workflow"
+msgstr "تأكيد إجراءات الإلغاء"
+
+#. module: sales_order_double_approval
+#: model_terms:ir.ui.view,arch_db:sales_order_double_approval.view_order_form_inherit_approval_workflow
+msgid "Enter Sale Order No."
+msgstr "أدخل رقم أمر البيع"
+
+#. module: sales_order_double_approval
+#: model:ir.actions.act_window,name:sales_order_double_approval.action_finance_team
+msgid "Finance Team"
+msgstr "الفريق المالي"
+
+#. module: sales_order_double_approval
+#: model:ir.model.fields,field_description:sales_order_double_approval.field_sale_order__is_force_delivered
+#: model:ir.model.fields,field_description:sales_order_double_approval.field_stock_picking__is_force_delivered
+msgid "Force Fully Delivered"
+msgstr "تعيين التسليم كمكتمل إجباريًا"
+
+#. module: sales_order_double_approval
+#: model_terms:ir.ui.view,arch_db:sales_order_double_approval.finance_team_form_view
+msgid "Members"
+msgstr "الأعضاء"
+
+#. module: sales_order_double_approval
+#: model:ir.model.fields,field_description:sales_order_double_approval.field_crm_team__sales_manager_ids
+msgid "Sales Manager"
+msgstr "مدير المبيعات"
+
+#. module: sales_order_double_approval
+#: model_terms:ir.ui.view,arch_db:sales_order_double_approval.view_picking_form_inherit_delivery_info
+msgid "Set to Draft"
+msgstr "إعادة التعيين إلى مسودة"
+
+#. module: sales_order_double_approval
+#: model:ir.model.fields,field_description:sales_order_double_approval.field_financial_team__member_ids
+msgid "Team Members"
+msgstr "أعضاء الفريق"
+
+#. module: sales_order_double_approval
+#. odoo-python
+#: code:addons/sales_order_double_approval/models/sale_order.py:0
+msgid "You have already approved this stage."
+msgstr "لقد وافقت بالفعل على هذه المرحلة."
 
