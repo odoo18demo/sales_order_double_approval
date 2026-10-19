@@ -600,3 +600,12 @@ class SaleOrder(models.Model):
                     raise ValidationError(
                         _("Sale Order Number '%s' already exists! Please enter a unique number.") % order.name
                     )
+
+    @api.constrains('commitment_date', 'payment_term_id')
+    def _check_mandatory_delivery_and_payment(self):
+        for order in self:
+            if not order.commitment_date:
+                raise ValidationError(_("Save Error: Please select a Delivery Date (Commitment Date) before saving."))
+
+            if not order.payment_term_id:
+                raise ValidationError(_("Save Error: Payment Terms required. If locked, update them on the Customer form."))
