@@ -71,6 +71,7 @@
 <!--            </xpath>-->
             <!-- Ensure it is editable in draft state and disable creating new SOs from here -->
             <xpath expr="//field[@name='sale_id']" position="attributes">
+                <attribute name="domain">[('state', '=', 'sale')]</attribute>
                 <attribute name="readonly">state == 'done'</attribute>
                 <attribute name="options">{'no_create': True}</attribute>
             </xpath>

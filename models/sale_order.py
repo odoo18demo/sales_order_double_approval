@@ -85,12 +85,38 @@ class SaleOrder(models.Model):
         for order in self:
             if order.state != 'draft_approval':
                 continue
+            # 1. Validate Delivery Date
+            if not order.commitment_date:
+                raise ValidationError(_(
+                    "Please select a Delivery Date (Commitment Date) "
+                    "before submitting for approval."
+                ))
+            # 2. Validate Payment Terms
+            if not order.payment_term_id:
+                raise ValidationError(_(
+                    "Please select Payment Terms before submitting "
+                    "for approval."
+                ))
+            # 3. Validate Product Colour for each order line
+            for line in order.order_line:
+                if (
+                        line.product_id
+                        and not line.product_id.product_tmpl_id.no_color_required
+                        and not line.prod_color
+                ):
+                    raise ValidationError(_(
+                        "Please choose a color in the Colour column "
+                        "for product '%s'."
+                    ) % line.product_id.display_name)
+            # 4. Submit for Approval
             order.write({
                 'approval_token': str(uuid.uuid4()),
                 'approval_stage': 'pending_revisor',
                 'state': 'to_approve',
             })
+            # 5. Send Initial Approval Emails
             order._send_initial_approval_emails()
+
         return True
 
     def _send_initial_approval_emails(self):
@@ -600,12 +626,3 @@ class SaleOrder(models.Model):
                     raise ValidationError(
                         _("Sale Order Number '%s' already exists! Please enter a unique number.") % order.name
                     )
-
-    @api.constrains('commitment_date', 'payment_term_id')
-    def _check_mandatory_delivery_and_payment(self):
-        for order in self:
-            if not order.commitment_date:
-                raise ValidationError(_("Save Error: Please select a Delivery Date (Commitment Date) before saving."))
-
-            if not order.payment_term_id:
-                raise ValidationError(_("Save Error: Payment Terms required. If locked, update them on the Customer form."))
