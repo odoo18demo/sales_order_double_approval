@@ -91,11 +91,17 @@ class SaleOrder(models.Model):
                     "Please select a Delivery Date (Commitment Date) "
                     "before submitting for approval."
                 ))
-            # 2. Validate Payment Terms
+            if not order.payment_term_id and order.partner_id:
+                partner = order.partner_id
+                order.payment_term_id = (
+                        partner.property_payment_term_id
+                        or partner.commercial_partner_id.property_payment_term_id
+                )
+
+            # Validate Payment Terms
             if not order.payment_term_id:
                 raise ValidationError(_(
-                    "Please select Payment Terms before submitting "
-                    "for approval."
+                    "Please select Payment Terms before submitting for approval."
                 ))
             # 3. Validate Product Colour for each order line
             for line in order.order_line:
