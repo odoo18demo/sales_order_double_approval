@@ -119,7 +119,7 @@
                 <field name="commitment_date" position="move"/>
             </xpath>
             <xpath expr="//page[@name='other_information']" position="after">
-                <page name="display_note_page" string="Note">
+                <page name="display_note_page" string="Internal Notes">
                     <group>
                         <field name="display_note" placeholder="Enter note here..." readonly="state in ['cancel', 'sale'] or (is_salesperson and state != 'draft_approval')"/>
                     </group>
