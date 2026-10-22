@@ -15,7 +15,7 @@ class SaleOrder(models.Model):
     _order = 'order_number_numeric desc, id desc'
 
 
-    display_note = fields.Text(string='Note')
+    display_note = fields.Text(string='Internal Note')
     # Odoo 18 requires explicit positioning for injected selection states
     state = fields.Selection(
         selection_add=[
