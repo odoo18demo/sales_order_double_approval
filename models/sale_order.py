@@ -612,12 +612,12 @@ class SaleOrder(models.Model):
             else:
                 order.order_number_numeric = 0
     # 2. Prevent Odoo's core create() from generating a sequence if a manual number is typed
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            if not vals.get('name') or vals.get('name') == _('New'):
-                raise ValidationError(_("Please enter the Sale Order Number manually before saving!"))
-        return super(SaleOrder, self).create(vals_list)
+    # @api.model_create_multi
+    # def create(self, vals_list):
+    #     for vals in vals_list:
+    #         if not vals.get('name') or vals.get('name') == _('New'):
+    #             raise ValidationError(_("Please enter the Sale Order Number manually before saving!"))
+    #     return super(SaleOrder, self).create(vals_list)
 
     # 3. Block duplicate Sale Order numbers (Important for MRP & Deliveries!)
     @api.constrains('name')

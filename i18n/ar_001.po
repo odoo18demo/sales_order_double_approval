@@ -260,4 +260,4 @@ msgstr "لقد وافقت بالفعل على هذه المرحلة."
 #. module: sales_order_double_approval
 #: model_terms:ir.ui.view,arch_db:sales_order_double_approval.view_order_form_inherit_approval_workflow
 msgid "Internal Notes"
-msgstr "ملاحظة داخلية"
+msgstr ""
