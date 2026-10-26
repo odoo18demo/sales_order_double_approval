@@ -140,15 +140,17 @@ class StockPicking(models.Model):
         # ==============================================================
         # 3. GATHER EMAIL RECIPIENTS
         # ==============================================================
-        # Financial Managers
-        fin_managers = self.env['financial.team'].search([('active', '=', True)])
-        fin_emails = fin_managers.mapped('user_id.partner_id.email')
+        fin_teams = self.env['financial.team'].search([('active', '=', True)])
+        # Grab the main Finance Manager's email
+        fin_manager_emails = fin_teams.mapped('user_id.partner_id.email')
+        # Grab ALL the emails of the team members in the new Kanban tab
+        fin_member_emails = fin_teams.mapped('member_ids.partner_id.email')
         # Salesperson (The person who created the order)
         salesperson_email = sale.user_id.partner_id.email if sale.user_id else False
         # Sales Team Manager
         manager_email = sale.team_id.user_id.partner_id.email if sale.team_id and sale.team_id.user_id else False
         # Combine all emails into one list
-        emails = fin_emails + [salesperson_email, manager_email]
+        emails = fin_manager_emails + fin_member_emails + [salesperson_email, manager_email]
 
         # Remove empty values (if no email exists) and remove duplicates
         valid_emails = list(set([email for email in emails if email]))
