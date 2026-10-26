@@ -399,17 +399,12 @@ class SaleOrder(models.Model):
             rec.is_manager = (rec.team_id.second_approval_id == user)
 
     def action_confirm(self):
-        # for order in self:
-        #     # Swap the #draft name for the real sequence right before confirming
-        #     if order.name and order.name.startswith('#draft'):
-        #         new_name = self.env['ir.sequence'].next_by_code('sale.order') or order.name
-        #         order.write({'name': new_name})
         # 1. Run standard Odoo logic (This automatically creates the draft MO via MTO)
         res = super(SaleOrder, self).action_confirm()
 
         for order in self:
             # Your existing email notification
-            order._send_confirmation_email_to_manager()
+            # order._send_confirmation_email_to_manager()
 
             # ==============================================================
             # ADVANCED LOGIC: Auto-Confirm, Reserve, and Produce All MOs
@@ -438,27 +433,27 @@ class SaleOrder(models.Model):
 
         return res
 
-    def _send_confirmation_email_to_manager(self):
-        self.ensure_one()
-        revisor, manager = self._approval_users()
-        if not manager or not manager.email:
-            return
-
-        attachment = self._create_sale_order_pdf_attachment(link_to_order=True)
-
-        body = _(
-            '<p>Sale Order <strong>%s</strong> has been confirmed.</p>'
-            '<p>Customer: <strong>%s</strong></p>'
-            '<p>Total Amount: <strong>%s %.2f</strong></p>'
-        ) % (self.name, self.partner_id.display_name, self.currency_id.symbol or '', self.amount_total)
-
-        self._send_notification_email(
-            manager,
-            _('Sale Order %s Confirmed') % self.name,
-            body,
-            attachment=attachment,
-            sender_user=self.user_id,  # Force sender: Salesperson
-        )
+    # def _send_confirmation_email_to_manager(self):
+    #     self.ensure_one()
+    #     revisor, manager = self._approval_users()
+    #     if not manager or not manager.email:
+    #         return
+    #
+    #     attachment = self._create_sale_order_pdf_attachment(link_to_order=True)
+    #
+    #     body = _(
+    #         '<p>Sale Order <strong>%s</strong> has been confirmed.</p>'
+    #         '<p>Customer: <strong>%s</strong></p>'
+    #         '<p>Total Amount: <strong>%s %.2f</strong></p>'
+    #     ) % (self.name, self.partner_id.display_name, self.currency_id.symbol or '', self.amount_total)
+    #
+    #     self._send_notification_email(
+    #         manager,
+    #         _('Sale Order %s Confirmed') % self.name,
+    #         body,
+    #         attachment=attachment,
+    #         sender_user=self.user_id,  # Force sender: Salesperson
+    #     )
 
     def action_cancel(self):
         # 1. Trigger core Odoo logic FIRST!
