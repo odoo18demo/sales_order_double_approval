@@ -140,7 +140,9 @@ class StockPicking(models.Model):
         # ==============================================================
         # 3. GATHER EMAIL RECIPIENTS
         # ==============================================================
-        fin_teams = self.env['financial.team'].search([('active', '=', True)])
+        fin_teams = self.env['financial.team'].sudo().search([
+            ('active', '=', True)
+        ])
         # Grab the main Finance Manager's email
         fin_manager_emails = fin_teams.mapped('user_id.partner_id.email')
         # Grab ALL the emails of the team members in the new Kanban tab
