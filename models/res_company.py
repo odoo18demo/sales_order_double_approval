@@ -10,3 +10,4 @@ class ResCompany(models.Model):
         help="Enable this option to require double validation for sale orders. "
              "When enabled, sale orders exceeding a specified minimum amount "
              "will require approval by a sales manager.")
+

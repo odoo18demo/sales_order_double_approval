@@ -102,6 +102,10 @@
                 <attribute name="readonly">1</attribute>
                 <attribute name="force_save">1</attribute>
             </xpath>
+            <xpath expr="//field[@name='sale_id']" position="after">
+                <field name="sales_person_id"
+                       readonly="sale_id != False"/>
+            </xpath>
         </field>
     </record>
     <record id="stock.action_unreserve_picking" model="ir.actions.server">

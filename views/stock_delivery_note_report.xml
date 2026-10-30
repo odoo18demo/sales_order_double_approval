@@ -6,7 +6,7 @@
                 <div class="page" style="font-family: 'DejaVu Sans', Arial, sans-serif;">
 
                     <div style="text-align:center; margin-bottom:20px;">
-                        <h2>Delivery Note <br/><span style="font-size: 14px; font-weight: normal;">مذكرة تسليم</span></h2>
+                        <h2>Delivery Note <br/><span style="font-size: 18px; font-weight: normal;">مذكرة تسليم</span></h2>
                     </div>
                     <table style="width:100%; margin-bottom:20px; border-collapse:separate; border-spacing:0 8px;">
                         <tr>
@@ -21,7 +21,10 @@
                             <td><span t-field="o.city_code"/></td>
 
                             <td><b>Salesman / مندوب المبيعات:</b></td>
-                            <td><span t-field="o.sale_id.user_id"/></td>
+                            <td>
+                                <span t-if="o.sale_id" t-field="o.sale_id.user_id"/>
+                                <span t-else="" t-field="o.sales_person_id"/>
+                            </td>
                         </tr>
                         <tr>
                             <td><b>Customer / العميل:</b></td>
@@ -75,7 +78,15 @@
                                     <span t-field="line.product_id.default_code"/>
                                 </td>
                                 <td style="border:1px solid #000; padding:6px;">
-                                    <span t-esc="line.product_id.name.replace('Â', '').replace('\xa0', ' ')"/>
+                                    <!-- English Product Name -->
+                                    <div style="text-align:left; direction:ltr;">
+                                        <span t-esc="line.product_id.with_context(lang='en_US').name.replace('Â', '').replace('\xa0', ' ')"/>
+                                    </div>
+
+                                    <!-- Arabic Product Name -->
+                                    <div style="text-align:right; direction:rtl; unicode-bidi:embed; margin-top:3px;">
+                                        <span t-esc="line.product_id.with_context(lang='ar_001').name"/>
+                                    </div>
                                 </td>
                                 <td style="border:1px solid #000; padding:6px; text-align:right;">
                                     <span t-field="line.qty_meter"/>

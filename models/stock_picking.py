@@ -28,6 +28,22 @@ class StockPicking(models.Model):
             except (ValueError, AttributeError):
                 picking.sale_order_number_numeric = 0
 
+    sales_person_id = fields.Many2one(
+        'res.users',
+        string='Salesperson',
+        compute='_compute_sales_person_id',
+        store=True,
+        readonly=False,
+    )
+
+    @api.depends('sale_id', 'sale_id.user_id')
+    def _compute_sales_person_id(self):
+        for picking in self:
+            if picking.sale_id:
+                picking.sales_person_id = picking.sale_id.user_id
+            else:
+                picking.sales_person_id = False
+
     @api.onchange('driver_name')
     def _onchange_driver_name(self):
         if self.driver_name:

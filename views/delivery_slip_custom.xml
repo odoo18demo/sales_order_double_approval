@@ -13,7 +13,7 @@
                 <div class="row" style="margin-bottom: 20px;">
                     <div class="col-6">
                         <div style="padding: 5px;"><b>SN / الرقم التسلسلي:</b> <span t-field="o.name" dir="ltr" style="display: inline-block; direction: ltr; unicode-bidi: embed;"/></div>
-                        <div style="padding: 5px;"><b>City Code / رمز المدينة:</b> <span t-field="o.city_code"/></div>
+                        <div style="padding: 5px;"><b>City Code / رمز المدينة:</b> <span t-field="o.city_code" dir="ltr"/></div>
                         <div style="padding: 5px;"><b>Customer / العميل:</b> <span t-field="o.partner_id.name"/></div>
                         <div style="padding: 5px;"><b>Address / العنوان:</b> <span t-esc="o.partner_id.contact_address"/></div>
                         <div style="padding: 5px;"><b>Sales Order / أمر المبيعات:</b> <span t-field="o.origin" dir="ltr" style="display: inline-block; direction: ltr; unicode-bidi: embed;"/></div>
@@ -21,7 +21,7 @@
                     </div>
                     <div class="col-6">
                         <div style="padding: 5px;"><b>Date / التاريخ:</b> <span t-field="o.scheduled_date" dir="ltr" style="display: inline-block; direction: ltr; unicode-bidi: embed;"/></div>
-                        <div style="padding: 5px;"><b>Salesman / مندوب المبيعات:</b> <span t-field="o.sale_id.user_id.name"/></div>
+                        <div style="padding: 5px;"><b>Salesman / مندوب المبيعات:</b><span t-if="o.sale_id" t-field="o.sale_id.user_id.name"/><span t-else="" t-field="o.sales_person_id.name"/></div>
                         <div style="padding: 5px;"><b>Customer Phone / هاتف العميل:</b> <span t-field="o.customer_phone" dir="ltr" style="display: inline-block; direction: ltr; unicode-bidi: embed;"/></div>
                         <div style="padding: 5px;"><b>Leave Time / وقت المغادرة:</b> <span t-field="o.leave_datetime" dir="ltr" style="display: inline-block; direction: ltr; unicode-bidi: embed;"/></div>
                         <div style="padding: 5px;"><b>Truck Plate No / رقم اللوحة:</b> <span t-field="o.truck_plate_no" dir="ltr" style="display: inline-block; direction: ltr; unicode-bidi: embed;"/></div>
