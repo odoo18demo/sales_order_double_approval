@@ -22,7 +22,7 @@
                             <field name="phone"/>
                         </group>
                         <group>
-                            <field name="license_no"/>
+                            <field name="truck_plate"/>
                         </group>
                     </group>
                 </sheet>

@@ -6,5 +6,7 @@ class FleetDriver(models.Model):
 
     name = fields.Char(string="Driver Name", required=True)
     phone = fields.Char(string="Phone")
-    license_no = fields.Char(string="License No")
+    # license_no = fields.Char(string="License No")
+    truck_plate = fields.Char(string="Truck Plate No")
     active = fields.Boolean(default=True)
+

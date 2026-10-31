@@ -55,6 +55,12 @@ class StockPicking(models.Model):
             self.driver_name.phone = self.driver_mobile
 
     truck_plate_no = fields.Char(string="Truck Plate No")
+
+    @api.onchange('driver_name')
+    def _onchange_driver_name_plate(self):
+        if self.driver_name and hasattr(self.driver_name, 'truck_plate'):
+            self.truck_plate_no = self.driver_name.truck_plate
+
     customer_phone = fields.Char(
         string="Customer Phone",
         related="partner_id.mobile",
