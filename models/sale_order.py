@@ -399,36 +399,41 @@ class SaleOrder(models.Model):
             rec.is_manager = (rec.team_id.second_approval_id == user)
 
     def action_confirm(self):
-        # 1. Run standard Odoo logic (This automatically creates the draft MO via MTO)
+        # Clean up any old draft/quotation PDFs before confirming so they don't clutter the chatter
+        for order in self:
+            old_attachments = self.env['ir.attachment'].sudo().search([
+                ('res_model', '=', 'sale.order'),
+                ('res_id', '=', order.id),
+                ('mimetype', '=', 'application/pdf'),
+            ])
+            if old_attachments:
+                old_attachments.unlink()
+
         res = super(SaleOrder, self).action_confirm()
 
         for order in self:
-            # Your existing email notification
-            # order._send_confirmation_email_to_manager()
+            # Generate the final official Sales Order PDF attachment and link it to the order
+            final_attachment = order._create_sale_order_pdf_attachment(link_to_order=True)
 
-            # ==============================================================
-            # ADVANCED LOGIC: Auto-Confirm, Reserve, and Produce All MOs
-            # ==============================================================
+            # Post it cleanly to the chatter
+            order.message_post(
+                body=_('Sales Order confirmed.'),
+                attachment_ids=[final_attachment.id],
+                subtype_xmlid='mail.mt_note',
+            )
+
+            # Your existing MO auto-production logic...
             draft_mos = self.env['mrp.production'].sudo().search([
                 ('origin', '=', order.name),
                 ('state', 'in', ['draft', 'confirmed'])
             ])
-
             for mo in draft_mos:
-                # Step 1: Confirm the MO if it's still in draft
                 if mo.state == 'draft':
                     mo.action_confirm()
-
-                # Step 2: Check availability / reserve raw materials
                 mo.action_assign()
-
-                # Step 3: Automatically mark the production as Done (Produce All)
                 try:
-                    # Check if components are available or force completion
                     mo.button_mark_done()
                 except Exception as e:
-                    # If components are missing or serial numbers are required,
-                    # it will catch the error gracefully without breaking the Sale Order confirmation.
                     _logger.warning("Could not auto-produce MO %s: %s", mo.name, str(e))
 
         return res
