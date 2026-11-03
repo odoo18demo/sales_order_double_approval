@@ -80,7 +80,7 @@
                                 <td style="border:1px solid #000; padding:6px;">
                                     <!-- English Product Name -->
                                     <div style="text-align:left; direction:ltr;">
-                                        <span t-esc="line.product_id.with_context(lang='en_US').name.replace('Â', '').replace('\xa0', ' ')"/>
+                                        <span t-esc="line.with_context(lang='en_US').product_id.name.replace('Â', '').replace('\xa0', ' ')"/>
                                     </div>
 
                                     <!-- Arabic Product Name -->
