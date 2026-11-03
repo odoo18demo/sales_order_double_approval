@@ -78,17 +78,14 @@
                                     <span t-field="line.product_id.default_code"/>
                                 </td>
                                 <td style="border:1px solid #000; padding:6px;">
-    
                                     <!-- English Product Name -->
                                     <div style="text-align:left; direction:ltr;">
-                                        <span t-esc="line.product_id.product_tmpl_id.with_context(lang='en_US').name"/>
+                                        <span t-esc="line.product_id.with_context(lang='en_GB').name"/>
                                     </div>
-
                                     <!-- Arabic Product Name -->
-                                    <div style="text-align:right; direction:rtl; unicode-bidi:embed; margin-top:3px;">
-                                        <span t-esc="line.product_id.product_tmpl_id.with_context(lang='ar_001').name"/>
+                                    <div style="text-align:right; direction:rtl; margin-top:3px;">
+                                        <span t-esc="line.product_id.with_context(lang='ar_001').name"/>
                                     </div>
-
                                 </td>
                                 <td style="border:1px solid #000; padding:6px; text-align:right;">
                                     <span t-field="line.qty_meter"/>
