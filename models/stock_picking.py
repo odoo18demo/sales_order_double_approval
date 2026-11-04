@@ -204,7 +204,7 @@ class StockPicking(models.Model):
                 </tr>
                 <tr>
                     <td><strong>Customer</strong></td>
-                    <td>{sale.partner_id.name}</td>
+                    <td>{sale.partner_id.display_name}</td>
                 </tr>
                 <tr>
                     <td><strong>Validated By</strong></td>
