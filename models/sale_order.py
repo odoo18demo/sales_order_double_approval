@@ -289,15 +289,6 @@ class SaleOrder(models.Model):
         self.ensure_one()
         revisor, manager = self._approval_users()
 
-        old_attachments = self.env['ir.attachment'].sudo().search([
-            ('res_model', '=', 'sale.order'),
-            ('res_id', '=', self.id),
-            ('mimetype', '=', 'application/pdf'),
-            ('name', 'ilike', self.name)
-        ])
-        if old_attachments:
-            old_attachments.unlink()
-
         self.write({
             'state': 'draft',
             'approval_stage': 'approved',
@@ -400,15 +391,6 @@ class SaleOrder(models.Model):
 
     def action_confirm(self):
         # Clean up any old draft/quotation PDFs before confirming so they don't clutter the chatter
-        for order in self:
-            old_attachments = self.env['ir.attachment'].sudo().search([
-                ('res_model', '=', 'sale.order'),
-                ('res_id', '=', order.id),
-                ('mimetype', '=', 'application/pdf'),
-            ])
-            if old_attachments:
-                old_attachments.unlink()
-
         res = super(SaleOrder, self).action_confirm()
 
         for order in self:
