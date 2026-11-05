@@ -35,7 +35,7 @@
                         </tr>
                         <tr>
                             <td><b>Address / العنوان:</b></td>
-                            <td><span t-esc="o.partner_id.contact_address"/></td>
+                            <td><span t-esc="', '.join(filter(None, [o.partner_id.street, o.partner_id.street2, o.partner_id.city, o.partner_id.state_id.name if o.partner_id.state_id else '', o.partner_id.zip, o.partner_id.country_id.name if o.partner_id.country_id else '']))"/></td>
 
                             <td><b>Leave Time / وقت المغادرة:</b></td>
                             <td><span t-field="o.leave_datetime"/></td>

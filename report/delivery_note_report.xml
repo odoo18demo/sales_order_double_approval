@@ -4,8 +4,8 @@
         <field name="name">Custom Delivery Note Paperformat</field>
         <field name="format">A4</field>
         <field name="orientation">Portrait</field>
-        <field name="margin_top">30</field>
-        <field name="margin_bottom">35</field>
+        <field name="margin_top">32</field>
+        <field name="margin_bottom">37</field>
         <field name="margin_left">7</field>
         <field name="margin_right">7</field>
         <field name="header_line" eval="False"/>
