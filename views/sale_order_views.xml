@@ -59,6 +59,16 @@
                         class="btn-primary"
                         invisible="state != 'to_approve' or not ((is_revisor and approval_stage == 'pending_revisor') or is_manager)"/>
             </header>
+            <xpath expr="//field[@name='order_line']/list/field[@name='name']"
+                   position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/list/field[@name='product_template_id']"
+                   position="attributes">
+                <attribute name="options">
+                    {'no_quick_create': True}
+                </attribute>
+            </xpath>
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="domain">[('is_company', '=', False), ('customer_rank', '>', 0), '|', ('create_uid', '=', uid), ('user_id', '=', uid)]</attribute>
             </xpath>
