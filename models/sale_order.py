@@ -59,12 +59,10 @@ class SaleOrder(models.Model):
         # 1. If the order is fully confirmed
         if self.state == 'sale':
             file_name = _('Sales Order - %s.pdf') % self.name
-
         # 2. If it is in your custom double-approval process
         elif self.state in ['draft_approval', 'to_approve']:
             file_name = _('Draft - %s.pdf') % self.name
-
-        # 3. If it is standard Odoo draft or sent
+        # 3. If it is standard Odoo draft or sent (Manager Approved Quotation)
         else:
             file_name = _('Quotation - %s.pdf') % self.name
 
@@ -73,13 +71,32 @@ class SaleOrder(models.Model):
             'type': 'binary',
             'datas': self._render_sale_order_pdf(),
             'mimetype': 'application/pdf',
+            'public': False,  # Stays private when Manager approves
         }
         if link_to_order:
             values.update({
                 'res_model': 'sale.order',
                 'res_id': self.id,
             })
+
         return self.env['ir.attachment'].sudo().create(values)
+
+    def _get_secure_pdf_url(self, attachment, make_public=False):
+        """Build the PDF URL. Keeps public=False on approval, and sets public=True when sending WhatsApp."""
+        self.ensure_one()
+        if not attachment:
+            return False, False
+
+        if make_public and not attachment.public:
+            attachment.sudo().write({'public': True})
+
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url', '').rstrip('/')
+        safe_filename = re.sub(r'[^\w\.-]', '_', attachment.name or f"{self.name}.pdf")
+        if not safe_filename.lower().endswith('.pdf'):
+            safe_filename += '.pdf'
+
+        pdf_url = f"{base_url}/web/content/{attachment.id}/{safe_filename}"
+        return pdf_url, safe_filename
 
     def action_submit_for_approval(self):
         for order in self:
