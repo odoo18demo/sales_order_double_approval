@@ -29,19 +29,15 @@ class MrpScreen(http.Controller):
                 ('state', '=', 'sale')
             ], limit=1)
 
-            if not sale_order:
+            if not sale_order or sale_order.is_force_delivered:
                 continue
 
             pid = mo.product_id.id
-            sale_lines = sale_order.order_line.filtered(lambda l: l.product_id.id == pid)
+            sale_lines = sale_order.order_line.filtered(lambda l: l.product_id.id == pid and not l.display_type)
             if not sale_lines:
                 continue
 
-            # ==============================================================
-            # FIXED COLOR LOGIC: Group lines by color!
-            # Instead of taking the first color and ignoring the rest,
-            # we group the sale lines so each color gets its own card.
-            # ==============================================================
+            # Group lines by color for the Grid Cards
             color_groups = {}
             for line in sale_lines:
                 line_color = ''
@@ -54,43 +50,42 @@ class MrpScreen(http.Controller):
                     color_groups[line_color] = []
                 color_groups[line_color].append(line)
 
-            # Process each color group separately
+            # Process each color group for the Card, but add each line separately to 'orders'
             for line_color, grouped_lines in color_groups.items():
 
-                # UNIQUE KEY INCLUDES COLOR: Separates cards if colors differ
                 product_color_key = f"{pid}_{line_color}"
                 so_product_key = f"{sale_order.id}_{product_color_key}"
 
                 if so_product_key in processed_so_lines:
                     continue
 
-                # Calculate quantities ONLY for this specific color group!
-                ordered_qty = sum(l.product_uom_qty for l in grouped_lines)
-                delivered_qty = sum(l.qty_delivered for l in grouped_lines)
-                remaining_qty = ordered_qty - delivered_qty
+                # Filter lines that still have remaining quantity to deliver
+                valid_lines = []
+                group_remaining_qty = 0
+                for l in grouped_lines:
+                    rem = l.product_uom_qty - l.qty_delivered
+                    if rem > 0:
+                        valid_lines.append((l, rem))
+                        group_remaining_qty += rem
 
-                if remaining_qty <= 0 or sale_order.is_force_delivered:
+                if group_remaining_qty <= 0:
                     continue
 
                 processed_so_lines.add(so_product_key)
                 productions |= mo
 
-                # Replace the customer lookup with this:
                 if sale_order.partner_id:
-                    # Use display_name or fallback to parent company name, then name
                     customer = (
-                            sale_order.partner_id.display_name
-                            or sale_order.partner_id.parent_id.name
-                            or sale_order.partner_id.name
-                            or '—'
+                        sale_order.partner_id.display_name
+                        or sale_order.partner_id.parent_id.name
+                        or sale_order.partner_id.name
+                        or '—'
                     )
                 else:
                     customer = 'No Customer'
 
                 if product_color_key not in product_map:
                     base_name = mo.product_id.name
-
-                    # Check if the color name is already written inside the product name
                     if line_color and line_color.lower() not in base_name.lower():
                         display_name = f"{base_name} - {line_color}"
                     else:
@@ -117,40 +112,42 @@ class MrpScreen(http.Controller):
                     except Exception:
                         delivery_date = str(picking.scheduled_date)
 
-                product_map[product_color_key]['total_qty'] += remaining_qty
+                # Add total remaining quantity of this color group to the Card
+                product_map[product_color_key]['total_qty'] += group_remaining_qty
 
                 order_date_str = '—'
                 if sale_order.date_order:
                     order_date_str = sale_order.date_order.strftime('%d-%m-%Y')
 
-                # And ensure orders dictionary has clean fallbacks:
-                product_map[product_color_key]['orders'].append({
-                    'mo_name': mo.name or '—',
-                    'origin': mo.origin or '—',
-                    'customer': customer,
-                    'customer_city': (
+                # Append EACH individual sale order line separately so "View All Sale Orders" shows every line
+                for line, line_rem_qty in valid_lines:
+                    product_map[product_color_key]['orders'].append({
+                        'mo_name': mo.name or '—',
+                        'origin': mo.origin or '—',
+                        'customer': customer,
+                        'customer_city': (
                             sale_order.partner_id.city
                             or (sale_order.partner_id.parent_id.city if sale_order.partner_id.parent_id else '—')
                             or '—'
-                    ),
-                    'salesperson': (
-                        sale_order.user_id.name
-                        if sale_order.user_id
-                        else '—'
-                    ),
-                    'item_name': mo.product_id.name or '—',
-                    'color': line_color or '',
-                    'delivery_date': delivery_date,
-                    'note': html2plaintext(sale_order.display_note) if sale_order.display_note else '',
-                    'qty': remaining_qty,
-                    'state': mo.state,
-                    'date_order': order_date_str,
-                    'date': (
-                        str(mo.date_start)
-                        if mo.date_start
-                        else '—'
-                    ),
-                })
+                        ),
+                        'salesperson': (
+                            sale_order.user_id.name
+                            if sale_order.user_id
+                            else '—'
+                        ),
+                        'item_name': mo.product_id.name or '—',
+                        'color': line_color or '',
+                        'delivery_date': delivery_date,
+                        'note': html2plaintext(sale_order.display_note) if sale_order.display_note else '',
+                        'qty': int(line_rem_qty) if line_rem_qty == int(line_rem_qty) else line_rem_qty,
+                        'state': mo.state,
+                        'date_order': order_date_str,
+                        'date': (
+                            str(mo.date_start)
+                            if mo.date_start
+                            else '—'
+                        ),
+                    })
 
         products = list(product_map.values())
         for prod in products:
