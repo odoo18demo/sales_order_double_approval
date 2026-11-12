@@ -355,7 +355,7 @@ class StockPicking(models.Model):
         ('partial', 'Partially Delivered'),
         ('full', 'Fully Delivered'),
         ('cancelled', 'Cancelled')
-    ], string="Delivery Status", compute="_compute_delivery_badge_status", store=False)
+    ], string="Delivery Status", compute="_compute_delivery_badge_status", store=True)
 
     @api.depends('sale_id.delivery_badge_status', 'state', 'is_force_delivered')
     def _compute_delivery_badge_status(self):

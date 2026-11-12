@@ -531,7 +531,7 @@ class SaleOrder(models.Model):
         ('partial', 'Partially Delivered'),
         ('full', 'Fully Delivered'),
         ('cancelled', 'Cancelled')
-    ], string="Delivery Status", compute="_compute_delivery_badge_status", store=False)  # <--- CHANGE THIS
+    ], string="Delivery Status", compute="_compute_delivery_badge_status", store=True)  # <--- CHANGE THIS
 
     # 1. Change this from a manual Boolean to a computed Boolean
     is_force_delivered = fields.Boolean(
@@ -604,7 +604,6 @@ class SaleOrder(models.Model):
     def _compute_order_number_numeric(self):
         for order in self:
             if order.name:
-                # r'\D' finds every character that is NOT a digit and replaces it with nothing
                 # Example: "#draft00200" becomes "00200", which int() converts to 200
                 numeric_only = re.sub(r'\D', '', order.name)
                 order.order_number_numeric = int(numeric_only) if numeric_only else 0
