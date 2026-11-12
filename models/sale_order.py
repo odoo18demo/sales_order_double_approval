@@ -586,13 +586,13 @@ class SaleOrder(models.Model):
             order.is_force_delivered = True
 
     # 1. Unlock the Sale Order Number (name) field and remove the 'New' default
-    name = fields.Char(
-        string="Order Reference",
-        required=True,
-        copy=False,
-        readonly=False,
-        default=False,
-    )
+    # name = fields.Char(
+    #     string="Order Reference",
+    #     required=True,
+    #     copy=False,
+    #     readonly=False,
+    #     default=False,
+    # )
     # 2. Add compute and store=True so Odoo can sort it in the database
     order_number_numeric = fields.Integer(
         string="Order Number Numeric",
@@ -610,12 +610,12 @@ class SaleOrder(models.Model):
             else:
                 order.order_number_numeric = 0
     # 2. Prevent Odoo's core create() from generating a sequence if a manual number is typed
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            if not vals.get('name') or vals.get('name') == _('New'):
-                raise ValidationError(_("Please enter the Sale Order Number manually before saving!"))
-        return super(SaleOrder, self).create(vals_list)
+    # @api.model_create_multi
+    # def create(self, vals_list):
+    #     for vals in vals_list:
+    #         if not vals.get('name') or vals.get('name') == _('New'):
+    #             raise ValidationError(_("Please enter the Sale Order Number manually before saving!"))
+    #     return super(SaleOrder, self).create(vals_list)
 
     # 3. Block duplicate Sale Order numbers (Important for MRP & Deliveries!)
     @api.constrains('name')
