@@ -13,18 +13,25 @@
                     <!-- Info Table: Reduced font size (11px), tighter spacing, and 1-line labels -->
                     <table style="width:100%; margin-bottom:12px; border-collapse:separate; border-spacing:0 4px; font-size:15px;">
                         <tr>
-                            <td style="width:24%; white-space:nowrap;"><b>SN / الرقم التسلسلي:</b></td>
-                            <td style="width:26%;"><b><span t-field="o.name"/></b></td>
+                            <!-- Left Side (47% total) -->
+                            <td style="width:22%; white-space:nowrap;"><b>SN / الرقم التسلسلي:</b></td>
+                            <td style="width:25%;"><b><span t-field="o.name"/></b></td>
 
-                            <td style="width:24%; white-space:nowrap;"><b>Date / التاريخ:</b></td>
-                            <td style="width:26%;"><b><span t-field="o.scheduled_date"/></b></td>
+                            <!-- Center Gap (2%) -->
+                            <td style="width:2%;"></td>
+
+                            <!-- Right Side (47% total) -->
+                            <td style="width:25%; white-space:nowrap;"><b>Date / التاريخ:</b></td>
+                            <td style="width:26%; text-align:right;"><b><span t-field="o.scheduled_date"/></b></td>
                         </tr>
                         <tr>
                             <td style="white-space:nowrap;"><b>City Code / رمز المدينة:</b></td>
                             <td><b><span t-field="o.city_code"/></b></td>
 
+                            <td></td>
+
                             <td style="white-space:nowrap;"><b>Salesman / مندوب المبيعات:</b></td>
-                            <td>
+                            <td style="text-align:right;">
                                 <b>
                                     <span t-if="o.sale_id" t-field="o.sale_id.user_id"/>
                                     <span t-else="" t-field="o.sales_person_id"/>
@@ -32,31 +39,40 @@
                             </td>
                         </tr>
                         <tr>
-                            <td style="white-space:nowrap;"><b>Customer / العميل:</b></td>
-                            <td><b><span t-field="o.partner_id"/></b></td>
+                            <td style="white-space:nowrap; vertical-align:top;"><b>Customer / العميل:</b></td>
+                            <td style="vertical-align:top;"><b><span t-field="o.partner_id"/></b></td>
 
-                            <td style="white-space:nowrap;"><b>Customer Phone / هاتف العميل:</b></td>
-                            <td><b><span t-field="o.customer_phone"/></b></td>
+                            <td></td>
+
+                            <td style="white-space:nowrap; vertical-align:top;"><b>Customer Phone / هاتف العميل:</b></td>
+                            <td style="text-align:right; vertical-align:top;"><b><span t-field="o.customer_phone"/></b></td>
                         </tr>
                         <tr>
                             <td style="white-space:nowrap; vertical-align:top;"><b>Address / العنوان:</b></td>
                             <td style="vertical-align:top;"><b><span t-esc="', '.join(filter(None, [o.partner_id.street, o.partner_id.street2, o.partner_id.city, o.partner_id.state_id.name if o.partner_id.state_id else '', o.partner_id.zip, o.partner_id.country_id.name if o.partner_id.country_id else '']))"/></b></td>
 
+                            <td></td>
+
                             <td style="white-space:nowrap; vertical-align:top;"><b>Leave Time / وقت المغادرة:</b></td>
-                            <td style="vertical-align:top;"><b><span t-field="o.leave_datetime"/></b></td>
+                            <td style="text-align:right; vertical-align:top;"><b><span t-field="o.leave_datetime"/></b></td>
                         </tr>
                         <tr>
                             <td style="white-space:nowrap;"><b>Sales Order / أمر المبيعات:</b></td>
                             <td><b><span t-esc="o.origin"/></b></td>
 
+                            <td></td>
+
                             <td style="white-space:nowrap;"><b>Truck Plate No / رقم اللوحة:</b></td>
-                            <td><b><span t-field="o.truck_plate_no"/></b></td>
+                            <td style="text-align:right;"><b><span t-field="o.truck_plate_no"/></b></td>
                         </tr>
                         <tr>
                             <td style="white-space:nowrap;"><b>Driver Name / اسم السائق:</b></td>
                             <td><b><span t-field="o.driver_name"/></b></td>
+
+                            <td></td>
+
                             <td style="white-space:nowrap;"><b>Driver Mobile / جوال السائق:</b></td>
-                            <td><b><span t-field="o.driver_mobile"/></b></td>
+                            <td style="text-align:right;"><b><span t-field="o.driver_mobile"/></b></td>
                         </tr>
                     </table>
 
@@ -77,29 +93,29 @@
 
                             <tr t-foreach="delivered_lines" t-as="line">
                                 <td style="border:1px solid #000; padding:4px; text-align:center;">
-                                    <span t-esc="line_index + 1"/>
+                                    <b><span t-esc="line_index + 1"/></b>
                                 </td>
                                 <td style="border:1px solid #000; padding:4px;">
-                                    <span t-field="line.product_id.default_code"/>
+                                    <b><span t-field="line.product_id.default_code"/></b>
                                 </td>
                                 <td style="border:1px solid #000; padding:4px;">
                                     <!-- English Product Name (Line 1) -->
                                     <div style="text-align:left; direction:ltr;">
-                                        <span t-esc="line.product_id.with_context(lang='en_GB').name"/>
+                                        <b><span t-esc="line.product_id.with_context(lang='en_GB').name"/></b>
                                     </div>
                                     <!-- Arabic Product Name (Line 2) -->
                                     <div style="text-align:right; direction:rtl; margin-top:2px;">
-                                        <span t-esc="line.product_id.with_context(lang='ar_001').name"/>
+                                        <b><span t-esc="line.product_id.with_context(lang='ar_001').name"/></b>
                                     </div>
                                 </td>
                                 <td style="border:1px solid #000; padding:4px; text-align:right;">
-                                    <span t-field="line.qty_meter"/>
+                                    <b><span t-field="line.qty_meter"/></b>
                                 </td>
                                 <td style="border:1px solid #000; padding:4px; text-align:right;">
-                                    <span t-field="line.quantity"/>
+                                    <b><span t-field="line.quantity"/></b>
                                 </td>
                                 <td style="border:1px solid #000; padding:4px;">
-                                    <span t-field="line.product_uom"/>
+                                    <b><span t-field="line.product_uom"/></b>
                                 </td>
                             </tr>
 
