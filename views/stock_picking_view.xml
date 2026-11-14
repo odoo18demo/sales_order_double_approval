@@ -44,7 +44,7 @@
             <xpath expr="//field[@name='location_id']" position="after">
                     <field name="driver_name" required="1"/>
                     <field name="driver_mobile" required="1"/>
-                    <field name="city_code"/>
+                    <field name="city_code" required="1"/>
             </xpath>
             <xpath expr="//field[@name='quantity']" position="attributes">
                 <attribute name="column_invisible">False</attribute>
@@ -54,8 +54,8 @@
             </xpath>
             <xpath expr="//field[@name='origin']" position="after">
                     <field name="truck_plate_no" required="1"/>
-                    <field name="customer_phone"/>
-                    <field name="leave_datetime"/>
+                    <field name="customer_phone" required="1"/>
+                    <field name="leave_datetime" required="1"/>
             </xpath>
             <xpath expr="//field[@name='group_id']" position="after">
                 <field name="is_force_delivered"
@@ -105,6 +105,10 @@
             <xpath expr="//field[@name='sale_id']" position="after">
                 <field name="sales_person_id"
                        readonly="sale_id != False"/>
+            </xpath>
+            <!-- Make Delivery Address (partner_id) mandatory -->
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="required">1</attribute>
             </xpath>
         </field>
     </record>
