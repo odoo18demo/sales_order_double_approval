@@ -400,6 +400,7 @@ class SaleOrder(models.Model):
     is_manager = fields.Boolean(compute="_compute_approvers")
 
     @api.depends('team_id', 'team_id.user_id', 'team_id.second_approval_id')
+    @api.depends_context('uid')
     def _compute_approvers(self):
         for rec in self:
             user = self.env.user

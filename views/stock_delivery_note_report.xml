@@ -5,133 +5,291 @@
             <t t-foreach="docs" t-as="o">
                 <div class="page" style="font-family: 'DejaVu Sans', Arial, sans-serif;">
 
-                    <!-- Heading kept untouched -->
-                    <div style="text-align:center; margin-bottom:20px;">
-                        <h2>Delivery Note <br/><span style="font-weight: normal;">مذكرة تسليم</span></h2>
+                    <style>
+                        @import url('https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400..700&amp;display=swap');
+
+                        .ar-text {
+                            font-family: 'Noto Naskh Arabic', serif !important;
+                            direction: ltr;
+                            font-weight:bold;
+                        }
+
+                        .dn-info-table,
+                        .dn-info-table tr,
+                        .dn-info-table td {
+                            border: 0 !important;
+                            border-top: none !important;
+                            border-left: none !important;
+                            border-right: none !important;
+                            border-bottom: none !important;
+                            box-shadow: none !important;
+                        }
+                        .dn-info-table td.dn-val {
+                            border-bottom: 1px solid #000 !important;
+                            vertical-align: bottom !important;
+                            padding-bottom: 2px !important;
+                        }
+                        .dn-prod-table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            margin-top: 10px;
+                            border: 2px solid #000 !important;
+                            font-family: Arial, 'DejaVu Sans', sans-serif;
+                            font-size: 13px;
+                        }
+                        .dn-prod-table thead th {
+                            background-color: #c0c0c0 !important;
+                            border: 1px solid #000 !important;
+                            border-bottom: 2px solid #000 !important;
+                            padding: 4px 6px !important;
+                            text-align: center !important;
+                            vertical-align: middle !important;
+                            font-weight: bold !important;
+                            color: #000;
+                        }
+                        .dn-prod-table tbody,
+                        .dn-prod-table tbody tr {
+                            border: none !important;
+                        }
+                        .dn-prod-table tbody td {
+                            border-left: 1px solid #000 !important;
+                            border-right: 1px solid #000 !important;
+                            border-top: 0 !important;
+                            border-bottom: 0 !important;
+                            padding: 8px 6px !important;
+                            vertical-align: middle !important;
+                            font-weight: bold !important;
+                        }
+                        .dn-prod-table tbody tr.dn-total-row td {
+                            border-top: 2px solid #000 !important;
+                            border-bottom: 2px solid #000 !important;
+                            border-left: none !important;
+                            border-right: none !important;
+                            padding: 5px 6px !important;
+                            font-weight: bold !important;
+                        }
+                        .dn-notes-table,
+                        .dn-notes-table tr,
+                        .dn-notes-table td {
+                            border: 0 !important;
+                            border-top: none !important;
+                            border-left: none !important;
+                            border-right: none !important;
+                            border-bottom: none !important;
+                            box-shadow: none !important;
+                        }
+                        .dn-sig-table {
+                            width: 100%;
+                            border-collapse: separate;
+                            border-spacing: 14px 0;
+                            margin-top: 12px;
+                            page-break-inside: avoid;
+                        }
+                        .dn-sig-box {
+                            border: 2px solid #000 !important;
+                            height: 115px;
+                            vertical-align: top !important;
+                            text-align: center !important;
+                            padding: 8px 6px !important;
+                            font-weight: bold !important;
+                        }
+                    </style>
+
+                    <div style="text-align:center; margin-bottom:18px; font-family: Arial, 'DejaVu Sans', sans-serif; font-weight:bold;">
+                        <div class="ar-text" style="font-size:18px;">إشعار تسليم بضاعة</div>
+                        <div style="font-size:19px; margin-top:2px;">Delivery Note</div>
                     </div>
-                    <br/>
-                    <!-- Info Table: Reduced font size (11px), tighter spacing, and 1-line labels -->
-                    <table style="width:100%; margin-bottom:12px; border-collapse:separate; border-spacing:0 4px; font-size:15px;">
+                    <!-- Info Table: Bottom lines only, no boxes -->
+                    <table class="dn-info-table" style="width:100%; border-collapse:separate; border-spacing:4px 8px; font-family: Arial, 'DejaVu Sans', sans-serif; font-size:14px; font-weight:bold; margin-bottom:14px;">
+                        <!-- Row 1: Sn (Left) | Date (Right) -->
                         <tr>
-                            <!-- Left Side (57% total) -->
-                            <td style="width:22%; white-space:nowrap;"><b>SN / الرقم التسلسلي:</b></td>
-                            <td style="width:35%;"><b><span t-field="o.name"/></b></td>
+                            <td style="width:15%; vertical-align:bottom; line-height:1.25;">
+                                <div class="ar-text" style="font-size:14px;">الرقم التسلسلي</div>
+                                <div>Sn</div>
+                            </td>
+                            <td class="dn-val" style="width:23%;">
+                                <span t-field="o.name" dir="ltr" style="display:inline-block; direction:ltr;"/>
+                            </td>
 
-                            <!-- Center Gap (2%) -->
-                            <td style="width:1%;"></td>
+                            <td style="width:13%;"></td>
+                            <td style="width:15%;"></td>
 
-                            <!-- Right Side (47% total) -->
-                            <td style="width:22%; white-space:nowrap;"><b>Date / التاريخ:</b></td>
-                            <td style="width:20%; text-align:right;"><b><span t-field="o.scheduled_date"/></b></td>
-                        </tr>
-                        <tr>
-                            <td style="white-space:nowrap;"><b>City Code / رمز المدينة:</b></td>
-                            <td><b><span t-field="o.city_code"/></b></td>
-
-                            <td></td>
-
-                            <td style="white-space:nowrap;"><b>Salesman / مندوب المبيعات:</b></td>
-                            <td style="text-align:right;">
-                                <b>
-                                    <span t-if="o.sale_id" t-field="o.sale_id.user_id"/>
-                                    <span t-else="" t-field="o.sales_person_id"/>
-                                </b>
+                            <td style="width:16%; vertical-align:bottom; line-height:1.25; padding-left:8px;">
+                                <div class="ar-text" style="font-size:15px;">التاريخ</div>
+                                <div>Date</div>
+                            </td>
+                            <td class="dn-val" style="width:19%;">
+                                <span t-field="o.scheduled_date" dir="ltr" style="display:inline-block; direction:ltr;"/>
                             </td>
                         </tr>
+
+                        <!-- Row 2: City Code (Left) | Sales Order (Middle) | Salesman (Right) -->
                         <tr>
-                            <td style="white-space:nowrap; vertical-align:top;"><b>Customer / العميل:</b></td>
-                            <td style="vertical-align:top;"><b><span t-field="o.partner_id"/></b></td>
+                            <td style="vertical-align:bottom; line-height:1.25;">
+                                <div class="ar-text" style="font-size:15px;">رمز المدينة</div>
+                                <div>City Code</div>
+                            </td>
+                            <td class="dn-val">
+                                <span t-field="o.city_code" dir="ltr" style="display:inline-block; direction:ltr;"/>
+                            </td>
 
-                            <td></td>
+                            <td style="vertical-align:bottom; line-height:1.25; padding-left:8px; white-space:nowrap;">
+                                <div class="ar-text" style="font-size:15px;">رقم أمر الشراء</div>
+                                <div>Sales Order</div>
+                            </td>
+                            <td class="dn-val">
+                                <span t-esc="o.origin" dir="ltr" style="display:inline-block; direction:ltr;"/>
+                            </td>
 
-                            <td style="white-space:nowrap; vertical-align:top;"><b>Customer Phone / هاتف العميل:</b></td>
-                            <td style="text-align:right; vertical-align:top;"><b><span t-field="o.customer_phone"/></b></td>
+                            <td style="vertical-align:bottom; line-height:1.25; padding-left:8px;">
+                                <div class="ar-text" style="font-size:15px;">إسم البائع</div>
+                                <div>Salesman</div>
+                            </td>
+                            <td class="dn-val">
+                                <span t-if="o.sale_id" t-field="o.sale_id.user_id"/>
+                                <span t-else="" t-field="o.sales_person_id"/>
+                            </td>
                         </tr>
+
+                        <!-- Row 3: Customer (Left + Middle span) | Customer Phone (Right) -->
                         <tr>
-                            <td style="white-space:nowrap; vertical-align:top;"><b>Address / العنوان:</b></td>
-                            <td style="vertical-align:top;"><b><span t-esc="', '.join(filter(None, [o.partner_id.street, o.partner_id.street2, o.partner_id.city, o.partner_id.state_id.name if o.partner_id.state_id else '', o.partner_id.zip, o.partner_id.country_id.name if o.partner_id.country_id else '']))"/></b></td>
+                            <td style="vertical-align:bottom; line-height:1.25;">
+                                <div class="ar-text" style="font-size:15px;">إسم العميل</div>
+                                <div>Customer</div>
+                            </td>
+                            <td colspan="3" class="dn-val">
+                                <span t-field="o.partner_id"/>
+                            </td>
 
-                            <td></td>
-
-                            <td style="white-space:nowrap; vertical-align:top;"><b>Leave Time / وقت المغادرة:</b></td>
-                            <td style="text-align:right; vertical-align:top;"><b><span t-field="o.leave_datetime"/></b></td>
+                            <td style="vertical-align:bottom; line-height:1.25; padding-left:8px; white-space:nowrap;">
+                                <div class="ar-text" style="font-size:15px;">رقم هاتف العميل</div>
+                                <div>Customer Phone</div>
+                            </td>
+                            <td class="dn-val">
+                                <span t-field="o.customer_phone" dir="ltr" style="display:inline-block; direction:ltr;"/>
+                            </td>
                         </tr>
+
+                        <!-- Row 4: Address (Left + Middle span) | LeaveTime (Right) -->
                         <tr>
-                            <td style="white-space:nowrap;"><b>Sales Order / أمر المبيعات:</b></td>
-                            <td><b><span t-esc="o.origin"/></b></td>
+                            <td style="vertical-align:bottom; line-height:1.25;">
+                                <div class="ar-text" style="font-size:15px;">عنوان العميل</div>
+                                <div>Address</div>
+                            </td>
+                            <td colspan="3" class="dn-val">
+                                <span t-esc="', '.join(filter(None, [o.partner_id.street, o.partner_id.street2, o.partner_id.city, o.partner_id.state_id.name if o.partner_id.state_id else '', o.partner_id.zip, o.partner_id.country_id.name if o.partner_id.country_id else '']))"/>
+                            </td>
 
-                            <td></td>
-
-                            <td style="white-space:nowrap;"><b>Truck Plate No / رقم اللوحة:</b></td>
-                            <td style="text-align:right;"><b><span t-field="o.truck_plate_no"/></b></td>
+                            <td style="vertical-align:bottom; line-height:1.25; padding-left:8px;">
+                                <div class="ar-text" style="font-size:15px;">وقت المغادرة</div>
+                                <div>LeaveTime</div>
+                            </td>
+                            <td class="dn-val">
+                                <span t-field="o.leave_datetime" dir="ltr" style="display:inline-block; direction:ltr;"/>
+                            </td>
                         </tr>
+
+                        <!-- Row 5: Driver Name (Left) | Driver Mobile (Middle) | Truck Plate No (Right) -->
                         <tr>
-                            <td style="white-space:nowrap;"><b>Driver Name / اسم السائق:</b></td>
-                            <td><b><span t-field="o.driver_name"/></b></td>
+                            <td style="vertical-align:bottom; line-height:1.25;">
+                                <div class="ar-text" style="font-size:15px;">إسم السائق</div>
+                                <div>Driver Name</div>
+                            </td>
+                            <td class="dn-val">
+                                <span t-field="o.driver_name"/>
+                            </td>
 
-                            <td></td>
+                            <td style="vertical-align:bottom; line-height:1.25; padding-left:8px; white-space:nowrap;">
+                                <div class="ar-text" style="font-size:15px;">رقم جوال السائق</div>
+                                <div>Driver Mobile</div>
+                            </td>
+                            <td class="dn-val">
+                                <span t-field="o.driver_mobile" dir="ltr" style="display:inline-block; direction:ltr;"/>
+                            </td>
 
-                            <td style="white-space:nowrap;"><b>Driver Mobile / جوال السائق:</b></td>
-                            <td style="text-align:right;"><b><span t-field="o.driver_mobile"/></b></td>
+                            <td style="vertical-align:bottom; line-height:1.25; padding-left:8px; white-space:nowrap;">
+                                <div class="ar-text" style="font-size:15px;">رقم لوحة الشاحنة</div>
+                                <div>Truck Plate No</div>
+                            </td>
+                            <td class="dn-val">
+                                <span t-field="o.truck_plate_no" dir="ltr" style="display:inline-block; direction:ltr;"/>
+                            </td>
                         </tr>
                     </table>
 
-                    <!-- Product Table: Reduced font size (11px) and padding (4px) -->
-                    <table style="width:100%; border-collapse:collapse; margin-top:10px; font-size:15px;">
+                    <!-- Product Table -->
+                    <table class="dn-prod-table">
                         <thead>
                             <tr>
-                                <th style="border:1px solid #000; padding:4px; text-align:center;"><b>#</b></th>
-                                <th style="border:1px solid #000; padding:4px;"><b>Item Code <br/><span style="font-size:9px; font-weight:normal;">رمز الصنف</span></b></th>
-                                <th style="border:1px solid #000; padding:4px;"><b>Description <br/><span style="font-size:9px; font-weight:normal;">الوصف</span></b></th>
-                                <th style="border:1px solid #000; padding:4px; text-align:right;"><b>Qty (MTR) <br/><span style="font-size:9px; font-weight:normal;">الكمية (متر)</span></b></th>
-                                <th style="border:1px solid #000; padding:4px; text-align:right;"><b>Qty <br/><span style="font-size:9px; font-weight:normal;">الكمية</span></b></th>
-                                <th style="border:1px solid #000; padding:4px;"><b>Unit <br/><span style="font-size:9px; font-weight:normal;">الوحدة</span></b></th>
+                                <th style="width:5%; color:#ff0000 !important;">#</th>
+                                <th style="width:12%;">
+                                    <span class="ar-text" style="font-size:14px; display:block;">رمز الصنف</span>
+                                    Item Code
+                                </th>
+                                <th style="width:49%;">
+                                    <span class="ar-text" style="font-size:14px; display:block;">البيان</span>
+                                    Description
+                                </th>
+                                <th style="width:13%;">
+                                    <span class="ar-text" style="font-size:14px; display:block;">الكمية بالمتر</span>
+                                    Qty (MTR)
+                                </th>
+                                <th style="width:11%;">
+                                    <span class="ar-text" style="font-size:14px; display:block;">الكمية</span>
+                                    Qty
+                                </th>
+                                <th style="width:10%;">
+                                    <span class="ar-text" style="font-size:14px; display:block;">الوحدة</span>
+                                    Unit
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             <t t-set="delivered_lines" t-value="o.move_ids_without_package.filtered(lambda l: l.quantity > 0)"/>
 
                             <tr t-foreach="delivered_lines" t-as="line">
-                                <td style="border:1px solid #000; padding:4px; text-align:center;">
-                                    <b><span t-esc="line_index + 1"/></b>
+                                <td style="text-align:center; color:#ff0000;">
+                                    <span t-esc="line_index + 1"/>
                                 </td>
-                                <td style="border:1px solid #000; padding:4px;">
-                                    <b><span t-field="line.product_id.default_code"/></b>
+                                <td style="text-align:center;">
+                                    <span t-field="line.product_id.default_code"/>
                                 </td>
-                                <td style="border:1px solid #000; padding:4px;">
-                                    <!-- English Product Name (Line 1) -->
-                                    <div style="text-align:left; direction:ltr;">
-                                        <b><span t-esc="line.product_id.with_context(lang='en_GB').name"/></b>
+                                <td style="text-align:center;">
+                                    <!-- Arabic Product Name (Top, Centered, 2px smaller) -->
+                                    <div class="ar-text" style="text-align:center; font-size:12px;">
+                                        <span t-esc="line.env['product.product'].with_context(lang='ar_001').browse(line.product_id.id).name"/>
                                     </div>
-                                    <!-- Arabic Product Name (Line 2) -->
-                                    <div style="text-align:right; direction:rtl; margin-top:2px;">
-                                        <b><span t-esc="line.product_id.with_context(lang='ar_001').name"/></b>
+                                    <!-- English Product Name (Bottom, Centered) -->
+                                    <div style="text-align:center; direction:ltr; margin-top:2px; font-size:14px;">
+                                        <span t-esc="line.env['product.product'].with_context(lang='en_GB').browse(line.product_id.id).name"/>
                                     </div>
                                 </td>
-                                <td style="border:1px solid #000; padding:4px; text-align:right;">
-                                    <b><span t-field="line.qty_meter"/></b>
+                                <td style="text-align:center; color:#0000ff;">
+                                    <span t-esc="'{:,.0f}'.format(line.qty_meter).replace(',', '')"/>
                                 </td>
-                                <td style="border:1px solid #000; padding:4px; text-align:right;">
-                                    <b><span t-field="line.quantity"/></b>
+                                <td style="text-align:center; color:#008000;">
+                                    <span t-esc="'{:,.0f}'.format(line.quantity).replace(',', '')"/>
                                 </td>
-                                <td style="border:1px solid #000; padding:4px;">
-                                    <b><span t-field="line.product_uom"/></b>
+                                <td style="text-align:center;">
+                                    <span t-esc="line.product_uom.with_context(lang='en_US').name"/>
                                 </td>
                             </tr>
 
-                            <tr>
-                                <td colspan="3" style="border:1px solid #000; padding:4px; text-align:right; font-weight:bold;">
-                                    Total / الإجمالي
+                            <!-- Total Row -->
+                            <tr class="dn-total-row">
+                                <td colspan="3" style="text-align:right; padding-right:16px !important;">
+                                    <span class="ar-text" style="font-size:11px;">الإجمالي</span>
+                                    <span> | Total</span>
                                 </td>
-                                <td style="border:1px solid #000; padding:4px; text-align:right; font-weight:bold;">
-                                    <span t-esc="sum(delivered_lines.mapped('qty_meter'))"/>
+                                <td style="text-align:center; color:#0000ff;">
+                                    <span t-esc="'{:,.0f}'.format(sum(delivered_lines.mapped('qty_meter'))).replace(',', '')"/>
                                 </td>
-                                <td style="border:1px solid #000; padding:4px; text-align:right; font-weight:bold;">
-                                    <span t-esc="sum(delivered_lines.mapped('quantity'))"/>
+                                <td style="text-align:center; color:#008000;">
+                                    <span t-esc="'{:,.0f}'.format(sum(delivered_lines.mapped('quantity'))).replace(',', '')"/>
                                 </td>
-                                <td style="border:1px solid #000; padding:4px; font-weight:bold;">
+                                <td style="text-align:center;">
                                     <t t-if="delivered_lines">
-                                        <span t-esc="delivered_lines[-1].product_uom.name"/>
+                                        <span t-esc="delivered_lines[-1].product_uom.with_context(lang='en_US').name"/>
                                     </t>
                                 </td>
                             </tr>
@@ -139,37 +297,40 @@
                     </table>
 
                     <!-- Notes Section: Reduced spacing and font size -->
-                    <div style="margin-top:12px; font-size:13px;">
-                        <strong>Notes / الملاحظات:</strong>
-                        <hr style="margin:4px 0;"/>
-                        <span t-field="o.note"/>
-                    </div>
-
-                    <!-- Signatures Section: Tightened spacing so it fits on Page 1 -->
-                    <t t-if="not env.context.get('hide_signatures')">
-                        <div style="margin-top:25px; width:100%; text-align:center; font-size:16px; page-break-inside:avoid;">
-
-                            <div style="display:inline-block; width:32%; vertical-align:top;">
-                                <strong>Warehouse Manager</strong><br/>
-                                <span style="font-size:13px;">أمين المستودع</span>
-                                <br/><br/><br/>
-                                <div style="border-top:1px solid #000; width:120px; margin:0 auto;"></div>
+                    <!-- Notes Section: No table, no outer box, Arabic on top, English below + black line -->
+                    <div style="margin-top:14px; width:100%; font-family: Arial, 'DejaVu Sans', sans-serif; font-weight:bold;">
+                        <div style="display:table; width:100%;">
+                            <div style="display:table-cell; width:65px; vertical-align:bottom; line-height:1.2;">
+                                <div class="ar-text" style="font-size:13px;">ملاحظات</div>
+                                <div style="font-size:14px;">Notes</div>
                             </div>
-
-                            <div style="display:inline-block; width:32%; vertical-align:top;">
-                                <strong>Driver Signature</strong><br/>
-                                <span style="font-size:13px;">توقيع السائق</span>
-                                <br/><br/><br/>
-                                <div style="border-top:1px solid #000; width:120px; margin:0 auto;"></div>
-                            </div>
-
-                            <div style="display:inline-block; width:32%; vertical-align:top;">
-                                <strong>Customer Signature</strong><br/>
-                                <span style="font-size:13px;">توقيع العميل</span>
-                                <br/><br/><br/>
-                                <div style="border-top:1px solid #000; width:120px; margin:0 auto;"></div>
+                            <div style="display:table-cell; vertical-align:bottom; padding-bottom:4px;">
+                                <div style="border-bottom:1px solid #000; width:100%;"></div>
                             </div>
                         </div>
+                        <div style="margin-top:4px; font-size:13px; font-weight:normal;">
+                            <span t-field="o.note"/>
+                        </div>
+                    </div>
+
+                    <!-- Signatures Section: 3 Separate Bordered Boxes (No Raheem Khan, No Received text) -->
+                    <t t-if="not env.context.get('hide_signatures')">
+                        <table class="dn-sig-table" style="font-family: Arial, 'DejaVu Sans', sans-serif;">
+                            <tr>
+                                <td class="dn-sig-box" style="width:33.3%;">
+                                    <div class="ar-text" style="font-size:14px;">إدارة المستودعات</div>
+                                    <div style="font-size:14px; margin-top:2px;">Warehouse Manager</div>
+                                </td>
+                                <td class="dn-sig-box" style="width:33.3%;">
+                                    <div class="ar-text" style="font-size:14px;">إسم السائق والتوقيع</div>
+                                    <div style="font-size:14px; margin-top:2px;">Driver Name &amp; Signature</div>
+                                </td>
+                                <td class="dn-sig-box" style="width:33.3%;">
+                                    <div class="ar-text" style="font-size:14px;">إسم العميل والتوقيع</div>
+                                    <div style="font-size:14px; margin-top:2px;">Customer Name &amp; Signature</div>
+                                </td>
+                            </tr>
+                        </table>
                     </t>
                 </div>
             </t>

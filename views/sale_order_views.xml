@@ -136,6 +136,14 @@
                     </group>
                 </page>
             </xpath>
+            <xpath expr="//field[@name='team_id'][not(ancestor::field)]" position="after">
+                <field name="is_revisor" invisible="1"/>
+                <field name="is_manager" invisible="1"/>
+            </xpath>
+            <!-- 2. Show the Discount button ONLY to the Revisor or Manager -->
+            <xpath expr="//button[@name='action_open_discount_wizard']" position="attributes">
+                <attribute name="invisible">not is_revisor and not is_manager</attribute>
+            </xpath>
         </field>
     </record>
     <record id="sale.action_accrued_revenue_entry" model="ir.actions.act_window">
