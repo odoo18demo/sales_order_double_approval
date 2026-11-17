@@ -4,7 +4,6 @@
         <t t-call="web.basic_layout">
             <t t-foreach="docs" t-as="o">
                 <div class="page" style="font-family: 'DejaVu Sans', Arial, sans-serif;">
-
                     <style>
                         @import url('https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400..700&amp;family=Readex+Pro:wght@160..700&amp;display=swap');
 
@@ -68,6 +67,12 @@
                             padding: 5px 6px !important;
                             font-weight: bold !important;
                         }
+                        .dn-num {
+                            color: #000 !important;
+                            font-family: Arial, 'DejaVu Sans', sans-serif;
+                            font-size: 15px !important;
+                            font-weight: bold !important;
+                        }
                         .dn-notes-table,
                         .dn-notes-table tr,
                         .dn-notes-table td {
@@ -94,7 +99,6 @@
                             font-weight: bold !important;
                         }
                     </style>
-
                     <div style="text-align:center; margin-bottom:18px; font-family: Arial, 'DejaVu Sans', sans-serif; font-weight:bold;">
                         <div class="ar-text" style="font-size:18px;">إشعار تسليم بضاعة</div>
                         <div style="font-size:19px; margin-top:2px;">Delivery Note</div>
@@ -221,25 +225,25 @@
                     <table class="dn-prod-table">
                         <thead>
                             <tr>
-                                <th style="width:5%; color:#ff0000 !important;">#</th>
+                                <th style="width:5%; color:#000 !important;">#</th>
                                 <th style="width:12%;">
-                                    <span class="ar-text" style="font-size:14px; display:block;">رمز الصنف</span>
+                                    <span class="ar-text" style="font-size:15px; display:block;">رمز الصنف</span>
                                     Item Code
                                 </th>
                                 <th style="width:49%;">
-                                    <span class="ar-text" style="font-size:14px; display:block;">البيان</span>
+                                    <span class="ar-text" style="font-size:15px; display:block;">البيان</span>
                                     Description
                                 </th>
                                 <th style="width:13%;">
-                                    <span class="ar-text" style="font-size:14px; display:block;">الكمية بالمتر</span>
+                                    <span class="ar-text" style="font-size:15px; display:block;">الكمية بالمتر</span>
                                     Qty (MTR)
                                 </th>
                                 <th style="width:11%;">
-                                    <span class="ar-text" style="font-size:14px; display:block;">الكمية</span>
+                                    <span class="ar-text" style="font-size:15px; display:block;">الكمية</span>
                                     Qty
                                 </th>
                                 <th style="width:10%;">
-                                    <span class="ar-text" style="font-size:14px; display:block;">الوحدة</span>
+                                    <span class="ar-text" style="font-size:15px; display:block;">الوحدة</span>
                                     Unit
                                 </th>
                             </tr>
@@ -248,7 +252,7 @@
                             <t t-set="delivered_lines" t-value="o.move_ids_without_package.filtered(lambda l: l.quantity > 0)"/>
 
                             <tr t-foreach="delivered_lines" t-as="line">
-                                <td style="text-align:center; color:#ff0000;">
+                                <td style="text-align:center; color:#000;">
                                     <span t-esc="line_index + 1"/>
                                 </td>
                                 <td style="text-align:center;">
@@ -264,13 +268,13 @@
                                         <span t-esc="line.env['product.product'].with_context(lang='en_GB').browse(line.product_id.id).name"/>
                                     </div>
                                 </td>
-                                <td style="text-align:center; color:#0000ff;">
+                                <td class="dn-num" style="text-align:center;">
                                     <span t-esc="'{:,.0f}'.format(line.qty_meter).replace(',', '')"/>
                                 </td>
-                                <td style="text-align:center; color:#008000;">
+                                <td class="dn-num" style="text-align:center;">
                                     <span t-esc="'{:,.0f}'.format(line.quantity).replace(',', '')"/>
                                 </td>
-                                <td style="text-align:center;">
+                                <td class="dn-num" style="text-align:center;">
                                     <span t-esc="line.product_uom.with_context(lang='en_US').name"/>
                                 </td>
                             </tr>
@@ -281,13 +285,13 @@
                                     <span class="ar-text" style="font-size:11px;">الإجمالي</span>
                                     <span> | Total</span>
                                 </td>
-                                <td style="text-align:center; color:#0000ff;">
+                                <td class="dn-num" style="text-align:center;">
                                     <span t-esc="'{:,.0f}'.format(sum(delivered_lines.mapped('qty_meter'))).replace(',', '')"/>
                                 </td>
-                                <td style="text-align:center; color:#008000;">
+                                <td class="dn-num" style="text-align:center;">
                                     <span t-esc="'{:,.0f}'.format(sum(delivered_lines.mapped('quantity'))).replace(',', '')"/>
                                 </td>
-                                <td style="text-align:center;">
+                                <td class="dn-num" style="text-align:center;">
                                     <t t-if="delivered_lines">
                                         <span t-esc="delivered_lines[-1].product_uom.with_context(lang='en_US').name"/>
                                     </t>

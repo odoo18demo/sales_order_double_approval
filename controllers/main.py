@@ -31,6 +31,16 @@ class MrpScreen(http.Controller):
 
             if not sale_order or sale_order.is_force_delivered:
                 continue
+            # Also check deliveries matched by sale_id OR Source Document (origin)
+            force_delivered_picking = request.env['stock.picking'].sudo().search([
+                '|',
+                ('sale_id', '=', sale_order.id),
+                ('origin', '=', sale_order.name),
+                ('state', '!=', 'cancel'),
+                ('is_force_delivered', '=', True),
+            ], limit=1)
+            if force_delivered_picking:
+                continue
 
             pid = mo.product_id.id
             sale_lines = sale_order.order_line.filtered(lambda l: l.product_id.id == pid and not l.display_type)

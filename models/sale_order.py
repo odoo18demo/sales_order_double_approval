@@ -541,13 +541,26 @@ class SaleOrder(models.Model):
         store=True
     )
     # 2. Add this new compute method to watch the Delivery orders
-    @api.depends('picking_ids.is_force_delivered', 'picking_ids.state')
+    @api.depends('picking_ids.is_force_delivered', 'picking_ids.state', 'name')
     def _compute_is_force_delivered(self):
         for order in self:
-            # If ANY active delivery has the toggle ON, the Sale Order is forced to 'Fully Delivered'!
-            order.is_force_delivered = any(
-                p.is_force_delivered for p in order.picking_ids if p.state != 'cancel'
-            )
+            domain = [
+                ('state', '!=', 'cancel'),
+                ('is_force_delivered', '=', True),
+            ]
+            if order.name:
+                domain = [
+                    '&',
+                    '|', ('sale_id', '=', order.id), ('origin', '=', order.name.strip()),
+                    '&', ('state', '!=', 'cancel'), ('is_force_delivered', '=', True),
+                ]
+            else:
+                domain = [
+                    ('sale_id', '=', order.id),
+                    ('state', '!=', 'cancel'),
+                    ('is_force_delivered', '=', True),
+                ]
+            order.is_force_delivered = bool(self.env['stock.picking'].sudo().search(domain, limit=1))
 
     @api.depends('order_line.product_uom_qty', 'order_line.qty_delivered', 'is_force_delivered', 'state')
     def _compute_delivery_badge_status(self):

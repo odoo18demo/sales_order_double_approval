@@ -282,21 +282,43 @@ class StockPicking(models.Model):
         if new_lines:
             self.move_ids_without_package = new_lines
 
+    def _sync_origin_sale_order_force_delivered(self):
+        """Recompute is_force_delivered on Sale Orders matched via Source Document (origin) when sale_id is empty."""
+        origins = set()
+        for picking in self:
+            if picking.origin:
+                for ref in picking.origin.split(','):
+                    clean_ref = ref.strip()
+                    if clean_ref:
+                        origins.add(clean_ref)
+        if origins:
+            orders = self.env['sale.order'].sudo().search([('name', 'in', list(origins))])
+            if orders:
+                orders._compute_is_force_delivered()
+
     @api.model_create_multi
     def create(self, vals_list):
-        """ Intercept creation to force the Sales Order Line links """
         pickings = super().create(vals_list)
         for picking in pickings:
             if picking.sale_id:
                 picking._force_sale_line_links()
+        if any(k in vals for vals in vals_list for k in ('is_force_delivered', 'origin', 'state', 'sale_id')):
+            pickings._sync_origin_sale_order_force_delivered()
         return pickings
 
     def write(self, vals):
-        """ Intercept saves to force the Sales Order Line links """
+        # Capture old origins before write in case origin itself is edited/cleared
+        old_origins = {p.origin.strip() for p in self if p.origin}
         res = super().write(vals)
         for picking in self:
             if picking.sale_id:
                 picking._force_sale_line_links()
+        if any(k in vals for k in ('is_force_delivered', 'origin', 'state', 'sale_id')):
+            self._sync_origin_sale_order_force_delivered()
+            if old_origins:
+                old_orders = self.env['sale.order'].sudo().search([('name', 'in', list(old_origins))])
+                if old_orders:
+                    old_orders._compute_is_force_delivered()
         return res
 
     def _force_sale_line_links(self):
