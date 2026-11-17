@@ -170,7 +170,9 @@
                                 <div>Customer Phone</div>
                             </td>
                             <td class="dn-val">
-                                <span t-field="o.customer_phone" dir="ltr" style="display:inline-block; direction:ltr;"/>
+                                <t t-set="raw_dn_phone" t-value="(o.customer_phone or '').strip()"/>
+                                <t t-set="clean_dn_phone" t-value="raw_dn_phone[4:].lstrip(' -') if raw_dn_phone.startswith('+966') else (raw_dn_phone[5:].lstrip(' -') if raw_dn_phone.startswith('00966') else raw_dn_phone)"/>
+                                <span t-esc="clean_dn_phone" dir="ltr" style="display:inline-block; direction:ltr; unicode-bidi:embed;"/>
                             </td>
                         </tr>
 
@@ -329,9 +331,14 @@
                                     <div class="ar-text" style="font-size:14px;">إسم السائق والتوقيع</div>
                                     <div style="font-size:14px; margin-top:2px;">Driver Name &amp; Signature</div>
                                 </td>
-                                <td class="dn-sig-box" style="width:33.3%;">
+                                <td class="dn-sig-box" style="width:33.3%; position:relative;">
                                     <div class="ar-text" style="font-size:14px;">إسم العميل والتوقيع</div>
                                     <div style="font-size:14px; margin-top:2px;">Customer Name &amp; Signature</div>
+
+                                    <div style="margin-top:34px; color:#0000; font-size:11px; line-height:1.25; text-align:center; font-weight:bold;">
+                                        <div>Received above products<br/>in good condition</div>
+                                        <div class="ar-text" style="font-size:11px; direction:rtl;">استلمت البضاعة بحالة جيدة</div>
+                                    </div>
                                 </td>
                             </tr>
                         </table>
