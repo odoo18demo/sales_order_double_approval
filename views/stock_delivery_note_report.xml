@@ -6,10 +6,10 @@
                 <div class="page" style="font-family: 'DejaVu Sans', Arial, sans-serif;">
 
                     <style>
-                        @import url('https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400..700&amp;display=swap');
+                        @import url('https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400..700&amp;family=Readex+Pro:wght@160..700&amp;display=swap');
 
                         .ar-text {
-                            font-family: 'Noto Naskh Arabic', serif !important;
+                            font-family: "Readex Pro", sans-serif;
                             direction: ltr;
                             font-weight:bold;
                         }
@@ -102,7 +102,7 @@
                     <!-- Info Table: Bottom lines only, no boxes -->
                     <table class="dn-info-table" style="width:100%; border-collapse:separate; border-spacing:4px 8px; font-family: Arial, 'DejaVu Sans', sans-serif; font-size:14px; font-weight:bold; margin-bottom:14px;">
                         <!-- Row 1: Sn (Left) | Date (Right) -->
-                        <tr>
+                        <tr style="line-height:1">
                             <td style="width:15%; vertical-align:bottom; line-height:1.25;">
                                 <div class="ar-text" style="font-size:14px;">الرقم التسلسلي</div>
                                 <div>Sn</div>
@@ -124,7 +124,7 @@
                         </tr>
 
                         <!-- Row 2: City Code (Left) | Sales Order (Middle) | Salesman (Right) -->
-                        <tr>
+                        <tr style="line-height:1">
                             <td style="vertical-align:bottom; line-height:1.25;">
                                 <div class="ar-text" style="font-size:15px;">رمز المدينة</div>
                                 <div>City Code</div>
@@ -152,7 +152,7 @@
                         </tr>
 
                         <!-- Row 3: Customer (Left + Middle span) | Customer Phone (Right) -->
-                        <tr>
+                        <tr style="line-height:1">
                             <td style="vertical-align:bottom; line-height:1.25;">
                                 <div class="ar-text" style="font-size:15px;">إسم العميل</div>
                                 <div>Customer</div>
@@ -171,7 +171,7 @@
                         </tr>
 
                         <!-- Row 4: Address (Left + Middle span) | LeaveTime (Right) -->
-                        <tr>
+                        <tr style="line-height:1">
                             <td style="vertical-align:bottom; line-height:1.25;">
                                 <div class="ar-text" style="font-size:15px;">عنوان العميل</div>
                                 <div>Address</div>
@@ -190,7 +190,7 @@
                         </tr>
 
                         <!-- Row 5: Driver Name (Left) | Driver Mobile (Middle) | Truck Plate No (Right) -->
-                        <tr>
+                        <tr style="line-height:1">
                             <td style="vertical-align:bottom; line-height:1.25;">
                                 <div class="ar-text" style="font-size:15px;">إسم السائق</div>
                                 <div>Driver Name</div>
