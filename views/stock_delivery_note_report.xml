@@ -34,7 +34,7 @@
                             margin-top: 10px;
                             border: 2px solid #000 !important;
                             font-family: Arial, 'DejaVu Sans', sans-serif;
-                            font-size: 13px;
+                            font-size: 15px !important;
                         }
                         .dn-prod-table thead th {
                             background-color: #c0c0c0 !important;
@@ -45,6 +45,7 @@
                             vertical-align: middle !important;
                             font-weight: bold !important;
                             color: #000;
+                            font-size: 15px !important;
                         }
                         .dn-prod-table tbody,
                         .dn-prod-table tbody tr {
@@ -58,6 +59,15 @@
                             padding: 8px 6px !important;
                             vertical-align: middle !important;
                             font-weight: bold !important;
+                            font-size: 15px !important;
+                        }
+                        .dn-prod-table .ar-text {
+                            font-size: 13px !important;
+                            font-family: "Readex Pro", sans-serif !important;
+                        }
+                        .dn-prod-table .en-text {
+                            font-size: 15px !important;
+                            font-family: Arial, 'DejaVu Sans', sans-serif !important;
                         }
                         .dn-prod-table tbody tr.dn-total-row td {
                             border-top: 2px solid #000 !important;
@@ -66,6 +76,7 @@
                             border-right: none !important;
                             padding: 5px 6px !important;
                             font-weight: bold !important;
+                            font-size: 15px !important;
                         }
                         .dn-num {
                             color: #000 !important;
@@ -123,7 +134,8 @@
                                 <div>Date</div>
                             </td>
                             <td class="dn-val" style="width:19%;">
-                                <span t-field="o.scheduled_date" dir="ltr" style="display:inline-block; direction:ltr;"/>
+                                <span t-field="o.scheduled_date" t-options='{"widget": "date"}' dir="ltr"
+                                      style="display:inline-block; direction:ltr;"/>
                             </td>
                         </tr>
 
@@ -170,8 +182,8 @@
                                 <div>Customer Phone</div>
                             </td>
                             <td class="dn-val">
-                                <t t-set="raw_dn_phone" t-value="(o.customer_phone or '').strip()"/>
-                                <t t-set="clean_dn_phone" t-value="raw_dn_phone[4:].lstrip(' -') if raw_dn_phone.startswith('+966') else (raw_dn_phone[5:].lstrip(' -') if raw_dn_phone.startswith('00966') else raw_dn_phone)"/>
+                                <t t-set="compact_phone" t-value="(o.customer_phone or '').replace(' ', '').replace('-', '')"/>
+                                <t t-set="clean_dn_phone" t-value="('0' + compact_phone[4:].lstrip('0')) if compact_phone.startswith('+966') else (('0' + compact_phone[5:].lstrip('0')) if compact_phone.startswith('00966') else compact_phone)"/>
                                 <span t-esc="clean_dn_phone" dir="ltr" style="display:inline-block; direction:ltr; unicode-bidi:embed;"/>
                             </td>
                         </tr>
@@ -229,16 +241,16 @@
                             <tr>
                                 <th style="width:5%; color:#000 !important;">#</th>
                                 <th style="width:12%;">
-                                    <span class="ar-text" style="font-size:15px; display:block;">رمز الصنف</span>
-                                    Item Code
+                                    <span class="ar-text" style="display:block;">رمز الصنف</span>
+                                    <span class="en-text">Item Code</span>
                                 </th>
                                 <th style="width:49%;">
-                                    <span class="ar-text" style="font-size:15px; display:block;">البيان</span>
-                                    Description
+                                    <span class="ar-text" style="display:block;">البيان</span>
+                                    <span class="en-text">Description</span>
                                 </th>
                                 <th style="width:13%;">
-                                    <span class="ar-text" style="font-size:15px; display:block;">الكمية بالمتر</span>
-                                    Qty (MTR)
+                                    <span class="ar-text" style="display:block;">الكمية بالمتر</span>
+                                    <span class="en-text">Qty (MTR)</span>
                                 </th>
                                 <th style="width:11%;">
                                     <span class="ar-text" style="font-size:15px; display:block;">الكمية</span>
@@ -262,11 +274,11 @@
                                 </td>
                                 <td style="text-align:center;">
                                     <!-- Arabic Product Name (Top, Centered, 2px smaller) -->
-                                    <div class="ar-text" style="text-align:center; font-size:12px;">
+                                    <div class="ar-text" style="text-align:center;">
                                         <span t-esc="line.env['product.product'].with_context(lang='ar_001').browse(line.product_id.id).name"/>
                                     </div>
                                     <!-- English Product Name (Bottom, Centered) -->
-                                    <div style="text-align:center; direction:ltr; margin-top:2px; font-size:14px;">
+                                    <div class="en-text" style="text-align:center; direction:ltr; margin-top:2px;">
                                         <span t-esc="line.env['product.product'].with_context(lang='en_GB').browse(line.product_id.id).name"/>
                                     </div>
                                 </td>
@@ -284,8 +296,8 @@
                             <!-- Total Row -->
                             <tr class="dn-total-row">
                                 <td colspan="3" style="text-align:right; padding-right:16px !important;">
-                                    <span class="ar-text" style="font-size:11px;">الإجمالي</span>
-                                    <span> | Total</span>
+                                    <span class="ar-text">الإجمالي</span>
+                                    <span class="en-text"> | Total</span>
                                 </td>
                                 <td class="dn-num" style="text-align:center;">
                                     <span t-esc="'{:,.0f}'.format(sum(delivered_lines.mapped('qty_meter'))).replace(',', '')"/>
