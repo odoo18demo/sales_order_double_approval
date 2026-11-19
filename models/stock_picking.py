@@ -8,6 +8,7 @@ _logger = logging.getLogger(__name__)
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
+    sn = fields.Char(string="SN", copy=False, readonly=True, index=True)
     driver_name = fields.Many2one('fleet.driver', string="Driver")
     driver_mobile = fields.Char(string="Driver Mobile")
 
@@ -75,23 +76,13 @@ class StockPicking(models.Model):
     def button_validate(self):
         _logger.warning("CUSTOM BUTTON_VALIDATE CALLED")
 
-        # ==============================================================
-        # NEW LOGIC: Block extra quantities and unapproved new products
-        # ==============================================================
         for picking in self:
-            # Only enforce this on Deliveries linked to a Sale Order
             if picking.sale_id:
                 for move in picking.move_ids:
-                    # 1. Block products that were added manually by the warehouse
                     if not move.sale_line_id:
                         raise UserError(
-                            f"Error: You cannot add new products ({move.product_id.display_name}) to a Delivery that were not on the approved Sale Order!")
-
-        #             # 2. Block delivering more than the demanded quantity
-        #             if move.quantity > move.product_uom_qty:
-        #                 raise UserError(
-        #                     f"Error: You are trying to deliver {move.quantity} of {move.product_id.display_name}, but only {move.product_uom_qty} was ordered!")
-        # # ==============================================================
+                            f"Error: You cannot add new products ({move.product_id.display_name}) to a Delivery that were not on the approved Sale Order!"
+                        )
 
         self = self.with_context(
             skip_backorder=True,
@@ -105,8 +96,24 @@ class StockPicking(models.Model):
 
     def _action_done(self):
         _logger.warning("CUSTOM ACTION_DONE CALLED")
-        res = super()._action_done()
+        validation_dt = fields.Datetime.now()
+
+        # 1. Update Scheduled Date & Leave Time BEFORE state becomes 'done'
         for picking in self:
+            if picking.state not in ('done', 'cancel'):
+                picking.sudo().write({
+                    'scheduled_date': validation_dt,
+                    'leave_datetime': validation_dt,
+                })
+
+        res = super()._action_done()
+
+        # 2. Assign SN and send email AFTER validation succeeds
+        for picking in self:
+            if picking.state == 'done' and not picking.sn:
+                picking.sudo().write({
+                    'sn': self.env['ir.sequence'].next_by_code('stock.picking.sn')
+                })
             try:
                 if picking.state == 'done' and picking.sale_id:
                     _logger.warning(

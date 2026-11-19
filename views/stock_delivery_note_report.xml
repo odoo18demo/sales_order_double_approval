@@ -119,8 +119,8 @@
                         <!-- Row 1: Sn (Left) | Date (Right) -->
                         <tr style="line-height:1">
                             <td style="width:15%; vertical-align:bottom; line-height:1.25;">
-                                <div class="ar-text" style="font-size:14px;">الرقم التسلسلي</div>
-                                <div>Sn</div>
+                                <div class="ar-text" style="font-size:14px;">الرقم المرجعي</div>
+                                <div>Reference</div>
                             </td>
                             <td class="dn-val" style="width:23%;">
                                 <span t-field="o.name" dir="ltr" style="display:inline-block; direction:ltr;"/>
@@ -174,7 +174,8 @@
                                 <div>Customer</div>
                             </td>
                             <td colspan="3" class="dn-val">
-                                <span t-field="o.partner_id"/>
+                                <t t-set="company_partner" t-value="o.partner_id.commercial_partner_id or o.partner_id.parent_id or o.partner_id"/>
+                                <span t-esc="company_partner.with_context(lang='en_GB').name"/>
                             </td>
 
                             <td style="vertical-align:bottom; line-height:1.25; padding-left:8px; white-space:nowrap;">

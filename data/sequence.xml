@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <record id="seq_sale_order_draft" model="ir.sequence">
-            <field name="name">Draft Quotation Sequence</field>
-            <field name="code">sale.order.draft</field>
-            <field name="prefix">#draft</field>
+        <record id="seq_stock_picking_sn_30000" model="ir.sequence">
+            <field name="name">Delivery SN Sequence</field>
+            <field name="code">stock.picking.sn</field>
+            <field name="prefix"></field>
             <field name="padding">5</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">30000</field>
             <field name="company_id" eval="False"/>
         </record>
     </data>
