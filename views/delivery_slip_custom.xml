@@ -9,14 +9,14 @@
                 <!-- Increased font sizes and reduced margin-bottom -->
                 <h2 style="text-align:center; font-size:24px; margin-top: 0px; margin-bottom: 10px;">
                     Delivery Note <br/>
-                    <span style="font-size: 20px; font-weight: normal;">مذكرة تسليم</span>
+                    <span style="font-size: 20px; font-weight: normal;">مذكرة تسليم</span><br/>
+                    <span t-esc="o.sn" style="display:inline-block; font-size: 16px; direction:ltr; unicode-bidi:embed;"/>
                 </h2>
-
                 <!-- Reduced margin-bottom to pull the table up -->
                 <div class="row" style="margin-bottom: 10px;">
                     <div class="col-6">
                         <!-- Reduced padding from 5px to 2px for tighter line spacing -->
-                        <div style="padding: 2px;"><b>SN / الرقم التسلسلي:</b> <span t-field="o.name" dir="ltr" style="display: inline-block; direction: ltr; unicode-bidi: embed;"/></div>
+                        <div style="padding: 2px;"><b>Reference / الرقم المرجعي:</b> <span t-field="o.name" dir="ltr" style="display: inline-block; direction: ltr; unicode-bidi: embed;"/></div>
                         <div style="padding: 2px;"><b>City Code / رمز المدينة:</b> <span t-field="o.city_code" dir="ltr"/></div>
                         <div style="padding: 2px;"><b>Customer / العميل:</b> <span t-field="o.partner_id.display_name"/></div>
                         <div style="padding: 2px;">
