@@ -109,10 +109,17 @@
                             padding: 8px 6px !important;
                             font-weight: bold !important;
                         }
+                        .dn-note-val p {
+                            margin: 0 !important;
+                            padding: 0 !important;
+                        }
                     </style>
                     <div style="text-align:center; margin-bottom:18px; font-family: Arial, 'DejaVu Sans', sans-serif; font-weight:bold;">
-                        <div class="ar-text" style="font-size:18px;">إشعار تسليم بضاعة</div>
-                        <div style="font-size:19px; margin-top:2px;">Delivery Note</div>
+                        <div class="ar-text" style="font-size:17px;">إشعار تسليم بضاعة</div>
+                        <div style="font-size:18px; margin-top:2px;">Delivery Note</div>
+                        <div t-if="o.sn" style="font-size:13px; margin-top:2px; font-weight:bold;" dir="ltr">
+                            <span t-esc="o.sn" style="display:inline-block; direction:ltr; unicode-bidi:embed;"/>
+                        </div>
                     </div>
                     <!-- Info Table: Bottom lines only, no boxes -->
                     <table class="dn-info-table" style="width:100%; border-collapse:separate; border-spacing:4px 8px; font-family: Arial, 'DejaVu Sans', sans-serif; font-size:14px; font-weight:bold; margin-bottom:14px;">
@@ -314,21 +321,19 @@
                             </tr>
                         </tbody>
                     </table>
-
-                    <!-- Notes Section: Reduced spacing and font size -->
                     <!-- Notes Section: No table, no outer box, Arabic on top, English below + black line -->
+                    <!-- Notes Section: Value sits directly above the black line -->
                     <div style="margin-top:14px; width:100%; font-family: Arial, 'DejaVu Sans', sans-serif; font-weight:bold;">
                         <div style="display:table; width:100%;">
                             <div style="display:table-cell; width:65px; vertical-align:bottom; line-height:1.2;">
                                 <div class="ar-text" style="font-size:13px;">ملاحظات</div>
                                 <div style="font-size:14px;">Notes</div>
                             </div>
-                            <div style="display:table-cell; vertical-align:bottom; padding-bottom:4px;">
-                                <div style="border-bottom:1px solid #000; width:100%;"></div>
+                            <div style="display:table-cell; vertical-align:bottom; padding-left:6px; padding-bottom:2px;">
+                                <div class="dn-note-val" style="border-bottom:1px solid #000; width:100%; min-height:18px; padding-bottom:2px; font-size:13px; font-weight:normal;">
+                                    <span t-field="o.note"/>
+                                </div>
                             </div>
-                        </div>
-                        <div style="margin-top:4px; font-size:13px; font-weight:normal;">
-                            <span t-field="o.note"/>
                         </div>
                     </div>
 
