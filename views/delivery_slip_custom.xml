@@ -10,7 +10,7 @@
                 <h2 style="text-align:center; font-size:24px; margin-top: 0px; margin-bottom: 10px;">
                     Delivery Note <br/>
                     <span style="font-size: 20px; font-weight: normal;">مذكرة تسليم</span><br/>
-                    <span t-esc="o.sn" style="display:inline-block; font-size: 16px; direction:ltr; unicode-bidi:embed;"/>
+                    <span t-esc="o.sn" style="display:inline-block; font-size: 20px; direction:ltr; unicode-bidi:embed;"/>
                 </h2>
                 <!-- Reduced margin-bottom to pull the table up -->
                 <div class="row" style="margin-bottom: 10px;">
