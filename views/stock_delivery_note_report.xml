@@ -117,8 +117,8 @@
                     <div style="text-align:center; margin-bottom:18px; font-family: Arial, 'DejaVu Sans', sans-serif; font-weight:bold;">
                         <div class="ar-text" style="font-size:17px;">إشعار تسليم بضاعة</div>
                         <div style="font-size:18px; margin-top:2px;">Delivery Note</div>
-                        <div t-if="o.sn" style="font-size:13px; margin-top:2px; font-weight:bold;" dir="ltr">
-                            <span t-esc="o.sn" style="display:inline-block; direction:ltr; unicode-bidi:embed;"/>
+                        <div t-if="o.sn" style="font-size:16px; margin-top:2px; font-weight:bold;" dir="ltr">
+                            <span t-esc="o.sn" style="display:inline-block; direction:ltr; unicode-bidi:embed; font-weight:bold;"/>
                         </div>
                     </div>
                     <!-- Info Table: Bottom lines only, no boxes -->
@@ -330,7 +330,7 @@
                                 <div style="font-size:14px;">Notes</div>
                             </div>
                             <div style="display:table-cell; vertical-align:bottom; padding-left:6px; padding-bottom:2px;">
-                                <div class="dn-note-val" style="border-bottom:1px solid #000; width:100%; min-height:18px; padding-bottom:2px; font-size:13px; font-weight:normal;">
+                                <div class="dn-note-val" style="border-bottom:1px solid #000; width:100%; min-height:18px; padding-bottom:2px; font-size:13px; font-weight:bold;">
                                     <span t-field="o.note"/>
                                 </div>
                             </div>
